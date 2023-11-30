@@ -6,6 +6,8 @@
       <v-icon v-if="mobile.mobile && useRoute().fullPath == '/'" class="arrow-right d-sm-none" size="x-large">mdi-arrow-left-thick</v-icon>
     </v-app-bar>
     <v-navigation-drawer
+        app
+        temporary="true"
         class="mt-n2"
         v-if="authStore.isAuthenticated"
         v-model="drawer"
@@ -14,14 +16,14 @@
         <v-list-item
             lines="two"
             prepend-avatar="https://randomuser.me/api/portraits/women/81.jpg"
-            :title="authStore.userName"
+            :title="authStore.userName || userStore.userName"
             subtitle="Logado"
         ></v-list-item>
       </template>
 
       <v-divider></v-divider>
 
-      <v-list density="compact" nav>
+      <v-list density="comfortable" nav>
         <v-list-item @click="navigateTo('/')" prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
         <v-list-item @click="dialog=true" prepend-icon="mdi-account" title="Minha Conta" value="account"></v-list-item>
         <v-list-item @click="navigateTo('/artigos')" prepend-icon="mdi-sticker-text" title="Meus Artigos" value="users"></v-list-item>
@@ -46,10 +48,12 @@
 import {useRoute} from 'vue-router'
 import {useAuthStore} from '~/store/user/authStore'
 import { useDisplay } from 'vuetify/lib/framework.mjs';
+import { userManager } from '~/store/user/user_manager';
 const mobile = useDisplay()
 const dialog = ref(false)
 const drawer = ref(false)
 const authStore = useAuthStore()
+const userStore = userManager()
 const isRouteDifferent = computed(() => {
   return useRoute().fullPath !== '/';
 })

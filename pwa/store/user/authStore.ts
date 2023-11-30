@@ -1,28 +1,18 @@
 import {defineStore} from "pinia";
 import axios from 'axios'
+import { userManager } from "./user_manager";
 export const useAuthStore = defineStore('authStore',{
   state: () => ({
     errorMessages: [],
     token: localStorage.getItem('token'),
     user: localStorage.getItem('user'),
     userName: localStorage.getItem('name'),
-    loggedWithGoogle: false
+    loggedWithGoogle: false,
+    userManager: userManager()
   }),
 
   actions:{
-    async add_new_user(objUser: object){
-      await axios.post('http://localhost:3030/user/new_user',{
-        name: objUser.name,
-        email: objUser.email,
-        password: objUser.password
-      }).then((res)=>{
-        localStorage.setItem('token', res.data.access_token)
-        localStorage.setItem('user', res.data.user.email)
-        localStorage.setItem('name', res.data.user.name)
-        if (res) navigateTo('/profile')
-      })
-    },
-    async login_user(objUser) {
+    async login_user(objUser: object) {
       await axios.post('http://localhost:3030/auth/login', {
         email: objUser.email,
         password: objUser.password
@@ -33,7 +23,7 @@ export const useAuthStore = defineStore('authStore',{
         localStorage.setItem('token', res.data.access_token)
         localStorage.setItem('user', res.data.user.email)
         localStorage.setItem('name', res.data.user.name)
-        if (res) navigateTo('/profile')
+        if (res) navigateTo('/artigos')
       })
     },
     async login_google(token_google: string){
@@ -48,7 +38,7 @@ export const useAuthStore = defineStore('authStore',{
           if(res.data.fromGoogle){
             this.loggedWithGoogle = true
           }
-          if(res) navigateTo('/profile')
+          if(res) navigateTo('/artigos')
         })
       } catch (error) {
         console.error("Erro ao verificar o token do Google:", error);
@@ -64,6 +54,6 @@ export const useAuthStore = defineStore('authStore',{
   },
 
   getters: {
-    isAuthenticated: (state)=> state.user !== null && state.token !== null
+    isAuthenticated: (state)  => state.token || state.user !== null
   }
 })

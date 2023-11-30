@@ -7,8 +7,8 @@
   />
 </template>
 <script lang="ts" setup>
-import {useAuthStore} from '~/store/user/authStore'
-const authStore = useAuthStore()
+import { userManager } from '~/store/user/user_manager';
+const user = userManager()
 const loading = ref(false)
 const user_data = reactive({
   name: '',
@@ -19,7 +19,7 @@ const user_data = reactive({
 
 const add = () => {
   loading.value = true
-  authStore.add_new_user(user_data)
+  user.add_new_user(user_data)
 }
 </script>
     

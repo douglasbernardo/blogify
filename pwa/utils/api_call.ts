@@ -1,13 +1,21 @@
 import axios from "axios";
 
-export function api_call(method, url, data=null, headers=null){
-  const runtimeConfig = useRuntimeConfig()
+export interface InterfaceAPI{
+  method: string,
+  url: string,
+  data: string | object | null,
+  headers: string | null
+}
+const runtimeConfig = useRuntimeConfig()
+
+export function api_call({method, url, data, headers} : InterfaceAPI){
   return axios({
-    method: method,
+    method,
     url: `${runtimeConfig.public.apiBase}${url}`,
-    data: data,
-    headers: headers
-  }).then(res => JSON.stringify(res.data))
+    data,
+    headers
+  })
+  .then(res => JSON.stringify(res.data))
     .catch(error => {
       console.log('Error trying to call api',error)
       throw new Error('Something went wrong with API call.')

@@ -1,5 +1,5 @@
 
-export function formatArticle(article){
+export function formatArticle(article: string){
   const regex = /\((.*?)\)/g;
   let novoTexto = article;
   const matches = novoTexto.match(regex);

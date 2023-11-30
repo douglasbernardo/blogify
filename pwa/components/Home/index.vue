@@ -1,8 +1,12 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer elevation="5" location="right">
+    <v-navigation-drawer 
+      elevation="5"
+      width="200"
+      location="right"
+      >
       <div class="px-2">
-          <v-btn class="ma-2 ml-10 pa-2 bg-blue" id="newPubBtn" :to="useAuthStore().isAuthenticated ? '/create-publication' : '/user/login'">Nova Publicação</v-btn>
+          <v-btn class="ma-2 ml-3 pa-2 bg-blue" id="newPubBtn" :to="useAuthStore().isAuthenticated ? '/create-publication' : '/user/login'">Nova Publicação</v-btn>
         <v-divider class="my-6"></v-divider>
         <v-row class="ma-2">
           <p>Filtro</p>
@@ -15,7 +19,7 @@
           multiple
         ></v-select>
       </div>
-      <v-btn @click="dialog=!dialog" elevation="5" location="end" class="ml-7" color="purple" variant="outlined">Enviar FeedBacks</v-btn>
+      <v-btn @click="dialog=!dialog" size="small" elevation="5" location="end" class="ml-7" color="purple" variant="outlined">Enviar FeedBacks</v-btn>
       <div class="text-center">
         <v-dialog
           v-model="dialog"
