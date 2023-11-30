@@ -5,7 +5,6 @@ import {signInDto, UserDto} from "../dto/user.dto";
 @Controller('auth')
 export class AuthController{
   constructor(private authService: AuthService) {}
-  
   @HttpCode(HttpStatus.OK)
   @Post('/login')
   signIn(@Body() signData: signInDto){

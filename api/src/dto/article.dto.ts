@@ -2,6 +2,9 @@ import { IsEmail, IsString} from "class-validator";
 
 export class ArticleDto{
   @IsString()
+  readonly backgroundImage: string;
+
+  @IsString()
   readonly title: string;
 
   @IsString()
