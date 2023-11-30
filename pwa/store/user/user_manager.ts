@@ -56,7 +56,4 @@ export const userManager = defineStore('userManager',{
       })
     }
   },
-  getters: {
-    signupAuthenticated: (state)=> state.user !== null && state.token !== null
-  }
 })
