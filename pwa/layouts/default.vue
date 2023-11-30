@@ -15,12 +15,15 @@
       <template v-slot:prepend>
         <v-list-item
             lines="two"
-            prepend-avatar="https://randomuser.me/api/portraits/women/81.jpg"
+            :prepend-avatar="pictureAvailable ? 'https://randomuser.me/api/portraits/women/81.jpg' : 'fa'"
             :title="authStore.userName || userStore.userName"
             subtitle="Logado"
-        ></v-list-item>
+        >
+          <template #prepend v-if="!pictureAvailable">
+            <v-btn icon="mdi-image-plus" @click="dialogPicture=!dialogPicture" variant="text"></v-btn>
+          </template>
+      </v-list-item>
       </template>
-
       <v-divider></v-divider>
 
       <v-list density="comfortable" nav>
@@ -39,6 +42,12 @@
         >
           <Configuration @close="dialog=false"/>
         </v-dialog>
+        <v-dialog
+          v-model="dialogPicture"
+          width="auto"
+        >
+          <ProfilePicture @close="dialogPicture=false"/>
+        </v-dialog>
       </div>
       <slot/>
     </v-main>
@@ -51,9 +60,11 @@ import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { userManager } from '~/store/user/user_manager';
 const mobile = useDisplay()
 const dialog = ref(false)
+const dialogPicture = ref(false)
 const drawer = ref(false)
 const authStore = useAuthStore()
 const userStore = userManager()
+const pictureAvailable = ref(false)
 const isRouteDifferent = computed(() => {
   return useRoute().fullPath !== '/';
 })
