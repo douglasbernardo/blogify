@@ -5,20 +5,25 @@
       <v-icon class="ml-2">mdi-image</v-icon>
     </v-row>
     <v-file-input
+      :disabled="disabled"
       type="file"
       @change="handleFileChange"
       label="Escolher Imagem"
     ></v-file-input>
     <v-progress-linear v-if="selectedFile !== null && loading" color="primary" indeterminate></v-progress-linear>
     <p v-if="uploaded && !loading" class="text-center bg-green">{{ uploaded }}</p>
-    <v-btn color="blue" @click="uploadPicture" block class="mt-2">Enviar</v-btn>
-    <v-btn @click="$emit('close')" variant="tonal" color="blue" size="small" block class="mt-2">Fechar</v-btn>
+    <v-btn v-if="!disabled" color="blue" @click="uploadPicture" block class="mt-2">Enviar</v-btn>
+    <v-btn v-if="!isProfile" @click="$emit('close')" variant="tonal" color="blue" size="small" block class="mt-2">Fechar</v-btn>
   </v-sheet>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+const props = defineProps({
+  disabled: {type: Boolean,required:true},
+  isProfile: {type: Boolean}
+})
 const selectedFile = ref(null);
 const loading = ref(false)
 const uploaded = ref(false)

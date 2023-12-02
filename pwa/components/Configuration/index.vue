@@ -1,5 +1,4 @@
 <template>
-  <v-card class="ma-2 pa-2">
     <v-card-title>
       <span class="text-h5">Configurações de perfil</span>
     </v-card-title>
@@ -13,6 +12,12 @@
             inset
         ></v-switch>
         <v-row>
+          <v-col>
+            <v-img :src="user.userConfigData.urlImage" width="200" alt="Profile Picture"></v-img>
+          </v-col>
+          <v-col cols="9">
+            <ProfilePicture :is-profile="true" :disabled="!switchd"/>
+          </v-col>
           <v-col cols="12">
             <v-text-field
               :disabled="!switchd"
@@ -50,35 +55,20 @@
         </v-row>
         <v-card-actions>
       <v-row>
-        <v-col cols="12" md="12" sm="12" lg="12"> 
-          <v-btn
-              :disabled="!switchd"
-            color="blue-darken-1"
-            variant="flat"
-            block
-            @click="edit"
-          >
-            Salvar
-          </v-btn>
-        </v-col>
-        <v-col cols="12" md="12" sm="12" lg="12">
-          <v-btn
-            color="blue-darken-1"
-            variant="tonal"
-            block
-            size="small"
-            class="mb-5 mt-n4"
-            @click="$emit('close')"
-          >
-            Fechar
-          </v-btn>
-        </v-col>
-      <v-spacer></v-spacer>
+        <v-btn
+          :disabled="!switchd"
+          color="blue-darken-1"
+          variant="flat"
+          @click="edit"
+        >
+          Salvar
+        </v-btn>
         <v-col cols="12" md="12" sm="12" lg="12">
           <v-btn
             color="red-darken-1"
-            variant="text"
-            block
+            variant="flat"
+            class="ml-n3"
+            size="small"
             @click="dialogDeleteAccount=!dialogDeleteAccount"
           >
             Excluir minha conta
@@ -88,7 +78,6 @@
     </v-card-actions>
       </v-container>
     </v-card-text>
-  </v-card>
   <v-dialog v-model="dialogDeleteAccount" width="auto">
     <DeleteAccount @cancel="dialogDeleteAccount=false" @delete="deleteAcc"/>
   </v-dialog>

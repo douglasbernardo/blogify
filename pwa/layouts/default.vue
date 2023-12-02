@@ -14,11 +14,15 @@
     >
       <template v-slot:prepend>
         <v-list-item
-            lines="two"
-            :prepend-avatar="imageAvailable ? `${userStore.userConfigData.urlImage}` : 'f'"
-            :title="authStore.userName || userStore.userName"
-            subtitle="Logado"
+          lines="two"
+          :title="authStore.userName || userStore.userName"
+          subtitle="Logado"
         >
+          <template #prepend v-if="imageAvailable">
+            <v-avatar size="46">
+              <v-img :src="userStore.userConfigData?.urlImage"></v-img>
+            </v-avatar>
+          </template>
           <template #prepend v-if="!imageAvailable">
             <v-btn icon="mdi-image-plus" @click="dialogPicture=!dialogPicture" variant="text"></v-btn>
           </template>
@@ -27,20 +31,14 @@
       <v-divider></v-divider>
       <v-list density="comfortable" nav>
         <v-list-item @click="navigateTo('/')" prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-        <v-list-item @click="dialog=true" prepend-icon="mdi-account" title="Minha Conta" value="account"></v-list-item>
+        <v-list-item @click="navigateTo('/profile')" prepend-icon="mdi-account" title="Minha Conta" value="account"></v-list-item>
         <v-list-item @click="navigateTo('/artigos')" prepend-icon="mdi-sticker-text" title="Meus Artigos" value="users"></v-list-item>
-        <v-list-item @click="navigateTo('/profile')" prepend-icon="mdi-ticket" title="Suas Atividades" value="users"></v-list-item>
+        <v-list-item @click="navigateTo('/atividades')" prepend-icon="mdi-ticket" title="Suas Atividades" value="users"></v-list-item>
         <v-list-item @click="authStore.logout()" prepend-icon="mdi-logout" title="Logout" value="Logout"></v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-main>
       <div class="text-center">
-        <v-dialog
-          v-model="dialog"
-          width="auto"
-        >
-          <Configuration @close="dialog=false"/>
-        </v-dialog>
         <v-dialog
           v-model="dialogPicture"
           width="auto"
@@ -72,7 +70,7 @@ onMounted(()=>{
 })
 
 const imageAvailable = computed(()=>{
-  return userStore.userConfigData.urlImage !== null ? true : false
+  return userStore.userConfigData.urlImage
 })
 </script>
 <style scoped>
