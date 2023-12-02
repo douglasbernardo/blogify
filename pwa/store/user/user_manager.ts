@@ -28,7 +28,7 @@ export const userManager = defineStore('userManager',{
         navigateTo('/artigos')
       }
     },
-    async get_user(objUser){
+    async get_user(){
       await axios.post('http://localhost:3030/user',{
         currentEmail: localStorage.getItem('user'),
       }).then((res)=>{

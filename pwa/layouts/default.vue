@@ -15,17 +15,16 @@
       <template v-slot:prepend>
         <v-list-item
             lines="two"
-            :prepend-avatar="pictureAvailable ? 'https://randomuser.me/api/portraits/women/81.jpg' : 'fa'"
+            :prepend-avatar="imageAvailable ? `${userStore.userConfigData.urlImage}` : 'f'"
             :title="authStore.userName || userStore.userName"
             subtitle="Logado"
         >
-          <template #prepend v-if="!pictureAvailable">
+          <template #prepend v-if="!imageAvailable">
             <v-btn icon="mdi-image-plus" @click="dialogPicture=!dialogPicture" variant="text"></v-btn>
           </template>
       </v-list-item>
       </template>
       <v-divider></v-divider>
-
       <v-list density="comfortable" nav>
         <v-list-item @click="navigateTo('/')" prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
         <v-list-item @click="dialog=true" prepend-icon="mdi-account" title="Minha Conta" value="account"></v-list-item>
@@ -48,6 +47,7 @@
         >
           <ProfilePicture @close="dialogPicture=false"/>
         </v-dialog>
+
       </div>
       <slot/>
     </v-main>
@@ -64,9 +64,15 @@ const dialogPicture = ref(false)
 const drawer = ref(false)
 const authStore = useAuthStore()
 const userStore = userManager()
-const pictureAvailable = ref(false)
 const isRouteDifferent = computed(() => {
   return useRoute().fullPath !== '/';
+})
+onMounted(()=>{
+  userStore.get_user()
+})
+
+const imageAvailable = computed(()=>{
+  return userStore.userConfigData.urlImage !== null ? true : false
 })
 </script>
 <style scoped>
