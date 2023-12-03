@@ -3,12 +3,12 @@ import axios from 'axios'
 import { userManager } from "./user_manager";
 export const useAuthStore = defineStore('authStore',{
   state: () => ({
-    errorMessages: [],
     token: localStorage.getItem('token'),
     user: localStorage.getItem('user'),
     userName: localStorage.getItem('name'),
     loggedWithGoogle: false,
-    userManager: userManager()
+    userManager: userManager(),
+    errorMessages: [],
   }),
 
   actions:{
@@ -24,6 +24,11 @@ export const useAuthStore = defineStore('authStore',{
         localStorage.setItem('user', res.data.user.email)
         localStorage.setItem('name', res.data.user.name)
         if (res) navigateTo('/artigos')
+      }).catch((e)=>{
+        console.log(e.response.data.message)
+        if (!this.errorMessages.includes(e.response.data.message)) {
+          this.errorMessages.push(e.response.data.message); // Adicionar apenas se não estiver presente
+        }
       })
     },
     async login_google(token_google: string){
@@ -50,6 +55,9 @@ export const useAuthStore = defineStore('authStore',{
       this.user = null
       this.userName = null
       navigateTo('/')
+    },
+    clearErrorMessages(){
+      this.errorMessages = []
     }
   },
 

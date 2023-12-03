@@ -1,7 +1,8 @@
 <template>
   <UserLogin
-      :user="user_data"
-      @login="login"
+    :user="user_data"
+    :error-messages="authStore.errorMessages"
+    @login="login"
   />
 </template>
 <script lang="ts" setup>

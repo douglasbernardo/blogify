@@ -18,12 +18,12 @@
           :title="authStore.userName || userStore.userName"
           subtitle="Logado"
         >
-          <template #prepend v-if="imageAvailable">
+          <template #prepend v-if="userStore.userConfigData?.urlImage">
             <v-avatar size="46">
               <v-img :src="userStore.userConfigData?.urlImage"></v-img>
             </v-avatar>
           </template>
-          <template #prepend v-if="!imageAvailable">
+          <template #prepend v-if="!userStore.userConfigData?.urlImage">
             <v-btn icon="mdi-image-plus" @click="dialogPicture=!dialogPicture" variant="text"></v-btn>
           </template>
       </v-list-item>
@@ -67,10 +67,6 @@ const isRouteDifferent = computed(() => {
 })
 onMounted(()=>{
   userStore.get_user()
-})
-
-const imageAvailable = computed(()=>{
-  return userStore.userConfigData.urlImage
 })
 </script>
 <style scoped>

@@ -100,10 +100,10 @@ const deleteAcc = () => {
 }
 const edit = () => {
   user.edit_user(
-      localStorage.getItem('user'),
-      user.userConfigData.name,
-      user.userConfigData.email,
-      pass.value
+    localStorage.getItem('user'),
+    user.userConfigData.name,
+    user.userConfigData.email,
+    pass.value
   )
 }
 </script>

@@ -9,6 +9,17 @@
     variant="tonal"
   ></v-alert>
     <v-form fast-fail @submit.prevent>
+      <v-alert
+        v-if="errorMessages?.length"
+        v-for="(error, index) in errorMessages"
+        :key="index"
+        closable
+        :text="error"
+        icon="$error"
+        type="error"
+        variant="tonal"
+        @click:close="clearErrorMessages"
+      />
       <v-text-field
         v-model="user.email"
         label="E-mail"
@@ -59,21 +70,27 @@
 </template>
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify/lib/framework.mjs';
+import { useAuthStore } from '~/store/user/authStore';
+const clearErrorMessages = useAuthStore().clearErrorMessages
 const mobile = useDisplay()
 const showPassword = ref(false)
 const props = defineProps({
-  user: Object
+  user: Object,
+  errorMessages: Array<string>
 })
+const teste = () => {
+  console.log('sdhiajfbdaiop')
+}
 </script>
     
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
   #changeText{
-      font-size:40px;
-      font-family: monospace;
+    font-size:40px;
+    font-family: monospace;
   }
   .form{
-      margin-top: 5rem;
-      font-family: monospace;
+    margin-top: 5rem;
+    font-family: monospace;
   }
 </style>
