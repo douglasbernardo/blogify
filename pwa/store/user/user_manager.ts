@@ -5,27 +5,34 @@ import type { InterfaceAPI } from "~/utils/api_call";
 export const userManager = defineStore('userManager',{
   state: () => ({
     userConfigData: {},
+    authStore: useAuthStore(),
+    errorMessages: []
   }),
 
   actions:{
     async add_new_user(objUser: object){
-      const api_request: InterfaceAPI =  {
-        method: 'post',
-        url: '/user/new_user',
-        data: {name: objUser?.name, email: objUser?.email, password: objUser?.password},
-        headers: null
-      }
-      const apiResponse = await api_call(api_request)
-      const user = JSON.parse(apiResponse)
-      if(apiResponse){
-        const authStore = useAuthStore()
-        authStore.token = user.access_token
-        authStore.user = user.user.email
-        authStore.userName  = user.user.name
-        localStorage.setItem('token', user.access_token)
-        localStorage.setItem('user', user.user.email)
-        localStorage.setItem('name', user.user.name)
-        navigateTo('/artigos')
+      try{
+        const api_request: InterfaceAPI =  {
+          method: 'post',
+          url: '/user/new_user',
+          data: {name: objUser?.name, email: objUser?.email, password: objUser?.password, confirmPassword: objUser.confirmPassword},
+          headers: null
+        }
+        console.log(api_request)
+        const apiResponse = await api_call(api_request)
+        const user = JSON.parse(apiResponse)
+        if(apiResponse){
+          this.authStore.token = user.access_token
+          this.authStore.user = user.user.email
+          this.authStore.userName  = user.user.name
+          localStorage.setItem('token', user.access_token)
+          localStorage.setItem('user', user.user.email)
+          localStorage.setItem('name', user.user.name)
+          navigateTo('/artigos')
+        }
+      }catch(e: any) {
+        this.errorMessages.push(e.response.data.message)
+        console.log(e.response.data.message)
       }
     },
     async get_user(){
@@ -36,7 +43,7 @@ export const userManager = defineStore('userManager',{
         console.log(res)
       })
     },
-    async edit_user(currentEmail,name,email,pass){
+    async edit_user(currentEmail: string, name:string, email:string, pass:string){
       await axios.post('http://localhost:3030/user/edit_user',{
         currentEmail: currentEmail,
         name: name,
@@ -54,6 +61,9 @@ export const userManager = defineStore('userManager',{
         navigateTo('/')
         useAuthStore().logout()
       })
+    },
+    clearErrorMessages(){
+      this.errorMessages = []
     }
   },
 })

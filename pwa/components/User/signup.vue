@@ -9,15 +9,16 @@
     variant="tonal"
   ></v-alert>
     <v-alert
-        v-if="props.user.email && !validateEmail"
-        class="mb-5"
-        type="error"
-    >E-mail Invalido</v-alert>
-    <v-alert
-        v-if="props.user.confirmPassword && props.user.password !== props.user.confirmPassword"
-        class="mb-5"
-        type="error"
-    >Senhas não batem</v-alert>
+      v-if="errorMessages?.length"
+      v-for="(error, index) in errorMessages"
+      :key="index"
+      closable
+      :text="error"
+      icon="$error"
+      type="error"
+      variant="tonal"
+      @click:close="clearErrorMessages"
+    />
     <v-form fast-fail @submit.prevent>
       <v-text-field
         v-model="props.user.name"
@@ -76,10 +77,14 @@
   </v-sheet>
 </template>
 <script lang="ts" setup>
+import { userManager } from '~/store/user/user_manager';
+
 const props = defineProps({
   user: Object,
-  loading: Boolean
+  loading: Boolean,
+  errorMessages: Array<string>
 })
+const clearErrorMessages = userManager().clearErrorMessages
 const showPassword = ref(false)
 const validateEmail = computed(()=>{
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

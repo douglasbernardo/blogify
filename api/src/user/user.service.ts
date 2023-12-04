@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, userSchema } from '../schemas/user.schema';
+import { User } from '../schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UserDto } from 'src/dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -12,9 +13,24 @@ export class UserService {
     private user: Model<User>,
     private jwtService: JwtService,
   ) {}
-  async add_user(data): Promise<{ access_token: string; user: User }> {
+  async add_user(data) {
+    if (!data.name || !data.email || !data.password || !data.confirmPassword) {
+      const missingField = !data.name
+        ? 'nome'
+        : !data.email
+        ? 'email'
+        : 'senha';
+      throw new UnauthorizedException(
+        `O campo ${missingField} deve ser preenchido.`,
+      );
+    }
+    if (data.password !== data.confirmPassword) {
+      throw new UnauthorizedException(
+        'Verifique se as senhas inseridas são as mesmas.',
+      );
+    }
     if (await this.verify_existing_email(data.email)) {
-      throw new UnauthorizedException('E-mail already Exists');
+      throw new UnauthorizedException('Esse e-mail já existe');
     }
     const user = await new this.user({
       name: data.name,

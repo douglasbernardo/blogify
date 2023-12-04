@@ -16,8 +16,7 @@ export function api_call({method, url, data, headers} : InterfaceAPI){
     headers
   })
   .then(res => JSON.stringify(res.data))
-    .catch(error => {
-      console.log('Error trying to call api',error)
-      throw new Error('Something went wrong with API call.')
-    })
+  .catch(error => {
+    throw error
+  })
 }

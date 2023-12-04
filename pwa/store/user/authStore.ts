@@ -1,13 +1,13 @@
 import {defineStore} from "pinia";
 import axios from 'axios'
 import { userManager } from "./user_manager";
+
 export const useAuthStore = defineStore('authStore',{
   state: () => ({
     token: localStorage.getItem('token'),
     user: localStorage.getItem('user'),
     userName: localStorage.getItem('name'),
     loggedWithGoogle: false,
-    userManager: userManager(),
     errorMessages: [],
   }),
 
@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('authStore',{
       }).catch((e)=>{
         console.log(e.response.data.message)
         if (!this.errorMessages.includes(e.response.data.message)) {
-          this.errorMessages.push(e.response.data.message); // Adicionar apenas se não estiver presente
+          this.errorMessages.push(e.response.data.message);
         }
       })
     },

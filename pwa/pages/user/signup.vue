@@ -1,9 +1,10 @@
 <template>
   <UserSignup
-      class="pa-2"
-      :user="user_data"
-      :loading="loading"
-      @add_user="add"
+    class="pa-2"
+    :user="user_data"
+    :error-messages="user.errorMessages"
+    :loading="loading"
+    @add_user="add"
   />
 </template>
 <script lang="ts" setup>

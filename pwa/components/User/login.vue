@@ -78,9 +78,6 @@ const props = defineProps({
   user: Object,
   errorMessages: Array<string>
 })
-const teste = () => {
-  console.log('sdhiajfbdaiop')
-}
 </script>
     
 <style scoped>
