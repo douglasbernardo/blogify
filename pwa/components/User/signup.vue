@@ -55,9 +55,9 @@
         >
           Me Cadastrar
             <v-progress-circular
-                v-if="loading && props.user.name
-                && props.user.email && props.user.password && props.user.confirmPassword"
-                class="ml-10" indeterminate
+              v-if="loading && props.user.name
+              && props.user.email && props.user.password && props.user.confirmPassword && !errorMessages?.length"
+              class="ml-10" indeterminate
             ></v-progress-circular>
         </v-btn>
       </v-col>
@@ -78,7 +78,6 @@
 </template>
 <script lang="ts" setup>
 import { userManager } from '~/store/user/user_manager';
-
 const props = defineProps({
   user: Object,
   loading: Boolean,

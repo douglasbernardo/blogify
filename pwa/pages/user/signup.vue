@@ -18,9 +18,14 @@ const user_data = reactive({
   confirmPassword: ''
 })
 
-const add = () => {
-  loading.value = true
-  user.add_new_user(user_data)
+const add = async () => {
+  try {
+    loading.value = true;
+    await user.add_new_user(user_data);
+    loading.value = false;
+  } catch (error) {
+    loading.value = false;
+  }
 }
 </script>
     
