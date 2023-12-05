@@ -137,6 +137,9 @@
 <script lang="ts" setup>
   import {useAuthStore} from "~/store/user/authStore";
 
+  const props= defineProps({
+    lastAdded: {type: Array}
+  })
   const cards = [
 		{ title: 'O início das IAS', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', likes: 2345, comments:45 },
 		{ title: 'O começo de tudo', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', likes: 2100,comments:49 },

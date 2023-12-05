@@ -18,7 +18,6 @@ export const userManager = defineStore('userManager',{
           data: {name: objUser?.name, email: objUser?.email, password: objUser?.password, confirmPassword: objUser.confirmPassword},
           headers: null
         }
-        console.log(api_request)
         const apiResponse = await api_call(api_request)
         const user = JSON.parse(apiResponse)
         if(apiResponse){

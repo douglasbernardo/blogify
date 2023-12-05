@@ -53,7 +53,7 @@ export class UserService {
     try {
       return await this.user.findOne({ email: email }).exec();
     } catch (e) {
-      throw new UnauthorizedException('E-mail not found', e);
+      throw new UnauthorizedException('E-mail não encontrado', e);
     }
   }
 
@@ -62,7 +62,7 @@ export class UserService {
       email: userData.currentEmail,
     });
     if (!user_editing) {
-      throw new UnauthorizedException('E-mail does not exist');
+      throw new UnauthorizedException('E-mail não existe');
     }
     if (userData.name !== '') {
       user_editing.name = userData.name;

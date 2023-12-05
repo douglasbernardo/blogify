@@ -1,25 +1,27 @@
 <template>
 <v-card>
-  <v-card-title class="bg-blue-grey">
+  <v-card-title class="bg-primary">
     Deseja realmente deletar sua conta?
   </v-card-title>
   <v-card-text>
     <v-icon>mdi-information</v-icon>
       Caso delete não haverá como retomar com ela, somente criando outra
   </v-card-text>
-  <v-card-actions>
+  <v-card-actions class="ma-2">
     <v-btn
-        color="red"
-        variant="flat"
-        @click="$emit('delete')"
+      color="green"
+      variant="flat"
+      size="small"
+      @click="$emit('cancel')"
     >
-      Deletar
+      Cancelar
     </v-btn>
     <v-btn
-        variant="text"
-        @click="$emit('cancel')"
+      variant="text"
+      color="red"
+      @click="$emit('delete')"
     >
-      cancelar
+      Deletar
     </v-btn>
   </v-card-actions>
 </v-card>

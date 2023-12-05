@@ -78,7 +78,12 @@
     </v-card-actions>
       </v-container>
     </v-card-text>
-  <v-dialog v-model="dialogDeleteAccount" width="auto">
+  <v-dialog 
+    v-model="dialogDeleteAccount" 
+    persistent 
+    width="auto"
+    transition="dialog-top-transition"
+  >
     <DeleteAccount @cancel="dialogDeleteAccount=false" @delete="deleteAcc"/>
   </v-dialog>
 </template>
