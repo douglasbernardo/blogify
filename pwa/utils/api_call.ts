@@ -4,7 +4,7 @@ export interface InterfaceAPI{
   method: string,
   url: string,
   data: string | object | null,
-  headers: string | null
+  headers: string| object | null
 }
 const runtimeConfig = useRuntimeConfig()
 

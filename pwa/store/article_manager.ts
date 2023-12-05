@@ -1,27 +1,23 @@
 import {defineStore} from "pinia";
 import axios from "axios";
-import {useAuthStore} from "~/store/user/authStore";
 
 export const useArticleStore = defineStore('article',{
   state: () => ({
     articles: [],
+    lastArticles: [],
     categories: []
   }),
   actions: {
     async add_new_article(data: object){
       await axios.post('http://localhost:3030/article/add',{
-        backgroundImage: data.backgroundImage
-        // title: data.title,
-        // titleFont: data.titleFont,
-        // article: data.article,
-        // textFont: data.textFont,
-        // category: data.category,
-        // status: data.status,
-        //createdBy: useAuthStore().user
-      },{
-        headers:{
-          'Content-Type': 'multipart/form-data'
-        }
+        backgroundImage: data.backgroundImage,
+        title: data.title,
+        titleFont: data.titleFont,
+        article: data.article,
+        textFont: data.textFont,
+        category: data.category,
+        status: data.status,
+        createdBy: data.user
       }).then((res)=>{
         res.data ? navigateTo('/artigos') : console.log("Failed creating an article")
       })
@@ -32,12 +28,18 @@ export const useArticleStore = defineStore('article',{
           this.articles = res.data
         })
     },
-    async delete_article(data){
+    async delete_article(data: object){
       await axios.post('http://localhost:3030/article/remove',{
-        email: data.email,
-        id: data.id
+        email: data?.email,
+        id: data?.id
       }).then((res)=>{
         console.log(res)
+      })
+    },
+
+    async lastAddedArticles(){
+      await axios.get('http://localhost:3030/article/last-added').then((res)=>{
+        this.lastArticles = res.data
       })
     }
   }

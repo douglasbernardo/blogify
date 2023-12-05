@@ -2,8 +2,11 @@
   <v-container>
     <form @submit.prevent="submit">
       <span>Imagem de Background (opcional)</span>
-      <v-file-input v-model="backgroundImage" type="file" accept="image/*" prepend-icon="mdi-image" variant="solo" label="File input"></v-file-input>
-      <p>{{imageFormatted}}</p>
+      <v-file-input
+      type="file"
+      @change="handleFileChange"
+      label="Escolher Imagem"
+    ></v-file-input>
       <span class="mb-3">Título</span>
       <v-text-field
           v-model="articleTitle"
@@ -51,14 +54,18 @@
   </v-container>
 </template>
 <script lang="ts" setup>
-
-  import {useArticleStore} from "~/store/article_manager";
   import Form from "~/components/User/Form.vue";
+  import axios from "axios";
+  import {useArticleStore} from "~/store/article_manager";
   const articleStore = useArticleStore()
-
   const categories = ref()
   onMounted(async () => {
-    const categoriesDB = await api_call('get','/article/categories')
+    const categoriesDB = await api_call(<InterfaceAPI>{
+    method: 'get',
+    url: '/article/categories',
+    data: '',
+    headers: null
+  })
     categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
   })
 
@@ -90,27 +97,36 @@
   const article = ref('')
   const categoryChosen= ref('')
   const statusChosen = ref('')
-  const backgroundImage = ref('')
-  const imageFormatted = ref(new FormData().backgroundImage)
   const fontChosen= ref({
     text: '',
     title: ''
   })
-  const handleSubtitlesUpdated = (updatedSubtitles) => {
-    subtitles.value = updatedSubtitles
-  }
-  const submit = () => {
-    const formData = new FormData()
-    formData.append('backgroundImage', backgroundImage.value)
-    articleStore.add_new_article({
-      backgroundImage: String(formData)
-      // title: String(articleTitle.value),
-      // titleFont: String(fontChosen.value.title),
-      // article: String(article.value),
-      // textFont: String(fontChosen.value.text),
-      // category: String(categoryChosen.value),
-      // status: String(statusChosen.value)
-    })
+  const selectedFile = ref(null)
+  const handleFileChange = (event) => {
+    selectedFile.value = event.target.files[0];
   };
+
+  const submit = async () => {
+    const formData = new FormData();
+    formData.append('image', selectedFile.value);
+    try {
+      const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+      console.log(response)
+      if(response.data) {
+        articleStore.add_new_article({
+          backgroundImage: response.data.data.display_url,
+          title: articleTitle.value,
+          titleFont: fontChosen.value.title,
+          article: article.value,
+          textFont: fontChosen.value.text,
+          category: categoryChosen.value,
+          status: statusChosen.value,
+          user: localStorage.getItem('user')
+        })
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 </script>
 
