@@ -1,7 +1,7 @@
-import {Body, Controller, Delete, Get, Param, Post, Request} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Request, UploadedFile, UseInterceptors} from "@nestjs/common";
 import {ArticleService} from "./article.service";
 import {ArticleDto} from "../dto/article.dto";
-import {UserDto} from "../dto/user.dto";
+import {FileInterceptor} from "@nestjs/platform-express";
 
 
 @Controller('article')
@@ -9,8 +9,9 @@ export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
   @Post('add')
-  addArticle(@Body() articleDto: ArticleDto){
-    return this.articleService.add_new_article(articleDto)
+  @UseInterceptors(FileInterceptor('backgroundImage'))
+  addArticle(@UploadedFile() image){
+    return this.articleService.add_new_article(image)
   }
 
   @Get('/categories')

@@ -1,7 +1,10 @@
 <template>
   <v-container>
     <form @submit.prevent="submit">
-      <span>Título</span>
+      <span>Imagem de Background (opcional)</span>
+      <v-file-input v-model="backgroundImage" type="file" accept="image/*" prepend-icon="mdi-image" variant="solo" label="File input"></v-file-input>
+      <p>{{imageFormatted}}</p>
+      <span class="mb-3">Título</span>
       <v-text-field
           v-model="articleTitle"
         :style="fontChosen.title ? `font-family: ${fontChosen.title}` : ''"
@@ -50,6 +53,7 @@
 <script lang="ts" setup>
 
   import {useArticleStore} from "~/store/article_manager";
+  import Form from "~/components/User/Form.vue";
   const articleStore = useArticleStore()
 
   const categories = ref()
@@ -86,6 +90,8 @@
   const article = ref('')
   const categoryChosen= ref('')
   const statusChosen = ref('')
+  const backgroundImage = ref('')
+  const imageFormatted = ref(new FormData().backgroundImage)
   const fontChosen= ref({
     text: '',
     title: ''
@@ -94,13 +100,16 @@
     subtitles.value = updatedSubtitles
   }
   const submit = () => {
+    const formData = new FormData()
+    formData.append('backgroundImage', backgroundImage.value)
     articleStore.add_new_article({
-      title: String(articleTitle.value),
-      titleFont: String(fontChosen.value.title),
-      article: String(article.value),
-      textFont: String(fontChosen.value.text),
-      category: String(categoryChosen.value),
-      status: String(statusChosen.value)
+      backgroundImage: String(formData)
+      // title: String(articleTitle.value),
+      // titleFont: String(fontChosen.value.title),
+      // article: String(article.value),
+      // textFont: String(fontChosen.value.text),
+      // category: String(categoryChosen.value),
+      // status: String(statusChosen.value)
     })
   };
 </script>

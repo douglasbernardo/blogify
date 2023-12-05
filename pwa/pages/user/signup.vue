@@ -1,14 +1,15 @@
 <template>
   <UserSignup
-      class="pa-2"
-      :user="user_data"
-      :loading="loading"
-      @add_user="add"
+    class="pa-2"
+    :user="user_data"
+    :error-messages="user.errorMessages"
+    :loading="loading"
+    @add_user="add"
   />
 </template>
 <script lang="ts" setup>
-import {useAuthStore} from '~/store/user/authStore'
-const authStore = useAuthStore()
+import { userManager } from '~/store/user/user_manager';
+const user = userManager()
 const loading = ref(false)
 const user_data = reactive({
   name: '',
@@ -17,9 +18,14 @@ const user_data = reactive({
   confirmPassword: ''
 })
 
-const add = () => {
-  loading.value = true
-  authStore.add_new_user(user_data)
+const add = async () => {
+  try {
+    loading.value = true;
+    await user.add_new_user(user_data);
+    loading.value = false;
+  } catch (error) {
+    loading.value = false;
+  }
 }
 </script>
     

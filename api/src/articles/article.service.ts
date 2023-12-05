@@ -1,8 +1,9 @@
-import {Injectable, UnauthorizedException} from "@nestjs/common";
+import {Injectable, UnauthorizedException, UploadedFile} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {Article} from "../schemas/articles.schema";
 import {Model, Schema} from "mongoose";
 import {UserService} from "../user/user.service";
+import {ArticleDto} from "../dto/article.dto";
 
 @Injectable()
 export class ArticleService {
@@ -11,21 +12,21 @@ export class ArticleService {
     private userService: UserService
   ) {}
 
-  async add_new_article(data){
-    console.log(data)
-    return new this.article({
-      title: data.title,
-      titleFont: data.titleFont,
-      article: data.article,
-      textFont: data.textFont,
-      category: data.category,
-      status: data.status,
-      createdBy: data.createdBy
-    }).save()
+  async add_new_article(image: Express.Multer.File){
+    console.log('Imagem recebida:', image);
+    // return new this.article({
+    //   title: data.title,
+    //   titleFont: data.titleFont,
+    //   article: data.article,
+    //   textFont: data.textFont,
+    //   category: data.category,
+    //   status: data.status,
+    //   createdBy: data.createdBy
+    // }).save()
   }
 
   async get_my_articles(email){
-    return this.article.find({createdBy: 'blogify@gmail.com'}).exec()
+    return this.article.find({createdBy: email}).exec()
   }
 
   async get_article(id){

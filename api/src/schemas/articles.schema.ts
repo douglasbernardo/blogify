@@ -4,6 +4,9 @@ import {Document} from 'mongoose';
 @Schema({timestamps: true})
 export class Article extends Document {
   @Prop()
+  backgroundImage: string
+
+  @Prop()
   title: string
 
   @Prop()

@@ -21,10 +21,9 @@
       <v-divider></v-divider>
       <v-data-table
           v-model:search="search"
-          :items="items"
+          :items="articleStore.articles"
           :headers="headers"
-          :items-length="items.length"
-          :loading="loading"
+          :items-length="articleStore.articles.length"
       >
         <template v-slot:item.rating="{ item }">
           <v-rating
@@ -77,7 +76,7 @@
                 Deseja deletar este artigo?
               </v-card-title>
               <v-card-text>
-                Deseja realmente deletar esse artigo?
+                Tem certeza que deseja deletar? Esta ação não pode ser desfeita.
               </v-card-text>
               <v-card-actions>
                 <v-btn color="primary" variant="flat" @click="dialog = false">Cancelar</v-btn>
@@ -98,22 +97,18 @@
   const search = ref('')
   const loading = ref(true)
   const headers = ref([
-      { key: 'title', title: 'Nome' },
-      { key: 'category', title: 'Categoria' },
-      { key: 'likes', title: 'Likes' },
-      { key: 'comments.length', title: 'Comentários' },
-      { key: 'views', title: 'Visualizações' },
-      { key: 'status', title: 'Status', align: 'end' },
-      { key: 'actions', title: 'Acões', align: 'end', sortable: false },
+    { key: 'title', title: 'Nome' },
+    { key: 'category', title: 'Categoria' },
+    { key: 'likes', title: 'Likes' },
+    { key: 'comments.length', title: 'Comentários' },
+    { key: 'views', title: 'Visualizações' },
+    { key: 'status', title: 'Status', align: 'end' },
+    { key: 'actions', title: 'Acões', align: 'end', sortable: false },
   ])
-  const items = ref([])
   const dialog = ref(false)
   const id = ref('')
-  const fetchArticles = async() => {
-    await axios.post('http://localhost:3030/article/my_articles',{email: localStorage.getItem('user')}).then((res)=>{
-      items.value = res.data
-      loading.value = false
-    })
+  const fetchArticles = () => {
+    articleStore.my_articles(localStorage.getItem('user'))
   }
   onMounted( ()=>{
     fetchArticles()
