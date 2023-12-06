@@ -28,11 +28,13 @@
                 :class="isHovering ? 'bg-blue' : 'text-blue'" 
                 size="small"
                 variant="outlined"
+                @click="doReading(card._id)"
                 >Fazer leitura</v-btn>
               </v-hover>
             <v-spacer></v-spacer>
             <v-icon class="ma-1" color="red">mdi-heart</v-icon><p>{{ card.likes.toLocaleString('pt-br') }}</p>
             <v-icon class="ma-2" color="blue">mdi-comment</v-icon><p>{{ card.comments.length.toLocaleString('pt-br') }}</p>
+            <v-icon class="ma-2" color="blue">mdi-eye</v-icon><p>{{ card.views }}</p>
           </v-card-actions>
         </v-card>
       </template>
@@ -41,8 +43,18 @@
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios';
 import { useArticleStore } from '~/store/article_manager';
 const articleManager = useArticleStore()
+
+const doReading = async (id: string) => {
+  await axios.post('http://localhost:3030/article/add-view',{
+    id: id
+  }).then((res) => {
+    console.log(res)
+    navigateTo(`/artigos/reading/${id}`)
+  })
+}
 onMounted(()=>{
   articleManager.lastAddedArticles()
 })

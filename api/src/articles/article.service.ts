@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article } from '../schemas/articles.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model, ObjectId, mongo } from 'mongoose';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -50,5 +50,21 @@ export class ArticleService {
       .find({ status: 'publicado' })
       .sort({ _id: -1 })
       .limit(3);
+  }
+
+  async addViews(id: string) {
+    if (id) {
+      try {
+        const article = await this.article.findOne({ _id: id }).exec();
+        if (article) {
+          article.views += 1;
+          await article.save();
+        } else {
+          console.log('Article not found');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 }

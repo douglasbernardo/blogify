@@ -34,4 +34,9 @@ export class ArticleController {
   threeLastAdded() {
     return this.articleService.lastAdded();
   }
+
+  @Post('add-view')
+  async views(@Request() req) {
+    return this.articleService.addViews(req.body.id);
+  }
 }
