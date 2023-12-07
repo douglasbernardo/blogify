@@ -56,7 +56,7 @@
                   <v-list-item-title @click="deleteArticle(true,item._id)">
                     <v-icon class="ma-2" color="red">mdi-delete</v-icon>Deletar
                   </v-list-item-title>
-                  <v-list-item-title>
+                  <v-list-item-title @click="navigateTo(`/artigos/edicao/${item._id}`)">
                     <v-icon class="ma-2" color="blue">mdi-pencil</v-icon>Editar
                   </v-list-item-title>
                   <v-list-item-title @click="navigateTo(`/artigos/${item._id}`)">

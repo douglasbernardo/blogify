@@ -70,7 +70,6 @@ const iLiked = async (idArticle: string) => {
     console.log(res)
   })
   .catch((e)=>{
-    console.log(e.response.data.message)
     if(e.response.data){
       snackbarErrorLike.value = true
       likeError.value = e.response.data.message
@@ -78,11 +77,8 @@ const iLiked = async (idArticle: string) => {
   })
 }
 const doReading = async (id: string) => {
-  await axios.post('http://localhost:3030/article/add-view',{
-    id: id
-  }).then((res) => {
-    navigateTo(`/artigos/reading/${id}`)
-  })
+  await api_call(<InterfaceAPI> {method: 'post', url: '/article/add-view', data: {id: id}, headers: null});
+  navigateTo(`/artigos/reading/${id}`)
 }
 onMounted(()=>{
   articleManager.lastAddedArticles()
