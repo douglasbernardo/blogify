@@ -6,6 +6,7 @@ import * as process from 'process';
 import { AuthModule } from './auth/auth.module';
 import { ArticleModule } from './articles/article.module';
 import { uploadModule } from './upload/upload.module';
+import { likeModule } from './likes/like.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { uploadModule } from './upload/upload.module';
     AuthModule,
     ArticleModule,
     uploadModule,
+    likeModule,
   ],
 })
 export class AppModule {}

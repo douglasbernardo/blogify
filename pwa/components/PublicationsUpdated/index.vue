@@ -31,10 +31,14 @@
                 @click="doReading(card._id)"
                 >Fazer leitura</v-btn>
               </v-hover>
-            <v-spacer></v-spacer>
-            <v-icon class="ma-1" color="red">mdi-heart</v-icon><p>{{ card.likes.toLocaleString('pt-br') }}</p>
-            <v-icon class="ma-2" color="blue">mdi-comment</v-icon><p>{{ card.comments.length.toLocaleString('pt-br') }}</p>
-            <v-icon class="ma-2" color="blue">mdi-eye</v-icon><p>{{ card.views }}</p>
+            <v-icon
+              class="ml-2" 
+              @click="iLiked(card._id)"
+              color="red" 
+              icon="mdi-heart"
+            ></v-icon><p class="ml-1">{{ card.likes }}</p>
+            <v-icon class="ml-3" color="blue">mdi-comment</v-icon><p class="ml-1">5</p>
+            <v-icon class="ml-3" color="blue">mdi-eye</v-icon><p class="ml-1">{{ card.views }}</p>
           </v-card-actions>
         </v-card>
       </template>
@@ -47,11 +51,19 @@ import axios from 'axios';
 import { useArticleStore } from '~/store/article_manager';
 const articleManager = useArticleStore()
 
+const iLiked = async (idArticle: string) => {
+  await axios.post('http://localhost:3030/like/i-liked',{
+    user: localStorage.getItem('user'),
+    article: idArticle
+  }).then((res) => {
+    console.log(res)
+  })
+  console.log(idArticle)
+}
 const doReading = async (id: string) => {
   await axios.post('http://localhost:3030/article/add-view',{
     id: id
   }).then((res) => {
-    console.log(res)
     navigateTo(`/artigos/reading/${id}`)
   })
 }

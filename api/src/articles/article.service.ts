@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article } from '../schemas/articles.schema';
-import mongoose, { Model, ObjectId, mongo } from 'mongoose';
 import { UserService } from '../user/user.service';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ArticleService {
