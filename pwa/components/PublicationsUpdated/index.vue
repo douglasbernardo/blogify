@@ -39,6 +39,14 @@
             ></v-icon><p class="ml-1">{{ card.likes }}</p>
             <v-icon class="ml-3" color="blue">mdi-comment</v-icon><p class="ml-1">5</p>
             <v-icon class="ml-3" color="blue">mdi-eye</v-icon><p class="ml-1">{{ card.views }}</p>
+            <v-snackbar 
+              v-model="snackbarErrorLike" 
+              timeout="1200" 
+              variant="flat" 
+              color="red-darken-4" 
+              :text="likeError"
+              location="top"
+            />
           </v-card-actions>
         </v-card>
       </template>
@@ -50,15 +58,24 @@
 import axios from 'axios';
 import { useArticleStore } from '~/store/article_manager';
 const articleManager = useArticleStore()
+const snackbarErrorLike = ref(false)
+const likeError = ref('')
 
 const iLiked = async (idArticle: string) => {
   await axios.post('http://localhost:3030/like/i-liked',{
     user: localStorage.getItem('user'),
     article: idArticle
-  }).then((res) => {
+  })
+  .then((res) => {
     console.log(res)
   })
-  console.log(idArticle)
+  .catch((e)=>{
+    console.log(e.response.data.message)
+    if(e.response.data){
+      snackbarErrorLike.value = true
+      likeError.value = e.response.data.message
+    }
+  })
 }
 const doReading = async (id: string) => {
   await axios.post('http://localhost:3030/article/add-view',{
