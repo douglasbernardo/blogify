@@ -8,19 +8,19 @@
     >
       <p class="text-center font-weight-bold">Ultimas Publicações</p>
     </v-sheet>
-    <v-row justify="center">
+    <v-row>
       <template v-for="card in articleManager.lastArticles">
-        <v-card class="ma-4" width="275">
+        <v-card class="ma-2 pa-2" width="auto">
           <v-img
             :src="card.backgroundImage"
             class="align-center"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
             height="300px"
+            width="350px"
             cover
           >
             <v-card-title class="text-white text-center" v-text="card.title"></v-card-title>
           </v-img>
-
           <v-card-actions>
             <v-hover v-slot="{ isHovering, props }">
               <v-btn 
@@ -32,13 +32,13 @@
                 >Fazer leitura</v-btn>
               </v-hover>
             <v-icon
-              class="ml-2" 
+              class="ml-4" 
               @click="iLiked(card._id)"
-              color="red" 
-              icon="mdi-heart"
-            ></v-icon><p class="ml-1">{{ card.likes }}</p>
-            <v-icon class="ml-3" color="blue">mdi-comment</v-icon><p class="ml-1">5</p>
-            <v-icon class="ml-3" color="blue">mdi-eye</v-icon><p class="ml-1">{{ card.views }}</p>
+              color="blue" 
+              icon="mdi-thumb-up"
+            ></v-icon><p class="ml-2">{{ card.likes }}</p>
+            <v-icon class="ml-4" color="blue">mdi-comment</v-icon><p class="ml-2">5</p>
+            <v-icon class="ml-4" color="blue">mdi-eye</v-icon><p class="ml-2">{{ card.views }}</p>
             <v-snackbar 
               v-model="snackbarErrorLike" 
               timeout="1200" 
@@ -55,21 +55,17 @@
 </template>
 
 <script lang="ts" setup>
-import axios from 'axios';
 import { useArticleStore } from '~/store/article_manager';
 const articleManager = useArticleStore()
 const snackbarErrorLike = ref(false)
 const likeError = ref('')
 
 const iLiked = async (idArticle: string) => {
-  await axios.post('http://localhost:3030/like/i-liked',{
-    user: localStorage.getItem('user'),
-    article: idArticle
-  })
-  .then((res) => {
-    console.log(res)
-  })
-  .catch((e)=>{
+  await api_call(<InterfaceAPI>{
+    method: 'post', 
+    url: '/like/i-liked', 
+    data: {user: localStorage.getItem('user'), article: idArticle}, 
+  }).catch((e)=>{
     if(e.response.data){
       snackbarErrorLike.value = true
       likeError.value = e.response.data.message
@@ -77,7 +73,7 @@ const iLiked = async (idArticle: string) => {
   })
 }
 const doReading = async (id: string) => {
-  await api_call(<InterfaceAPI> {method: 'post', url: '/article/add-view', data: {id: id}, headers: null});
+  await api_call(<InterfaceAPI>{method: 'post', url: '/article/add-view', data: {id: id}});
   navigateTo(`/artigos/reading/${id}`)
 }
 onMounted(()=>{

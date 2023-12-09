@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
 import { ArticleService } from './article.service';
+import { articleEditDto } from 'src/dto/edit_article';
 
 @Controller('article')
 export class ArticleController {
@@ -8,6 +9,11 @@ export class ArticleController {
   @Post('add')
   addArticle(@Request() req) {
     return this.articleService.add_new_article(req.body);
+  }
+
+  @Post('/edit')
+  editArticle(@Body() dataEditDto: articleEditDto) {
+    return this.articleService.edit_article(dataEditDto);
   }
 
   @Get('/categories')
@@ -32,11 +38,11 @@ export class ArticleController {
 
   @Get('last-added')
   threeLastAdded() {
-    return this.articleService.lastAdded();
+    return this.articleService.last_added();
   }
 
   @Post('add-view')
   async views(@Request() req) {
-    return this.articleService.addViews(req.body.id);
+    return this.articleService.add_views(req.body.id);
   }
 }

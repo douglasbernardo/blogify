@@ -13,16 +13,40 @@
       ></v-text-field>
       <span>Escolha um fonte para seu título</span>
       <v-select
-        v-model="articleOptions.fontTitle"
+        :items="[
+          'Anton',
+          'Bebas Neue',
+          'Vina Sans',
+          'Black Ops One',
+          'Bungee',
+          'Rubik Mono One',
+          'Viga',
+          'Days One',
+          'Share Tech Mono'
+        ]"
+        v-model="articleOptions.titleFont"
       ></v-select>
       <span>Escreva aqui</span>
       <v-textarea v-model="articleOptions.article"/>
       <span>Escolha um fonte para seu texto</span>
       <v-select
-        v-model="articleOptions.fontTitle"
+        :items="[
+          'Roboto',
+          'Roboto Condensed',
+          'Kanit',
+          'Barlow Condensed',
+          'Sarabun',
+          'Alegreya Sans',
+          'Spectral',
+          'Saira',
+          'Crimson Pro',
+          'Red Hat Text'
+        ]"
+        v-model="articleOptions.textFont"
       ></v-select>
       <span>Escolha a categoria</span>
       <v-combobox
+        :items="categories"
         v-model="articleOptions.category"
       ></v-combobox>
       <span>Status</span>
@@ -34,10 +58,10 @@
 
       <v-btn
         class="me-4"
-        type="submit"
+        type="button"
         color="red"
         variant="tonal"
-        @click="navigateTo('/artigos')"
+        @click="$router.go(-1)"
       >
         Cancelar
       </v-btn>
@@ -51,11 +75,27 @@
 
 <script lang="ts" setup>
   import axios from "axios";
+  import {useArticleStore} from '~/store/article_manager'
   const route = useRoute()
-  const articleOptions = ref<object>(null)
-  const submit = () => {}
+  const articleStore = useArticleStore()
+  const articleOptions = ref<object>({})
+  const categories = ref<Array<string>>([])
+  const submit = () => {
+    articleStore.edit_article({
+      id: articleOptions.value._id,
+      backgroundImage: articleOptions.value.backgroundImage,
+      title: articleOptions.value.title,
+      titleFont: articleOptions.value.titleFont,
+      article: articleOptions.value.article,
+      textFont: articleOptions.value.textFont,
+      category: articleOptions.value.category,
+      status: articleOptions.value.status
+    })
+  }
   const handleFileChange = () => {}
   onMounted(async ()=>{
+    const categoriesDB = await api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',})
+    categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
     await axios.get(`http://localhost:3030/article/reading/${route.params.id}`).then((res)=>{
       articleOptions.value = res.data
     })

@@ -27,28 +27,28 @@
       >
         <template v-slot:item.rating="{ item }">
           <v-rating
-              :model-value="item.rating"
-              color="orange-darken-2"
-              density="compact"
-              size="small"
-              readonly
+            :model-value="item.rating"
+            color="orange-darken-2"
+            density="compact"
+            size="small"
+            readonly
           ></v-rating>
         </template>
         <template v-slot:item.status="{ item }">
           <div class="text-end">
             <v-chip
-                :color="item.status === 'publicado' ? 'green' : 'red'"
-                :text="item.status"
-                class="text-uppercase"
-                variant="elevated"
-                size="small"
+              :color="item.status === 'publicado' ? 'green' : 'red'"
+              :text="item.status"
+              class="text-uppercase"
+              variant="elevated"
+              size="small"
             ></v-chip>
           </div>
         </template>
         <template v-slot:item.actions="{item}">
           <v-btn
-              color="primary"
-              size="small"
+            color="primary"
+            size="small"
           > Opções
             <v-menu activator="parent" location="end">
               <v-list>
@@ -68,8 +68,8 @@
           </v-btn>
 
           <v-dialog
-              v-model="dialog"
-              width="auto"
+            v-model="dialog"
+            width="auto"
           >
             <v-card>
               <v-card-title class="bg-blue">
@@ -108,7 +108,7 @@
   const dialog = ref(false)
   const id = ref('')
   const fetchArticles = () => {
-    articleStore.my_articles(localStorage.getItem('user'))
+    articleStore.my_articles(String(localStorage.getItem('user')))
   }
   onMounted( ()=>{
     fetchArticles()

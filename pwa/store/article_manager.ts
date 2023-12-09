@@ -8,39 +8,36 @@ export const useArticleStore = defineStore('article',{
     categories: []
   }),
   actions: {
-    async add_new_article(data: object){
-      await axios.post('http://localhost:3030/article/add',{
-        backgroundImage: data.backgroundImage,
-        title: data.title,
-        titleFont: data.titleFont,
-        article: data.article,
-        textFont: data.textFont,
-        category: data.category,
-        status: data.status,
-        createdBy: data.user
-      }).then((res)=>{
-        res.data ? navigateTo('/artigos') : console.log("Failed creating an article")
+    async add_new_article(article: object){
+      const new_article = await api_call(<InterfaceAPI>{
+        method: 'post',
+        url: '/article/add',
+        data: article
       })
+      new_article ? navigateTo('/artigos') : console.log("Failed creating an article")
     },
     async my_articles(email: string){
-      await axios.post('http://localhost:3030/article/my_articles',{email: localStorage.getItem('user')})
-        .then((res)=>{
-          this.articles = res.data
-        })
+      const res = await api_call(<InterfaceAPI>{method: 'post', url: '/article/my_articles', data: {email: email}})
+      this.articles = JSON.parse(res)
     },
     async delete_article(data: object){
-      await axios.post('http://localhost:3030/article/remove',{
-        email: data?.email,
-        id: data?.id
-      }).then((res)=>{
-        console.log(res)
-      })
+      await api_call(<InterfaceAPI>{method: 'post', url: '/article/remove', data: data})
     },
 
+    async edit_article(article: object){
+      const response = await api_call(<InterfaceAPI>{
+          method: 'post',
+          url: '/article/edit',
+          data: article
+        }
+      )
+      if(response){
+        navigateTo('/artigos')
+      }
+    },
     async lastAddedArticles(){
-      await axios.get('http://localhost:3030/article/last-added').then((res)=>{
-        this.lastArticles = res.data
-      })
+      const res = await api_call(<InterfaceAPI>{method: 'get', url:'/article/last-added'})
+      this.lastArticles = JSON.parse(res)
     }
   }
 })
