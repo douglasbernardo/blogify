@@ -4,6 +4,13 @@
     </v-card-title>
     <v-card-text>
       <v-container>
+        <v-alert 
+          v-if="user.updated_message"
+          type="success" 
+          icon="$success"
+          closable 
+          @click:close="user.updated_message=''"
+        >{{ user.updated_message }}</v-alert>
         <v-switch
           v-if="!useAuthStore().loggedWithGoogle"
           :label="switchd ? 'Editando': 'Editar'"
