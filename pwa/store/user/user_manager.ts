@@ -12,13 +12,11 @@ export const userManager = defineStore('userManager',{
   actions:{
     async add_new_user(objUser: object){
       try{
-        const api_request: InterfaceAPI =  {
+        const apiResponse = await api_call(<InterfaceAPI>{
           method: 'post',
           url: '/user/new_user',
-          data: {name: objUser?.name, email: objUser?.email, password: objUser?.password, confirmPassword: objUser.confirmPassword},
-          headers: null
-        }
-        const apiResponse = await api_call(api_request)
+          data: objUser,
+        })
         const user = JSON.parse(apiResponse)
         if(apiResponse){
           this.authStore.token = user.access_token
@@ -35,31 +33,31 @@ export const userManager = defineStore('userManager',{
       }
     },
     async get_user(){
-      await axios.post('http://localhost:3030/user',{
-        currentEmail: localStorage.getItem('user'),
-      }).then((res)=>{
-        this.userConfigData = res.data
-        console.log(res)
+      const resp = await api_call(<InterfaceAPI>{
+        method: 'post',
+        url: '/user',
+        data: {currentEmail: localStorage.getItem('user')}
       })
+      this.userConfigData = JSON.parse(resp)
     },
-    async edit_user(currentEmail: string, name:string, email:string, pass:string){
-      await axios.post('http://localhost:3030/user/edit_user',{
-        currentEmail: currentEmail,
-        name: name,
-        email: email,
-        password: pass
-      }).then((res)=>{
-        localStorage.setItem('user',res.data.email)
-        localStorage.setItem('name',res.data.name)
+    async edit_user(user: object){
+      const resp = await api_call(<InterfaceAPI>{
+        method: 'post',
+        url: '/user/edit_user',
+        data: user
       })
+      const edited_user = JSON.parse(resp)
+      localStorage.setItem('user',edited_user.email)
+      localStorage.setItem('name',edited_user.name)
     },
     async delete_account(currentEmail: string){
-      await axios.post('http://localhost:3030/user/delete_account',{
-        currentEmail: currentEmail,
-      }).then((res)=>{
-        navigateTo('/')
-        useAuthStore().logout()
+      await api_call(<InterfaceAPI>{
+        method: 'post',
+        url: '/user/delete_account',
+        data: {currentEmail: currentEmail}
       })
+      navigateTo('/')
+      useAuthStore().logout()
     },
     clearErrorMessages(){
       this.errorMessages = []
