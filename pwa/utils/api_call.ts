@@ -2,7 +2,7 @@ import axios from "axios";
 
 export interface InterfaceAPI{
   method: string,
-  url: string,
+  url: string | object,
   data: string | object | null,
   headers: string| object | null
 }

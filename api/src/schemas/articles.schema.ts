@@ -1,42 +1,37 @@
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-@Schema({timestamps: true})
+@Schema({ timestamps: true })
 export class Article extends Document {
   @Prop()
-  backgroundImage: string
+  backgroundImage: string;
 
   @Prop()
-  title: string
+  title: string;
 
   @Prop()
-  titleFont: string
+  titleFont: string;
 
   @Prop()
-  article: string
+  article: string;
 
   @Prop()
-  textFont: string
+  textFont: string;
 
   @Prop()
-  category: string
+  category: string;
 
-  @Prop({default: 0})
-  likes: Number
+  @Prop({ default: 0 })
+  likes: 0;
 
-
-  @Prop({default: []})
-  comments: Array<Object>
-
-
-  @Prop({default: 0})
-  views: Number
+  @Prop({ default: 0 })
+  views: 0;
 
   @Prop()
-  status: string
+  status: string;
 
   @Prop()
-  createdBy: string
+  createdBy: string;
 }
 
-export const articleSchema = SchemaFactory.createForClass(Article)
+export const articleSchema = SchemaFactory.createForClass(Article);
