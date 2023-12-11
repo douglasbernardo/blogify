@@ -5,11 +5,11 @@
     <v-card-text>
       <v-container>
         <v-switch
-            v-if="useAuthStore().loggedWithGoogle === false"
-            :label="switchd ? 'Editando': 'Editar'"
-            v-model="switchd"
-            color="blue"
-            inset
+          v-if="!useAuthStore().loggedWithGoogle"
+          :label="switchd ? 'Editando': 'Editar'"
+          v-model="switchd"
+          color="blue"
+          inset
         ></v-switch>
         <v-row>
           <v-col>

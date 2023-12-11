@@ -82,4 +82,21 @@ export class ArticleService {
       }
     }
   }
+
+  async increment_article_like(article_id: string) {
+    try {
+      const article_liked = await this.article.findOneAndUpdate(
+        { _id: article_id },
+        { $inc: { likes: 1 } },
+        { new: true },
+      );
+      if (!article_liked) {
+        throw new Error('Artigo não encontrado');
+      }
+      return article_liked;
+    } catch (e) {
+      console.log('Error ao tentar dar like no artigo', e);
+      throw Error;
+    }
+  }
 }
