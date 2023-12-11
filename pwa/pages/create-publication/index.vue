@@ -63,8 +63,6 @@
     const categoriesDB = await api_call(<InterfaceAPI>{
     method: 'get',
     url: '/article/categories',
-    data: null,
-    headers: null
   })
     categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
   })
@@ -121,7 +119,7 @@
           textFont: fontChosen.value.text,
           category: categoryChosen.value,
           status: statusChosen.value,
-          user: localStorage.getItem('user')
+          createdBy: localStorage.getItem('user')
         })
       }
     } catch (error) {

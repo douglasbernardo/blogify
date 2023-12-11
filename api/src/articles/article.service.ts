@@ -43,9 +43,9 @@ export class ArticleService {
       textFont: article.textFont || edit_article.textFont,
       category: article.category || edit_article.category,
       status: article.status || edit_article.status,
-    }
-    Object.assign(edit_article, updated_fields)
-    return await edit_article.save()
+    };
+    Object.assign(edit_article, updated_fields);
+    return await edit_article.save();
   }
   async all_categories() {
     return this.article.distinct('category').exec();

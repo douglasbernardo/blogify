@@ -34,11 +34,11 @@
             <v-icon
               class="ml-4" 
               @click="iLiked(card._id)"
-              color="blue" 
-              icon="mdi-thumb-up"
-            ></v-icon><p class="ml-2">{{ card.likes }}</p>
-            <v-icon class="ml-4" color="blue">mdi-comment</v-icon><p class="ml-2">5</p>
-            <v-icon class="ml-4" color="blue">mdi-eye</v-icon><p class="ml-2">{{ card.views }}</p>
+              color="red" 
+              icon="mdi-heart"
+            ></v-icon><p class="ml-1">{{ card.likes }}</p>
+            <v-icon class="ml-4" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">5</p>
+            <v-icon class="ml-4" color="light-blue">mdi-eye</v-icon><p class="ml-1">{{ card.views }}</p>
             <v-snackbar 
               v-model="snackbarErrorLike" 
               timeout="1200" 
