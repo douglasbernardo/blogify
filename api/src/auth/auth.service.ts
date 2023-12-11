@@ -25,10 +25,12 @@ export class AuthService {
     if (!passwordIsValid) {
       throw new UnauthorizedException('A senha digitada é inválida');
     }
-    const payload = { sub: user.email, username: user.name };
     return {
       user,
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync({
+        sub: user.email,
+        username: user.name,
+      }),
     };
   }
   async verify_google_token(access_token: string) {
@@ -42,23 +44,23 @@ export class AuthService {
 
       const user = await this.userService.find_user(payload.email);
       if (!user) {
-        return {
-          user: {
-            name: payload.name,
-            email: payload.email,
-            profile_picture: payload.picture,
-          },
-          access_token: await this.jwtService.signAsync({
-            sub: payload.email,
-            username: payload.name,
-          }),
-        };
+        return this.userService.add_user({
+          name: payload.name,
+          email: payload.email,
+          fromGoogle: true,
+        });
       }
-      return this.userService.add_user({
-        name: payload.name,
-        email: payload.email,
-        fromGoogle: true,
-      });
+      return {
+        user: {
+          name: payload.name,
+          email: payload.email,
+          profile_picture: payload.picture,
+        },
+        access_token: await this.jwtService.signAsync({
+          sub: payload.email,
+          username: payload.name,
+        }),
+      };
     } catch (error) {
       console.log(error);
     }
