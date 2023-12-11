@@ -13,20 +13,27 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
   async add_user(data) {
-    if (!data.name || !data.email || !data.password || !data.confirmPassword) {
-      const missingField = !data.name
-        ? 'nome'
-        : !data.email
-        ? 'email'
-        : 'senha';
-      throw new UnauthorizedException(
-        `O campo ${missingField} deve ser preenchido.`,
-      );
-    }
-    if (data.password !== data.confirmPassword) {
-      throw new UnauthorizedException(
-        'Verifique se as senhas inseridas são as mesmas.',
-      );
+    if (!data.fromGoogle) {
+      if (
+        !data.name ||
+        !data.email ||
+        !data.password ||
+        !data.confirmPassword
+      ) {
+        const missingField = !data.name
+          ? 'nome'
+          : !data.email
+          ? 'email'
+          : 'senha';
+        throw new UnauthorizedException(
+          `O campo ${missingField} deve ser preenchido.`,
+        );
+      }
+      if (data.password !== data.confirmPassword) {
+        throw new UnauthorizedException(
+          'Verifique se as senhas inseridas são as mesmas.',
+        );
+      }
     }
     if (await this.verify_existing_email(data.email)) {
       throw new UnauthorizedException('Esse e-mail já existe');
@@ -39,10 +46,12 @@ export class UserService {
         : await bcrypt.hash(data.password, 14),
       fromGoogle: !!data.fromGoogle,
     }).save();
-    const payload = { sub: data.email, username: data.name };
     return {
       user,
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync({
+        sub: data.email,
+        username: data.name,
+      }),
     };
   }
   async verify_existing_email(email): Promise<boolean> {
