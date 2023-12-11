@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 import axios from 'axios'
-import { userManager } from "./user_manager";
 
 export const useAuthStore = defineStore('authStore',{
   state: () => ({
@@ -23,7 +22,7 @@ export const useAuthStore = defineStore('authStore',{
         localStorage.setItem('token', res.data.access_token)
         localStorage.setItem('user', res.data.user.email)
         localStorage.setItem('name', res.data.user.name)
-        if (res) navigateTo('/artigos')
+        if (res) navigateTo('/')
       }).catch((e)=>{
         console.log(e.response.data.message)
         if (!this.errorMessages.includes(e.response.data.message)) {
@@ -39,13 +38,11 @@ export const useAuthStore = defineStore('authStore',{
           this.user = res.data
           this.token = res.data
           this.userName = res.data.user.name
+          this.loggedWithGoogle = true
           localStorage.setItem('token', res.data.access_token)
           localStorage.setItem('user', res.data.user.email)
           localStorage.setItem('name', res.data.user.name)
-          if(res.data.fromGoogle){
-            this.loggedWithGoogle = true
-          }
-          if(res) navigateTo('/artigos')
+          navigateTo('/')
         })
       } catch (error) {
         console.error("Erro ao tentar se logar com google:", error);

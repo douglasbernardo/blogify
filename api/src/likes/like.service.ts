@@ -20,18 +20,17 @@ export class LikeService {
       if (existingLike) {
         throw new UnauthorizedException('Artigo já foi curtido por você');
       } else {
-        const newLike =  new this.like({
+        const newLike = new this.like({
           user: data.user,
           article: data.article,
-        }).save();
+        });
+        await newLike.save();
 
-        const article = await this.articleService.get_article(data.article);
-        article.likes++;
-        return article.save();
+        return await this.articleService.increment_article_like(data.article); //passing as parameter the article id
       }
     } catch (error) {
       console.error('Erro ao curtir o artigo:', error);
-      throw error; // Lançar o erro para tratar em um nível superior, se necessário
+      throw error;
     }
   }
 }

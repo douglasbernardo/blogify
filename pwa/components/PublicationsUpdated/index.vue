@@ -9,7 +9,7 @@
       <p class="text-center font-weight-bold">Ultimas Publicações</p>
     </v-sheet>
     <v-row>
-      <template v-for="card in articleManager.lastArticles">
+      <template v-for="(card,index) in articleManager.lastArticles">
         <v-card class="ma-2 pa-2" width="auto">
           <v-img
             :src="card.backgroundImage"
@@ -33,7 +33,7 @@
               </v-hover>
             <v-icon
               class="ml-4" 
-              @click="iLiked(card._id)"
+              @click="iLiked(card._id, index)"
               color="red" 
               icon="mdi-heart"
             ></v-icon><p class="ml-1">{{ card.likes }}</p>
@@ -60,12 +60,16 @@ const articleManager = useArticleStore()
 const snackbarErrorLike = ref(false)
 const likeError = ref('')
 
-const iLiked = async (idArticle: string) => {
+const iLiked = async (idArticle: string, index: any) => {
   await api_call(<InterfaceAPI>{
     method: 'post', 
     url: '/like/i-liked', 
     data: {user: localStorage.getItem('user'), article: idArticle}, 
-  }).catch((e)=>{
+  })
+  .then((res)=>{
+    if(res) articleManager.lastArticles[index].likes++;
+  })
+  .catch((e)=>{
     if(e.response.data){
       snackbarErrorLike.value = true
       likeError.value = e.response.data.message
