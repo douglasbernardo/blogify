@@ -39,10 +39,12 @@ export class UserService {
         : await bcrypt.hash(data.password, 14),
       fromGoogle: !!data.fromGoogle,
     }).save();
-    const payload = { sub: data.email, username: data.name };
     return {
       user,
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync({
+        sub: data.email,
+        username: data.name,
+      }),
     };
   }
   async verify_existing_email(email): Promise<boolean> {

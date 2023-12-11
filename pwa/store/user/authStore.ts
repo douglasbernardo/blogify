@@ -36,14 +36,14 @@ export const useAuthStore = defineStore('authStore',{
         await axios.post('http://localhost:3030/auth/verify-google-token', {
           access_token: token_google
         }).then((res) => {
-          console.log(res.data.user)
-          localStorage.setItem('token', res.data.access_token)
-          localStorage.setItem('user', res.data.user.email)
-          localStorage.setItem('name', res.data.user.name)
-          if(res.data.fromGoogle){
-            this.loggedWithGoogle = true
-          }
-          if(res) navigateTo('/artigos')
+          console.log(res.data)
+          // localStorage.setItem('token', res.data.access_token)
+          // localStorage.setItem('user', res.data.user.email)
+          // localStorage.setItem('name', res.data.user.name)
+          // if(res.data.fromGoogle){
+          //   this.loggedWithGoogle = true
+          // }
+          //if(res) navigateTo('/artigos')
         })
       } catch (error) {
         console.error("Erro ao verificar o token do Google:", error);
