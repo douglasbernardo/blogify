@@ -12,7 +12,7 @@ export class ArticleService {
     private userService: UserService,
   ) {}
 
-  async add_new_article(data) {
+  add_new_article(data) {
     return new this.article({
       backgroundImage: data.backgroundImage,
       title: data.title,
@@ -25,11 +25,15 @@ export class ArticleService {
     }).save();
   }
 
-  async get_my_articles(email: string) {
+  get_all_articles() {
+    return this.article.find({ status: 'publicado' }).exec();
+  }
+
+  get_my_articles(email: string) {
     return this.article.find({ createdBy: email }).exec();
   }
 
-  async get_article(id) {
+  get_article(id: string) {
     return this.article.findOne({ _id: id });
   }
 
@@ -47,7 +51,7 @@ export class ArticleService {
     Object.assign(edit_article, updated_fields);
     return await edit_article.save();
   }
-  async all_categories() {
+  all_categories() {
     return this.article.distinct('category').exec();
   }
 
@@ -60,7 +64,7 @@ export class ArticleService {
         })();
   }
 
-  async last_added() {
+  last_added() {
     return this.article
       .find({ status: 'publicado' })
       .sort({ _id: -1 })

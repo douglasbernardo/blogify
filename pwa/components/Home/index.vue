@@ -6,7 +6,12 @@
       location="right"
       >
       <div class="px-2">
-          <v-btn class="ma-2 ml-3 pa-2 bg-blue" id="newPubBtn" :to="useAuthStore().isAuthenticated ? '/create-publication' : '/user/login'">Nova Publicação</v-btn>
+        <v-btn 
+          class="ma-2 ml-3 pa-2 bg-blue" 
+          id="newPubBtn" 
+          :to="useAuthStore().isAuthenticated ? '/create-publication' : '/user/login'"
+          text="Nova Publicação"
+        />
         <v-divider class="my-6"></v-divider>
         <v-row class="ma-2">
           <p>Filtro</p>
@@ -34,133 +39,108 @@
 
     <v-main>
       <PublicationsUpdated/>
-      <v-sheet
-        class="mx-auto pa-2 pt-6"
-        color="grey-lighten-4"
-      >
+      <template v-if="article" v-for="category in article.categories" :key="category">
         <v-sheet
+          class="text-center ma-4"
           color="grey-lighten-2"
-          height="24"
+          height="25"
           rounded="pill"
-          width="150"
+          v-text="category"
+          width="200"
+        />
+        <v-slide-group
+          show-arrows
+          show-arrows-on-hover
         >
-          <p class="ma-2 font-weight-bold">Meio Ambiente</p>
-        </v-sheet>
-
-        <v-slide-group show-arrows>
-          <v-slide-group-item
-            v-for="n in 5"
-            :key="n"
-          >
-            <template v-for="card in cards2">
-              <v-card class="ma-4" width="275">
+          <template v-for="(article, index) in filteredArticles(category)">
+            <v-slide-group-item>
+              <v-card class="" width="auto">
                 <v-img
-                  :src="card.src"
-                  class="align-center"
+                  :src="article.backgroundImage"
+                  class="align-center ma-4"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="300px"
+                  width="400px"
                   cover
                 >
-                  <v-card-title class="text-white text-center" v-text="card.title"></v-card-title>
+                  <v-card-title class="text-white text-center" v-text="article.title"></v-card-title>
                 </v-img>
-
                 <v-card-actions>
                   <v-hover v-slot="{ isHovering, props }">
                     <v-btn 
-                    v-bind="props"
-                    :class="isHovering ? 'bg-blue' : 'text-blue'" 
-                    size="small"
-                    variant="outlined"
-                    >Fazer leitura</v-btn>
+                      v-bind="props"
+                      :class="isHovering ? 'bg-blue' : 'text-blue'" 
+                      size="small"
+                      variant="outlined"
+                      @click="doReading(article._id)"
+                      >Fazer leitura</v-btn>
                   </v-hover>
-                  <v-spacer></v-spacer>
-                  <v-icon class="ma-1" color="red">mdi-heart</v-icon><p>{{ card.likes.toLocaleString('pt-br') }}</p>
-                  <v-icon class="ma-2" color="blue">mdi-comment</v-icon><p>{{ card.comments.toLocaleString('pt-br') }}</p>
+                  <v-icon
+                    class="ml-4" 
+                    @click="iLiked(article._id,index)"
+                    color="red" 
+                    icon="mdi-heart"
+                  ></v-icon><p class="ml-1">{{ article.likes }}</p>
+                  <v-icon class="ml-4" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">9</p>
+                  <v-icon class="ml-4" color="light-blue">mdi-eye</v-icon><p class="ml-1">{{ article.views }}</p>
                 </v-card-actions>
+                <v-snackbar 
+                  v-model="snackbarErrorLike" 
+                  timeout="1200" 
+                  variant="flat" 
+                  color="red-darken-4" 
+                  :text="likeError"
+                  location="top"
+                />
               </v-card>
-            </template>
-          </v-slide-group-item>
-        </v-slide-group>
-      </v-sheet>
-      <v-sheet
-        class="mx-auto pa-2 pt-6"
-        color="grey-lighten-4"
-      >
-        <v-sheet
-          color="grey-lighten-2"
-          height="24"
-          rounded="pill"
-          width="150"
-        >
-          <p class="ma-2 font-weight-bold">Tecnologia</p>
-        </v-sheet>
-
-        <v-slide-group show-arrows>
-          <v-slide-group-item
-            v-for="n in 5"
-            :key="n"
-          >
-            <template v-for="card in cards">
-              <v-card class="ma-4" width="275">
-                <v-img
-                  :src="card.src"
-                  class="align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  height="300px"
-                  cover
-                >
-                  <v-card-title class="text-white text-center" v-text="card.title"></v-card-title>
-                </v-img>
-
-                <v-card-actions>
-                  <v-hover v-slot="{ isHovering, props }">
-                    <v-btn 
-                    v-bind="props"
-                    :class="isHovering ? 'bg-blue' : 'text-blue'" 
-                    size="small"
-                    variant="outlined"
-                    >Fazer leitura</v-btn>
-                  </v-hover>
-                    <v-spacer></v-spacer>
-                  <v-icon class="ma-1" color="red">mdi-heart</v-icon><p>{{ card.likes.toLocaleString('pt-br') }}</p>
-                  <v-icon class="ma-2" color="blue">mdi-comment</v-icon><p>{{ card.comments.toLocaleString('pt-br') }}</p>
-                </v-card-actions>
-              </v-card>
-            </template>
-          </v-slide-group-item>
-        </v-slide-group>
-      </v-sheet>
+            </v-slide-group-item>
+          </template>
+      </v-slide-group>
+      </template>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
   import {useAuthStore} from "~/store/user/authStore";
-
+  import { useArticleStore } from "~/store/article_manager";
+  import { useDisplay } from 'vuetify/lib/framework.mjs';
+  const mobile = useDisplay().mobile
+  const snackbarErrorLike = ref(false)
+  const likeError = ref('')
   const props= defineProps({
     lastAdded: {type: Array}
   })
-  const cards = [
-		{ title: 'O início das IAS', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', likes: 2345, comments:45 },
-		{ title: 'O começo de tudo', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', likes: 2100,comments:49 },
-		{ title: 'Oque é PWA?', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', likes: 100,comments:82 },
-	]
 
-	const cards2 = [
-		{ title: 'A importancia da amazonia', src: 'https://static.smg.edu.br/wp-content/uploads/2022/06/Eventos-1920-%C3%97-1080-px-7.png', likes: 2300, comments: 45 },
-		{ title: 'o meio ambiente', src: 'https://www.hydro.com/globalassets/04-sustainability/sustainability-new/environmentptbr.jpg?quality=85&width=1036&rmode=crop&rsampler=bicubic&rxy=0.47,0.45&compand=true', likes: 1100, comments: 95 },
-		{ title: 'a amazonia para o mundo', src: 'https://s2-g1.glbimg.com/pOAUi3_YnNy6MnKUKynFaxRzPtM=/0x0:1000x666/924x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2021/J/t/DS69d6TTqAd9iB7F98Lg/1.jpg', likes: 2000, comments: 24 },
-	]
+  const article = useArticleStore()
+  onMounted(()=>{
+    article.get_categories()
+    article.get_all_articles()
+  })
+  const filteredArticles = ((category: any)=>{
+    return article.allArticles.filter((article)=> article.category === category)
+  })
 
-  const categories = [
-    'Tecnologia',
-    'Meio Ambiente',
-    'Política',
-    'Cinema',
-    'Religião'
-  ]
-  import { useDisplay } from 'vuetify/lib/framework.mjs';
-const mobile = useDisplay().mobile
+const iLiked = async (idArticle: string, index: any) => {
+  await api_call(<InterfaceAPI>{
+    method: 'post', 
+    url: '/like/i-liked', 
+    data: {user: localStorage.getItem('user'), article: idArticle}, 
+  })
+  .then((res)=>{
+    if(res) article.allArticles[index].likes++;
+  })
+  .catch((e)=>{
+    if(e.response.data){
+      snackbarErrorLike.value = true
+      likeError.value = e.response.data.message
+    }
+  })
+}
+  const doReading = async (id: string) => {
+    await api_call(<InterfaceAPI>{method: 'post', url: '/article/add-view', data: {id: id}});
+    navigateTo(`/artigos/reading/${id}`)
+  }
 const dialog = ref(false)
 </script>
 

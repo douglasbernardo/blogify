@@ -1,5 +1,4 @@
 import {defineStore} from "pinia";
-import axios from 'axios'
 import {useAuthStore} from "~/store/user/authStore";
 import type { InterfaceAPI } from "~/utils/api_call";
 export const userManager = defineStore('userManager',{

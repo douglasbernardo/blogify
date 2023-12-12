@@ -11,6 +11,11 @@ export class ArticleController {
     return this.articleService.add_new_article(req.body);
   }
 
+  @Get('all')
+  getArticles() {
+    return this.articleService.get_all_articles();
+  }
+
   @Post('/edit')
   editArticle(@Body() dataEditDto: articleEditDto) {
     return this.articleService.edit_article(dataEditDto);
