@@ -48,13 +48,13 @@ export class AuthService {
           name: payload.name,
           email: payload.email,
           fromGoogle: true,
+          googlePicture: payload.picture,
         });
       }
       return {
         user: {
           name: payload.name,
           email: payload.email,
-          profile_picture: payload.picture,
         },
         access_token: await this.jwtService.signAsync({
           sub: payload.email,

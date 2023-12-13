@@ -18,7 +18,7 @@
           <v-icon>mdi-filter</v-icon>
         </v-row>
         <v-select
-          :items="categories"
+          :items="article.categories"
           chips
           label="Categorias"
           multiple
@@ -54,13 +54,13 @@
         >
           <template v-for="(article, index) in filteredArticles(category)">
             <v-slide-group-item>
-              <v-card class="" width="auto">
+              <v-card class="pa-2 ma-2" width="auto">
                 <v-img
                   :src="article.backgroundImage"
-                  class="align-center ma-4"
+                  class="align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="300px"
-                  width="400px"
+                  width="350px"
                   cover
                 >
                   <v-card-title class="text-white text-center" v-text="article.title"></v-card-title>
@@ -81,7 +81,7 @@
                     color="red" 
                     icon="mdi-heart"
                   ></v-icon><p class="ml-1">{{ article.likes }}</p>
-                  <v-icon class="ml-4" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">9</p>
+                  <v-icon class="ml-4" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">{{ article.comments }}</p>
                   <v-icon class="ml-4" color="light-blue">mdi-eye</v-icon><p class="ml-1">{{ article.views }}</p>
                 </v-card-actions>
                 <v-snackbar 

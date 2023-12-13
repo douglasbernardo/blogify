@@ -45,6 +45,7 @@ export class UserService {
         ? undefined
         : await bcrypt.hash(data.password, 14),
       fromGoogle: !!data.fromGoogle,
+      urlImage: data.fromGoogle ? data.googlePicture : '',
     }).save();
     return {
       user,
