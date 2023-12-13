@@ -4,6 +4,7 @@ import { Like, likeSchema } from 'src/schemas/like.schema';
 import { LikeService } from './like.service';
 import { LikeController } from './like.controller';
 import { ArticleModule } from 'src/articles/article.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ArticleModule } from 'src/articles/article.module';
         schema: likeSchema,
       },
     ]),
+    UserModule,
     ArticleModule,
   ],
   controllers: [LikeController],

@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  UnauthorizedException,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article } from '../schemas/articles.schema';
 import { UserService } from '../user/user.service';
@@ -9,10 +14,12 @@ import { articleEditDto } from 'src/dto/edit_article';
 export class ArticleService {
   constructor(
     @InjectModel(Article.name) private article: Model<Article>,
+    @Inject(forwardRef(() => UserService))
     private userService: UserService,
   ) {}
 
-  add_new_article(data) {
+  async add_new_article(data) {
+    const user_id = await this.userService.find_id_user_by_email(data.createdBy);
     return new this.article({
       backgroundImage: data.backgroundImage,
       title: data.title,
@@ -21,7 +28,7 @@ export class ArticleService {
       textFont: data.textFont,
       category: data.category,
       status: data.status,
-      createdBy: data.createdBy,
+      createdBy: user_id,
     }).save();
   }
 
@@ -29,8 +36,9 @@ export class ArticleService {
     return this.article.find({ status: 'publicado' }).exec();
   }
 
-  get_my_articles(email: string) {
-    return this.article.find({ createdBy: email }).exec();
+  async get_my_articles(email: string) {
+    const user_id = await this.userService.find_id_user_by_email(email);
+    return await this.article.find({ createdBy: user_id }).exec();
   }
 
   get_article(id: string) {
@@ -62,6 +70,12 @@ export class ArticleService {
       : (() => {
           throw new UnauthorizedException('Falha ao deletar artigo');
         })();
+  }
+
+  async remove_articles(user_id: string) {
+    return this.article.deleteMany({
+      createdBy: user_id,
+    });
   }
 
   last_added() {
