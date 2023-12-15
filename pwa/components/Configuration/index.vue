@@ -15,7 +15,7 @@
         @click:close="user.updated_message=''"
       />
       <v-switch
-        v-if="!useAuthStore().loggedWithGoogle"
+        v-if="authStore.loggedWithGoogle === false"
         :label="switchd ? 'Editando': 'Editar'"
         v-model="switchd"
         color="blue"
@@ -49,7 +49,7 @@
           density="compact"
           closable
           type="warning"
-          width="200"
+          max-width="800"
           title="Alterar senha"
           text="Se você optar por editar sua senha, ela será automaticamente atualizada para a nova versão escolhida por você."
         />
@@ -75,8 +75,8 @@
           <v-col cols="12" md="12" sm="12" lg="12">
             <v-btn
               color="red-darken-1"
-              variant="flat"
-              class="ml-n3"
+              variant="text"
+              class="ml-n5"
               size="small"
               @click="dialogDeleteAccount=!dialogDeleteAccount"
               text="Excluir minha conta"
@@ -96,28 +96,31 @@
   </v-dialog>
 </template>
 <script lang="ts" setup>
-import {userManager} from "~/store/user/user_manager";
-import DeleteAccount from "~/components/Configuration/DeleteAccount.vue";
-import {useAuthStore} from "~/store/user/authStore";
-const user = userManager()
-const switchd = ref(false)
-const pass = ref('')
-const dialogDeleteAccount = ref(false)
-onBeforeUnmount(() => user.updated_message = '')
+  import {userManager} from "~/store/user/user_manager";
+  import DeleteAccount from "~/components/Configuration/DeleteAccount.vue";
+  import {useAuthStore} from "~/store/user/authStore";
+  const authStore = useAuthStore()
+  const user = userManager()
+  const switchd = ref(false)
+  const pass = ref('')
+  const dialogDeleteAccount = ref(false)
 
-onMounted(()=>{
-  user.get_user()
-})
-const deleteAcc = () => {
-  dialogDeleteAccount.value = false
-  user.delete_account(String(localStorage.getItem('user')))
-}
-const edit = () => {
-  user.edit_user({
-    currentEmail:  localStorage.getItem('user'),
-    name: user.userConfigData.name,
-    email: user.userConfigData.email,
-    password: pass.value
+  onBeforeUnmount(() => user.updated_message = '')
+
+  onMounted(()=>{
+    authStore.loggedWithGoogle
+    user.get_user()
   })
-}
+  const deleteAcc = () => {
+    dialogDeleteAccount.value = false
+    user.delete_account(String(localStorage.getItem('user')))
+  }
+  const edit = () => {
+    user.edit_user({
+      currentEmail:  localStorage.getItem('user'),
+      name: user.userConfigData.name,
+      email: user.userConfigData.email,
+      password: pass.value
+    })
+  }
 </script>

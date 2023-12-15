@@ -105,8 +105,8 @@ export class UserService {
 
     return await user_editing.save();
   }
-  async get_all_users() {
-    return this.user.find({}).exec();
+  async get_all_users(): Promise<User[]> {
+    return await this.user.find({}).exec();
   }
 
   async delete_account(email: string) {

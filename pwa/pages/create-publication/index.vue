@@ -35,8 +35,6 @@
           default="default"
           v-model="statusChosen"
       ></v-select>
-
-
       <v-btn
         class="me-4"
         type="submit"
@@ -108,20 +106,20 @@
     const formData = new FormData();
     formData.append('image', selectedFile.value);
     try {
-      const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
-      console.log(response)
-      if(response.data) {
-        articleStore.add_new_article({
-          backgroundImage: response.data.data.display_url,
-          title: articleTitle.value,
-          titleFont: fontChosen.value.title,
-          article: article.value,
-          textFont: fontChosen.value.text,
-          category: categoryChosen.value,
-          status: statusChosen.value,
-          createdBy: localStorage.getItem('user')
-        })
+      if(selectedFile.value){
+        const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+        console.log(response)
       }
+      articleStore.add_new_article({
+        backgroundImage: selectedFile.value ? response.data.data.display_url : '',
+        title: articleTitle.value,
+        titleFont: fontChosen.value.title,
+        article: article.value,
+        textFont: fontChosen.value.text,
+        category: categoryChosen.value,
+        status: statusChosen.value,
+        createdBy: localStorage.getItem('user')
+      })
     } catch (error) {
       console.error(error);
     }

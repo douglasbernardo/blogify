@@ -12,7 +12,7 @@
       <template v-for="(article,index) in articleManager.lastArticles">
         <v-card class="ma-2 pa-2" width="auto">
           <v-img
-            :src="article.backgroundImage"
+            :src="article.backgroundImage ? article.backgroundImage : 'no-image-article.avif'"
             class="align-center"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
             height="300px"

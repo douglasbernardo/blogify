@@ -42,6 +42,7 @@
         <v-dialog
           v-model="dialogPicture"
           width="auto"
+          persistent
         >
           <ProfilePicture @close="dialogPicture=false"/>
         </v-dialog>
