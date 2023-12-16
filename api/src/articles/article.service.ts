@@ -9,6 +9,10 @@ import { Article } from '../schemas/articles.schema';
 import { UserService } from '../user/user.service';
 import { Model } from 'mongoose';
 import { articleEditDto } from 'src/dto/edit_article';
+import {
+  AddArticleInterface,
+  DeleteArticleInterface,
+} from '../interfaces/article.interface';
 
 @Injectable()
 export class ArticleService {
@@ -18,8 +22,7 @@ export class ArticleService {
     private userService: UserService,
   ) {}
 
-  async add_new_article(data) {
-    const user_id = await this.userService.find_id_user_by_email(data.createdBy);
+  async add_new_article(data: AddArticleInterface): Promise<Article> {
     return new this.article({
       backgroundImage: data.backgroundImage,
       title: data.title,
@@ -28,24 +31,25 @@ export class ArticleService {
       textFont: data.textFont,
       category: data.category,
       status: data.status,
-      createdBy: user_id,
+      createdBy: await this.userService.find_id_user_by_email(data.createdBy),
     }).save();
   }
 
-  get_all_articles() {
-    return this.article.find({ status: 'publicado' }).exec();
+  async get_all_articles() {
+    return await this.article.find({ status: 'publicado' }).exec();
   }
 
   async get_my_articles(email: string) {
-    const user_id = await this.userService.find_id_user_by_email(email);
-    return await this.article.find({ createdBy: user_id }).exec();
+    const user = await this.userService.find_id_user_by_email(email);
+    if (!user) return [];
+    return await this.article.find({ createdBy: user }).exec();
   }
 
-  get_article(id: string) {
-    return this.article.findOne({ _id: id });
+  async get_article(id: string) {
+    return await this.article.findOne({ _id: id });
   }
 
-  async edit_article(article: articleEditDto) {
+  async edit_article(article: articleEditDto): Promise<Article> {
     const edit_article = await this.article.findById(article.id);
     const updated_fields = {
       backgroundImage: article.backgroundImage || edit_article.backgroundImage,
@@ -63,22 +67,24 @@ export class ArticleService {
     return this.article.distinct('category').exec();
   }
 
-  async remove_article(data) {
-    const user = await this.userService.verify_existing_email(data.email);
-    return user
-      ? this.article.findOneAndDelete({ _id: data.id })
-      : (() => {
-          throw new UnauthorizedException('Falha ao deletar artigo');
-        })();
+  async remove_article(data: DeleteArticleInterface) {
+    const [emailExists, deletedArticle] = await Promise.all([
+      this.userService.verify_existing_email(data.email),
+      this.article.findOneAndDelete({ _id: data.id }),
+    ]);
+    if (!emailExists && !deletedArticle) {
+      throw new UnauthorizedException('Aconteceu uma falha ao deletar artigo!');
+    }
+    return deletedArticle;
   }
 
   async remove_articles(user_id: string) {
-    return this.article.deleteMany({
+    return await this.article.deleteMany({
       createdBy: user_id,
     });
   }
 
-  last_added() {
+  last_added(): Promise<Article[]> {
     return this.article
       .find({ status: 'publicado' })
       .sort({ _id: -1 })

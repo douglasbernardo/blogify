@@ -111,8 +111,15 @@ export class UserService {
 
   async delete_account(email: string) {
     const user_id = await this.find_id_user_by_email(email);
-    await this.articleService.remove_articles(user_id);
-
-    return await this.user.findOneAndDelete({ _id: user_id });
+    if (!user_id)
+      throw new UnauthorizedException(
+        'Usuário não autorizado para excluir a conta',
+      );
+    try {
+      await this.articleService.remove_articles(user_id);
+      return await this.user.findOneAndDelete({ _id: user_id });
+    } catch (e) {
+      throw new UnauthorizedException('Falha ao excluir conta do usuário!');
+    }
   }
 }
