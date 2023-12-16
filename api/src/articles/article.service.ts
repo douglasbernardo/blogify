@@ -50,6 +50,7 @@ export class ArticleService {
   }
 
   async edit_article(article: articleEditDto): Promise<Article> {
+    console.log(article);
     const edit_article = await this.article.findById(article.id);
     const updated_fields = {
       backgroundImage: article.backgroundImage || edit_article.backgroundImage,
@@ -66,7 +67,6 @@ export class ArticleService {
   all_categories() {
     return this.article.distinct('category').exec();
   }
-
   async remove_article(data: DeleteArticleInterface) {
     const [emailExists, deletedArticle] = await Promise.all([
       this.userService.verify_existing_email(data.email),

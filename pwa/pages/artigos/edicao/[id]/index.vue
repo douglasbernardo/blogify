@@ -78,12 +78,22 @@
   import {useArticleStore} from '~/store/article_manager'
   const route = useRoute()
   const articleStore = useArticleStore()
-  const articleOptions = ref<object>({})
+  const articleOptions = ref<Array<object>>({})
   const categories = ref<Array<string>>([])
-  const submit = () => {
+  const selectedFile = ref(null)
+  const handleFileChange = (event) => {
+    selectedFile.value = event.target.files[0];
+  };
+
+  const submit = async() => {
+    if(!articleOptions.value.backgroundImage){
+      const formData = new FormData();
+      formData.append('image', selectedFile.value);
+      const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+    }
     articleStore.edit_article({
       id: articleOptions.value._id,
-      backgroundImage: articleOptions.value.backgroundImage,
+      backgroundImage: articleOptions.value.backgroundImage ? articleOptions.value.backgroundImage : response.data.data.display_url,
       title: articleOptions.value.title,
       titleFont: articleOptions.value.titleFont,
       article: articleOptions.value.article,
@@ -92,7 +102,6 @@
       status: articleOptions.value.status
     })
   }
-  const handleFileChange = () => {}
   onMounted(async ()=>{
     const categoriesDB = await api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',})
     categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
