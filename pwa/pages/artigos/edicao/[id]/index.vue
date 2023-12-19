@@ -78,10 +78,10 @@
   import {useArticleStore} from '~/store/article_manager'
   const route = useRoute()
   const articleStore = useArticleStore()
-  const articleOptions = ref<Array<object>>({})
+  const articleOptions = ref({})
   const categories = ref<Array<string>>([])
   const selectedFile = ref(null)
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: any) => {
     selectedFile.value = event.target.files[0];
   };
 
@@ -102,11 +102,12 @@
       status: articleOptions.value.status
     })
   }
-  onMounted(async ()=>{
-    const categoriesDB = await api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',})
-    categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
-    await axios.get(`http://localhost:3030/article/reading/${route.params.id}`).then((res)=>{
-      articleOptions.value = res.data
-    })
+  onMounted(async() => {
+    const [categoriesResponse, editingArticleResponse] = await Promise.all([
+      api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',}),
+      api_call(<InterfaceAPI>{method:'get', url: `/article/reading/${route.params.id}`})
+    ])
+    categoriesResponse ? categories.value = JSON.parse(categoriesResponse) : []
+    editingArticleResponse ? articleOptions.value = JSON.parse(editingArticleResponse) : []
   })
 </script>
