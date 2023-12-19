@@ -85,23 +85,38 @@
     selectedFile.value = event.target.files[0];
   };
 
-  const submit = async() => {
-    if(!articleOptions.value.backgroundImage){
+  const submit = async () => {
+    let response = null;
+
+    if (!articleOptions.value.backgroundImage) {
       const formData = new FormData();
       formData.append('image', selectedFile.value);
-      const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+      try {
+        response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
     }
-    articleStore.edit_article({
-      id: articleOptions.value._id,
-      backgroundImage: articleOptions.value.backgroundImage ? articleOptions.value.backgroundImage : response.data.data.display_url,
-      title: articleOptions.value.title,
-      titleFont: articleOptions.value.titleFont,
-      article: articleOptions.value.article,
-      textFont: articleOptions.value.textFont,
-      category: articleOptions.value.category,
-      status: articleOptions.value.status
-    })
+
+    try {
+      const backgroundImage = response ? response.data.data.display_url : articleOptions.value.backgroundImage;
+
+      await articleStore.edit_article({
+        id: articleOptions.value._id,
+        backgroundImage,
+        title: articleOptions.value.title,
+        titleFont: articleOptions.value.titleFont,
+        article: articleOptions.value.article,
+        textFont: articleOptions.value.textFont,
+        category: articleOptions.value.category,
+        status: articleOptions.value.status,
+      })
+
+    } catch (error) {
+      console.error('Error editing article:', error);
+    }
   }
+
   onMounted(async() => {
     const [categoriesResponse, editingArticleResponse] = await Promise.all([
       api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',}),

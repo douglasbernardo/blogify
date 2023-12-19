@@ -98,20 +98,21 @@
     title: ''
   })
   const selectedFile = ref(null)
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: any) => {
     selectedFile.value = event.target.files[0];
   };
 
   const submit = async () => {
     const formData = new FormData();
     formData.append('image', selectedFile.value);
+    let backgroundImage = null
     try {
       if(selectedFile.value){
         const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
-        console.log(response)
+        backgroundImage = response ? response.data.data.display_url : ''
       }
       articleStore.add_new_article({
-        backgroundImage: selectedFile.value ? response.data.data.display_url : '',
+        backgroundImage: backgroundImage,
         title: articleTitle.value,
         titleFont: fontChosen.value.title,
         article: article.value,
