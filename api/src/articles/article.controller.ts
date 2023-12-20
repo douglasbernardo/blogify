@@ -27,7 +27,7 @@ export class ArticleController {
   }
 
   @Get('/reading/:id')
-  getArticle(@Param() params: any) {
+  getArticle(@Param() params) {
     return this.articleService.get_article(params.id);
   }
 
