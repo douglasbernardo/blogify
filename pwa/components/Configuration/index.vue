@@ -15,7 +15,7 @@
         @click:close="user.updated_message=''"
       />
       <v-switch
-        v-if="authStore.loggedWithGoogle === false"
+        v-show="showSwitch"
         :label="switchd ? 'Editando': 'Editar'"
         v-model="switchd"
         color="blue"
@@ -104,7 +104,21 @@
   const switchd = ref(false)
   const pass = ref('')
   const dialogDeleteAccount = ref(false)
+  watch(
+    () => authStore.loggedWithGoogle,
+    (isLoggedWithGoogle) => {
+      if (isLoggedWithGoogle) {
+        console.log('Usuário logado com Google');
+      } else {
+        console.log('Usuário não está logado com Google');
+      }
+    }
+  )
 
+  const showSwitch = computed(() => {
+    if(authStore.loggedWithGoogle === false) return true
+    return false
+  })
   onBeforeUnmount(() => user.updated_message = '')
 
   onMounted(()=>{

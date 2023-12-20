@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('authStore',{
           this.user = res.data
           this.token = res.data
           this.userName = res.data.user.name
-          this.loggedWithGoogle = true
+          this.$state.loggedWithGoogle = true
           localStorage.setItem('token', res.data.access_token)
           localStorage.setItem('user', res.data.user.email)
           localStorage.setItem('name', res.data.user.name)

@@ -9,7 +9,7 @@
     ></v-file-input>
       <span class="mb-3">Título</span>
       <v-text-field
-          v-model="articleTitle"
+        v-model="articleTitle"
         :style="fontChosen.title ? `font-family: ${fontChosen.title}` : ''"
       ></v-text-field>
       <span>Escolha um fonte para seu título</span>
@@ -59,9 +59,9 @@
   const categories = ref()
   onMounted(async () => {
     const categoriesDB = await api_call(<InterfaceAPI>{
-    method: 'get',
-    url: '/article/categories',
-  })
+      method: 'get',
+      url: '/article/categories',
+    })
     categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
   })
 
