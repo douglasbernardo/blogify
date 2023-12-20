@@ -78,26 +78,51 @@
   import {useArticleStore} from '~/store/article_manager'
   const route = useRoute()
   const articleStore = useArticleStore()
-  const articleOptions = ref<object>({})
+  const articleOptions = ref({})
   const categories = ref<Array<string>>([])
-  const submit = () => {
-    articleStore.edit_article({
-      id: articleOptions.value._id,
-      backgroundImage: articleOptions.value.backgroundImage,
-      title: articleOptions.value.title,
-      titleFont: articleOptions.value.titleFont,
-      article: articleOptions.value.article,
-      textFont: articleOptions.value.textFont,
-      category: articleOptions.value.category,
-      status: articleOptions.value.status
-    })
+  const selectedFile = ref(null)
+  const handleFileChange = (event: any) => {
+    selectedFile.value = event.target.files[0];
+  };
+
+  const submit = async () => {
+    let response = null;
+
+    if (!articleOptions.value.backgroundImage) {
+      const formData = new FormData();
+      formData.append('image', selectedFile.value);
+      try {
+        response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    }
+
+    try {
+      const backgroundImage = response ? response.data.data.display_url : articleOptions.value.backgroundImage;
+
+      await articleStore.edit_article({
+        id: articleOptions.value._id,
+        backgroundImage,
+        title: articleOptions.value.title,
+        titleFont: articleOptions.value.titleFont,
+        article: articleOptions.value.article,
+        textFont: articleOptions.value.textFont,
+        category: articleOptions.value.category,
+        status: articleOptions.value.status,
+      })
+
+    } catch (error) {
+      console.error('Error editing article:', error);
+    }
   }
-  const handleFileChange = () => {}
-  onMounted(async ()=>{
-    const categoriesDB = await api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',})
-    categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
-    await axios.get(`http://localhost:3030/article/reading/${route.params.id}`).then((res)=>{
-      articleOptions.value = res.data
-    })
+
+  onMounted(async() => {
+    const [categoriesResponse, editingArticleResponse] = await Promise.all([
+      api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',}),
+      api_call(<InterfaceAPI>{method:'get', url: `/article/reading/${route.params.id}`})
+    ])
+    categoriesResponse ? categories.value = JSON.parse(categoriesResponse) : []
+    editingArticleResponse ? articleOptions.value = JSON.parse(editingArticleResponse) : []
   })
 </script>

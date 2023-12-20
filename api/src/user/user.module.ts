@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, userSchema } from '../schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/constants';
+import { ArticleModule } from 'src/articles/article.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { jwtConstants } from '../auth/constants';
       global: true,
       secret: jwtConstants.secret,
     }),
+    forwardRef(() => ArticleModule),
   ],
   controllers: [UserController],
   exports: [UserService],

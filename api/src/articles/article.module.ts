@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Article, articleSchema } from '../schemas/articles.schema';
 import { ArticleService } from './article.service';
@@ -13,7 +13,7 @@ import { UserModule } from '../user/user.module';
         schema: articleSchema,
       },
     ]),
-    UserModule,
+    forwardRef(() => UserModule),
   ],
   controllers: [ArticleController],
   exports: [ArticleService],

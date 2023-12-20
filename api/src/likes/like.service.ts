@@ -3,31 +3,30 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ArticleService } from 'src/articles/article.service';
 import { Like } from 'src/schemas/like.schema';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class LikeService {
   constructor(
     @InjectModel(Like.name) private like: Model<Like>,
     private articleService: ArticleService,
+    private userService: UserService,
   ) {}
 
   async iLiked(data) {
     try {
+      const user_id = await this.userService.find_id_user_by_email(data.user);
       const existingLike = await this.like.findOne({
-        user: data.user,
+        user: user_id,
         article: data.article,
       });
       if (existingLike) {
         throw new UnauthorizedException('Artigo já foi curtido por você');
-      } else {
-        const newLike = new this.like({
-          user: data.user,
-          article: data.article,
-        });
-        await newLike.save();
-
-        return await this.articleService.increment_article_like(data.article); //passing as parameter the article id
       }
+      const newLike = await this.like.create({user: user_id,article: data.article})
+      await this.articleService.increment_article_like(data.article); //passing as parameter the article id
+
+      return newLike;
     } catch (error) {
       console.error('Erro ao curtir o artigo:', error);
       throw error;

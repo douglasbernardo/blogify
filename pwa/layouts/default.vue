@@ -6,11 +6,11 @@
       <v-icon v-if="mobile.mobile && useRoute().fullPath == '/'" class="arrow-right d-sm-none" size="x-large">mdi-arrow-left-thick</v-icon>
     </v-app-bar>
     <v-navigation-drawer
-        app
-        temporary="true"
-        class="mt-n2"
-        v-if="authStore.isAuthenticated"
-        v-model="drawer"
+      app
+      temporary="true"
+      class="mt-n2"
+      v-if="authStore.isAuthenticated"
+      v-model="drawer"
     >
       <template v-slot:prepend>
         <v-list-item
@@ -42,10 +42,10 @@
         <v-dialog
           v-model="dialogPicture"
           width="auto"
+          persistent
         >
           <ProfilePicture @close="dialogPicture=false"/>
         </v-dialog>
-
       </div>
       <slot/>
     </v-main>
@@ -65,6 +65,7 @@ const userStore = userManager()
 const isRouteDifferent = computed(() => {
   return useRoute().fullPath !== '/';
 })
+
 onMounted(()=>{
   userStore.get_user()
 })

@@ -1,9 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  UnauthorizedException,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ArticleService } from 'src/articles/article.service';
 
 @Injectable()
 export class UserService {
@@ -11,6 +17,8 @@ export class UserService {
     @InjectModel(User.name)
     private user: Model<User>,
     private jwtService: JwtService,
+    @Inject(forwardRef(() => ArticleService))
+    private articleService: ArticleService,
   ) {}
   async add_user(data) {
     if (!data.fromGoogle) {
@@ -45,6 +53,7 @@ export class UserService {
         ? undefined
         : await bcrypt.hash(data.password, 14),
       fromGoogle: !!data.fromGoogle,
+      urlImage: data.fromGoogle ? data.googlePicture : '',
     }).save();
     return {
       user,
@@ -63,6 +72,15 @@ export class UserService {
       return await this.user.findOne({ email: email }).exec();
     } catch (e) {
       throw new UnauthorizedException('E-mail não encontrado', e);
+    }
+  }
+
+  async find_id_user_by_email(email: string) {
+    try {
+      const user = await this.user.findOne({ email: email }).exec();
+      return user._id;
+    } catch (e) {
+      throw new UnauthorizedException('Id não encontrado', e);
     }
   }
 
@@ -87,11 +105,21 @@ export class UserService {
 
     return await user_editing.save();
   }
-  async get_all_users() {
-    return this.user.find({}).exec();
+  async get_all_users(): Promise<User[]> {
+    return await this.user.find({}).exec();
   }
 
   async delete_account(email: string) {
-    return this.user.findOneAndDelete({ email: email });
+    const user_id = await this.find_id_user_by_email(email);
+    if (!user_id)
+      throw new UnauthorizedException(
+        'Usuário não autorizado para excluir a conta',
+      );
+    try {
+      await this.articleService.remove_articles(user_id);
+      return await this.user.findOneAndDelete({ _id: user_id });
+    } catch (e) {
+      throw new UnauthorizedException('Falha ao excluir conta do usuário!');
+    }
   }
 }

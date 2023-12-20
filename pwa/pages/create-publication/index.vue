@@ -9,7 +9,7 @@
     ></v-file-input>
       <span class="mb-3">Título</span>
       <v-text-field
-          v-model="articleTitle"
+        v-model="articleTitle"
         :style="fontChosen.title ? `font-family: ${fontChosen.title}` : ''"
       ></v-text-field>
       <span>Escolha um fonte para seu título</span>
@@ -35,8 +35,6 @@
           default="default"
           v-model="statusChosen"
       ></v-select>
-
-
       <v-btn
         class="me-4"
         type="submit"
@@ -61,9 +59,9 @@
   const categories = ref()
   onMounted(async () => {
     const categoriesDB = await api_call(<InterfaceAPI>{
-    method: 'get',
-    url: '/article/categories',
-  })
+      method: 'get',
+      url: '/article/categories',
+    })
     categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
   })
 
@@ -100,28 +98,29 @@
     title: ''
   })
   const selectedFile = ref(null)
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: any) => {
     selectedFile.value = event.target.files[0];
   };
 
   const submit = async () => {
     const formData = new FormData();
     formData.append('image', selectedFile.value);
+    let backgroundImage = null
     try {
-      const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
-      console.log(response)
-      if(response.data) {
-        articleStore.add_new_article({
-          backgroundImage: response.data.data.display_url,
-          title: articleTitle.value,
-          titleFont: fontChosen.value.title,
-          article: article.value,
-          textFont: fontChosen.value.text,
-          category: categoryChosen.value,
-          status: statusChosen.value,
-          createdBy: localStorage.getItem('user')
-        })
+      if(selectedFile.value){
+        const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+        backgroundImage = response ? response.data.data.display_url : ''
       }
+      articleStore.add_new_article({
+        backgroundImage: backgroundImage,
+        title: articleTitle.value,
+        titleFont: fontChosen.value.title,
+        article: article.value,
+        textFont: fontChosen.value.text,
+        category: categoryChosen.value,
+        status: statusChosen.value,
+        createdBy: localStorage.getItem('user')
+      })
     } catch (error) {
       console.error(error);
     }

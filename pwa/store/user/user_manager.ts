@@ -1,12 +1,12 @@
 import {defineStore} from "pinia";
-import axios from 'axios'
 import {useAuthStore} from "~/store/user/authStore";
 import type { InterfaceAPI } from "~/utils/api_call";
 export const userManager = defineStore('userManager',{
   state: () => ({
     userConfigData: {},
     authStore: useAuthStore(),
-    errorMessages: []
+    errorMessages: [],
+    updated_message: ''
   }),
 
   actions:{
@@ -15,7 +15,7 @@ export const userManager = defineStore('userManager',{
         const apiResponse = await api_call(<InterfaceAPI>{
           method: 'post',
           url: '/user/new_user',
-          data: objUser,
+          data: objUser
         })
         const user = JSON.parse(apiResponse)
         if(apiResponse){
@@ -47,6 +47,7 @@ export const userManager = defineStore('userManager',{
         data: user
       })
       const edited_user = JSON.parse(resp)
+      this.updated_message = 'Usuário Editado com sucesso'
       localStorage.setItem('user',edited_user.email)
       localStorage.setItem('name',edited_user.name)
     },
