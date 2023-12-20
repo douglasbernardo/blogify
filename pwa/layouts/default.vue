@@ -65,6 +65,7 @@ const userStore = userManager()
 const isRouteDifferent = computed(() => {
   return useRoute().fullPath !== '/';
 })
+
 onMounted(()=>{
   userStore.get_user()
 })
