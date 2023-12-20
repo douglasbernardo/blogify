@@ -45,8 +45,9 @@ export class ArticleService {
     return await this.article.find({ createdBy: user }).exec();
   }
 
-  async get_article(id: string) {
-    return await this.article.findOne({ _id: id });
+  async get_article(id: string): Promise<Article> {
+    const articleDoc = await this.article.findOne({ _id: id }).exec();
+    return articleDoc ? (articleDoc.toObject() as Article) : null;
   }
 
   async edit_article(article: articleEditDto): Promise<Article> {
@@ -78,10 +79,17 @@ export class ArticleService {
     return deletedArticle;
   }
 
-  async remove_articles(user_id: string) {
-    return await this.article.deleteMany({
-      createdBy: user_id,
-    });
+  async remove_articles(user_id: string): Promise<any> {
+    try {
+      const result = await this.article.deleteMany({ createdBy: user_id });
+      console.log(
+        `${result.deletedCount} articles deleted for user ${user_id}`,
+      );
+      return result; // ou você pode retornar um feedback personalizado se necessário
+    } catch (error) {
+      console.error(`Error deleting articles for user ${user_id}:`, error);
+      throw error;
+    }
   }
 
   last_added(): Promise<Article[]> {

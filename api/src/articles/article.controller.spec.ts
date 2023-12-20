@@ -1,54 +1,31 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { ArticleController } from './article.controller';
-// import { ArticleService } from './article.service';
-// describe('ArticleController', () => {
-//   let articleController: ArticleController;
-//   let articleService: ArticleService;
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       controllers: [ArticleController],
-//       providers: [
-//         {
-//           provide: ArticleService,
-//           useValue: {
-//             threeLastAdded: jest.fn().mockResolvedValue([
-//               {
-//                 id: 'tal',
-//                 title: 'tal',
-//                 titleFont: 'tal',
-//                 text: 'tal',
-//                 fontText: 'blabla',
-//                 category: 'blalbla',
-//                 status: 'sbadfu',
-//               },
-//             ]),
-//           },
-//         },
-//       ],
-//     }).compile();
-
-//     articleController = module.get<ArticleController>(ArticleController);
-//     articleService = module.get<ArticleService>(ArticleService);
-//   });
-
-//   it('should fetch articles', () => {
-//     expect(articleController).toBeDefined();
-//   });
-
-//   describe('get all articles', () => {
-//     it('should return an article list', async () => {
-//       const articles = await articleController.getArticles();
-
-//       expect(articles).toBeDefined();
-//     });
-//   });
-// });
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArticleController } from './article.controller';
 import { ArticleService } from './article.service';
+
+interface Article {
+  _id: string;
+  backgroundImage: string;
+  title: string;
+  titleFont: string;
+  article: string;
+  textFont: string;
+  category: string;
+  status: string;
+}
 describe('ArticleController', () => {
+  let app;
   let articleController: ArticleController;
   let articleService: ArticleService;
+  const mockArticle: Article = {
+    _id: '21p5ccf11d7rt83l093d7c12',
+    backgroundImage: 'http://thisimagedoesnotexists.jpg',
+    title: 'testing',
+    titleFont: 'big font',
+    article: 'this is the article text being write in here',
+    textFont: 'vinna',
+    category: 'tech',
+    status: 'publicado',
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -57,35 +34,43 @@ describe('ArticleController', () => {
         {
           provide: ArticleService,
           useValue: {
-            getArticles: jest.fn().mockResolvedValue([
-              {
-                id: 'tal',
-                title: 'tal',
-                titleFont: 'tal',
-                text: 'tal',
-                fontText: 'blabla',
-                category: 'blalbla',
-                status: 'sbadfu',
-              },
-            ]),
+            get_all_articles: jest.fn().mockResolvedValue([mockArticle]),
+            get_article: jest.fn().mockResolvedValueOnce(mockArticle),
           },
         },
       ],
     }).compile();
 
+    app = module.createNestApplication();
+    await app.init();
+
     articleController = module.get<ArticleController>(ArticleController);
     articleService = module.get<ArticleService>(ArticleService);
   });
 
-  it('should return an array of articles', async () => {
-    const articles = await articleController.getArticles();
-    expect(articles).toBeDefined(); // Verifica se há retorno
-    expect(Array.isArray(articles)).toBe(true); // Verifica se é um array
-    expect(articles.length).toBeGreaterThan(0); // Verifica se o array não está vazio
-    // Verifica se o primeiro elemento do array é um objeto de artigo
-    expect(typeof articles[0]).toBe('object');
-    expect(articles[0]).toHaveProperty('title');
-    expect(articles[0]).toHaveProperty('content');
-    // Adicione mais verificações conforme necessário para os campos do objeto de artigo
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should fetch articles', () => {
+    expect(articleController).toBeDefined();
+  });
+
+  describe('get all articles', () => {
+    it('should return an article list', async () => {
+      const articles = await articleController.getArticles();
+      expect(articles).toBeDefined();
+      expect(Array.isArray(articles)).toBe(true);
+      expect(articles.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('get article by id', () => {
+    it('should return an article by id', async () => {
+      const result = await articleController.getArticle(mockArticle._id);
+
+      expect(articleService.get_article).toHaveBeenCalled();
+      expect(result).toEqual(mockArticle);
+    });
   });
 });

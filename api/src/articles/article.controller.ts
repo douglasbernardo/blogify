@@ -13,7 +13,7 @@ export class ArticleController {
   }
 
   @Get('all')
-  getArticles() {
+  getArticles(): Promise<Article[]> {
     return this.articleService.get_all_articles();
   }
 
@@ -23,13 +23,13 @@ export class ArticleController {
   }
 
   @Get('/categories')
-  getCategories(): Promise<Article[]> {
+  getCategories() {
     return this.articleService.all_categories();
   }
 
   @Get('/reading/:id')
-  getArticle(@Param() params) {
-    return this.articleService.get_article(params.id);
+  getArticle(@Param('id') id: string) {
+    return this.articleService.get_article(id);
   }
 
   @Post('/my_articles')
