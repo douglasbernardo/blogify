@@ -6,7 +6,7 @@ export const useAuthStore = defineStore('authStore',{
     token: localStorage.getItem('token'),
     user: localStorage.getItem('user'),
     userName: localStorage.getItem('name'),
-    loggedWithGoogle: false,
+    loggedWithGoogle: localStorage.getItem('google'),
     errorMessages: [],
   }),
 
@@ -38,7 +38,8 @@ export const useAuthStore = defineStore('authStore',{
           this.user = res.data
           this.token = res.data
           this.userName = res.data.user.name
-          this.$state.loggedWithGoogle = true
+          console.log(res.data)
+          localStorage.setItem('google', res.data.loggedWithGoogle)
           localStorage.setItem('token', res.data.access_token)
           localStorage.setItem('user', res.data.user.email)
           localStorage.setItem('name', res.data.user.name)
@@ -50,6 +51,7 @@ export const useAuthStore = defineStore('authStore',{
     },
     logout(){
       localStorage.clear()
+      this.loggedWithGoogle = null
       this.token = null
       this.user = null
       this.userName = null
