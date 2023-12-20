@@ -8,7 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Article } from '../schemas/articles.schema';
 import { UserService } from '../user/user.service';
 import { Model } from 'mongoose';
-import { articleEditDto } from 'src/dto/edit_article';
+import { articleEditDto } from '../dto/edit_article';
 import {
   AddArticleInterface,
   DeleteArticleInterface,
@@ -35,8 +35,8 @@ export class ArticleService {
     }).save();
   }
 
-  async get_all_articles() {
-    return await this.article.find({ status: 'publicado' }).exec();
+  async get_all_articles(): Promise<Article[]> {
+    return await this.article.find().exec();
   }
 
   async get_my_articles(email: string) {

@@ -1,10 +1,11 @@
 import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { articleEditDto } from 'src/dto/edit_article';
+import { articleEditDto } from '../dto/edit_article';
+import { Article } from 'src/schemas/articles.schema';
 
 @Controller('article')
 export class ArticleController {
-  constructor(private articleService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) {}
 
   @Post('add')
   addArticle(@Request() req) {
@@ -22,7 +23,7 @@ export class ArticleController {
   }
 
   @Get('/categories')
-  getCategories() {
+  getCategories(): Promise<Article[]> {
     return this.articleService.all_categories();
   }
 
