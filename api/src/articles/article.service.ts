@@ -79,6 +79,15 @@ export class ArticleService {
     return deletedArticle;
   }
 
+  async filter_articles(categories) {
+    const articles = await this.article.find({}).exec();
+    const categoriesArray = categories._value;
+
+    return articles.filter((article) =>
+      categoriesArray.includes(article.category),
+    );
+  }
+
   async remove_articles(user_id: string): Promise<any> {
     try {
       const result = await this.article.deleteMany({ createdBy: user_id });
@@ -92,8 +101,8 @@ export class ArticleService {
     }
   }
 
-  last_added(): Promise<Article[]> {
-    return this.article
+  async last_added(): Promise<Article[]> {
+    return await this.article
       .find({ status: 'publicado' })
       .sort({ _id: -1 })
       .limit(3);

@@ -3,9 +3,9 @@ import axios from "axios";
 export interface InterfaceAPI{
   method: string,
   url: string | object,
-  data: string | object | null,
-  params: object | string | null,
-  headers: string| object | null
+  data?: string | object | null,
+  params?: object | string | null,
+  headers?: string| object | null
 }
 const runtimeConfig = useRuntimeConfig()
 

@@ -33,7 +33,7 @@
               </v-hover>
             <v-icon
               class="ml-4" 
-              @click="iLiked(user.token, article._id, index)"
+              @click="handleLike(article._id, index)"
               color="red" 
               icon="mdi-heart"
             ></v-icon><p class="ml-1">{{ article.likes }}</p>
@@ -44,7 +44,7 @@
               timeout="1200" 
               variant="flat" 
               color="red-darken-4" 
-              :text="likeError"
+              :text="likeErrorMessage"
               location="top"
             />
           </v-card-actions>
@@ -57,38 +57,20 @@
 <script lang="ts" setup>
 import { useArticleStore } from '~/store/article_manager';
 import { useAuthStore } from '~/store/user/authStore';
+import { useArticleActions } from '~/composables/articleActions';
 const articleManager = useArticleStore()
 const user = useAuthStore()
 const snackbarErrorLike = ref(false)
-const likeError = ref('')
+const likeErrorMessage = ref('')
+const { doReading, iLiked } = useArticleActions()
 
+const handleLike = async(id:string, index: number) => {
+  await iLiked(id, index).catch(() => {
+    snackbarErrorLike.value = true
+    likeErrorMessage.value = 'Você já curtiu esse artigo'
+  })
+}
 onMounted(()=>{
   articleManager.lastAddedArticles()
 })
-
-const iLiked = async (userToken: any, idArticle: string, index: any) => {
-  if(!userToken){
-    snackbarErrorLike.value = true
-    likeError.value = 'Para curtir o artigo, realize o login'
-  }else{
-    await api_call(<InterfaceAPI>{
-      method: 'post', 
-      url: '/like/i-liked', 
-      data: {user: localStorage.getItem('user'), article: idArticle}, 
-    })
-    .then((res)=>{
-      if(res) articleManager.lastArticles[index].likes++;
-    })
-    .catch((e)=>{
-      if(e.response.data){
-        snackbarErrorLike.value = true
-        likeError.value = e.response.data.message
-      }
-    })
-  }
-}
-const doReading = async (id: string) => {
-  await api_call(<InterfaceAPI>{method: 'post', url: '/article/add-view', data: {id: id}});
-  navigateTo(`/artigos/reading/${id}`)
-}
 </script>
