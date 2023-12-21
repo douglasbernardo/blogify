@@ -79,6 +79,15 @@ export class ArticleService {
     return deletedArticle;
   }
 
+  async filter_articles(categories) {
+    const articles = await this.article.find({}).exec()
+    const categoriesArray = categories._value
+    console.log(categoriesArray)
+    const filteredArticles = articles.filter((article) => categoriesArray.includes(article.category))
+    
+    return filteredArticles
+  }
+
   async remove_articles(user_id: string): Promise<any> {
     try {
       const result = await this.article.deleteMany({ createdBy: user_id });

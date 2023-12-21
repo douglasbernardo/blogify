@@ -51,4 +51,9 @@ export class ArticleController {
   async views(@Request() req) {
     return this.articleService.add_views(req.body.id);
   }
+
+  @Post('filter')
+  async filteringArticles(@Request() req) {
+    return this.articleService.filter_articles(req.body.categories);
+  }
 }
