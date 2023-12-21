@@ -1,4 +1,13 @@
 <template v-if="articles_filtered">
+  <v-sheet
+    class="text-center ma-4"
+    color="grey-lighten-2"
+    height="auto"
+    rounded="pill"
+    width="250"
+    >
+    <h3>Artigos Exibidos</h3>
+  </v-sheet>
   <v-row>
     <v-col v-for="(filtered,index) in filtered_articles" :key="index" cols="12" md="4">
       <v-card class="pa-2 ma-2" width="auto">
