@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 import { User } from '../schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { ArticleService } from 'src/articles/article.service';
+import { ArticleService } from '../articles/article.service';
 
 @Injectable()
 export class UserService {
