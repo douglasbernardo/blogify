@@ -121,51 +121,7 @@
           </template>
         </v-slide-group>
       </template>
-      <template v-if="article.filteredArticles">
-        <v-row v-if="article.filteredArticles">
-          <v-col v-for="(filtered,index) in article.filteredArticles" :key="index" cols="12" md="4">
-            <v-card class="pa-2 ma-2" width="auto">
-              <v-img
-                :src="filtered.backgroundImage ? filtered.backgroundImage : 'no-image-article.avif'"
-                class="align-center"
-                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                height="300px"
-                width="350px"
-                cover
-              >
-                <v-card-title class="text-white text-center" v-text="filtered.title"></v-card-title>
-              </v-img>
-              <v-card-actions>
-                <v-hover v-slot="{ isHovering, props }">
-                  <v-btn 
-                    v-bind="props"
-                    :class="isHovering ? 'bg-blue' : 'text-blue'" 
-                    size="small"
-                    variant="outlined"
-                    @click="doReading(filtered._id)"
-                    >Fazer leitura</v-btn>
-                </v-hover>
-                <v-icon
-                  class="ml-4" 
-                  @click="iLiked(filtered._id,index)"
-                  color="red" 
-                  icon="mdi-heart"
-                ></v-icon><p class="ml-1">{{ filtered.likes }}</p>
-                <v-icon class="ml-4" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">{{ filtered.comments }}</p>
-                <v-icon class="ml-4" color="light-blue">mdi-eye</v-icon><p class="ml-1">{{ filtered.views }}</p>
-              </v-card-actions>
-              <v-snackbar 
-                v-model="snackbarErrorLike" 
-                timeout="1200" 
-                variant="flat" 
-                color="red-darken-4" 
-                :text="likeError"
-                location="top"
-              />
-            </v-card>
-          </v-col>
-        </v-row>
-      </template>
+      <HomeFilteredArticles v-if="article.filteredArticles" :filtered_articles="article.filteredArticles" />
     </v-main>
   </v-app>
 </template>
@@ -174,21 +130,24 @@
   import {useAuthStore} from "~/store/user/authStore";
   import { useArticleStore } from "~/store/article_manager";
   import { useDisplay } from 'vuetify/lib/framework.mjs';
+  const article = useArticleStore()
   const mobile = useDisplay().mobile
   const snackbarErrorLike = ref<boolean>(false)
   const likeError = ref('')
   const dialog = ref<boolean>(false)
   const api_loaded = ref<boolean>(false)
   const filterCategories = ref<Array<string>>([])
+
   const props= defineProps({
     lastAdded: {type: Array}
   })
-
-  const article = useArticleStore()
+  const fetchArticles = async () => {
+    await article.get_all_articles().then(() => api_loaded.value = true)
+  }
 
   onMounted(()=>{
     article.get_categories()
-    article.get_all_articles().then(() => api_loaded.value = true)
+    fetchArticles()
   })
 
   const filterArticles = ((category: any)=>{
@@ -217,9 +176,8 @@ const iLiked = async (idArticle: string, index: any) => {
   }
 
   const filteringChosenCategories = async() => {
-    if(filterCategories.value.length){
-      article.filter_by_categories(filterCategories)
-    }
+    filterCategories.value.length 
+      ? article.filter_by_categories(filterCategories) : article.filteredArticles = []
   }
 </script>
 

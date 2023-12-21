@@ -60,7 +60,6 @@ export const useArticleStore = defineStore('article',{
         url: '/article/filter',
         data: {categories: categoriesArray}
       })
-      
       this.filteredArticles = JSON.parse(filter)
     }
   }
