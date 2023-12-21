@@ -31,8 +31,8 @@ export class UserService {
         const missingField = !data.name
           ? 'nome'
           : !data.email
-          ? 'email'
-          : 'senha';
+            ? 'email'
+            : 'senha';
         throw new UnauthorizedException(
           `O campo ${missingField} deve ser preenchido.`,
         );
@@ -88,6 +88,11 @@ export class UserService {
     const user_editing = await this.user.findOne({
       email: userData.currentEmail,
     });
+    if (user_editing.fromGoogle) {
+      throw new UnauthorizedException(
+        'Você só pode editar seu usuário na sua conta google',
+      );
+    }
     if (!user_editing) {
       throw new UnauthorizedException('E-mail não existe');
     }
