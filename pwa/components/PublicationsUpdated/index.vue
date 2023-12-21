@@ -33,7 +33,7 @@
               </v-hover>
             <v-icon
               class="ml-4" 
-              @click="iLiked(article._id, index)"
+              @click="handleLike(article._id, index)"
               color="red" 
               icon="mdi-heart"
             ></v-icon><p class="ml-1">{{ article.likes }}</p>
@@ -44,7 +44,7 @@
               timeout="1200" 
               variant="flat" 
               color="red-darken-4" 
-              :text="likeError"
+              :text="likeErrorMessage"
               location="top"
             />
           </v-card-actions>
@@ -61,9 +61,15 @@ import { useArticleActions } from '~/composables/articleActions';
 const articleManager = useArticleStore()
 const user = useAuthStore()
 const snackbarErrorLike = ref(false)
-const likeError = ref('')
-const {doReading, iLiked} = useArticleActions()
+const likeErrorMessage = ref('')
+const { doReading, iLiked } = useArticleActions()
 
+const handleLike = async(id:string, index: number) => {
+  await iLiked(id, index).catch(() => {
+    snackbarErrorLike.value = true
+    likeErrorMessage.value = 'Você já curtiu esse artigo'
+  })
+}
 onMounted(()=>{
   articleManager.lastAddedArticles()
 })

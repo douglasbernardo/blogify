@@ -101,7 +101,7 @@
                   </v-hover>
                   <v-icon
                     class="ml-4" 
-                    @click="iLiked(article._id,index)"
+                    @click="handleLike(article._id,index)"
                     color="red" 
                     icon="mdi-heart"
                   ></v-icon><p class="ml-1">{{ article.likes }}</p>
@@ -113,7 +113,7 @@
                   timeout="1200" 
                   variant="flat" 
                   color="red-darken-4" 
-                  :text="likeError"
+                  :text="likeErrorMessage"
                   location="top"
                 />
               </v-card>
@@ -134,12 +134,18 @@
   const article = useArticleStore()
   const mobile = useDisplay().mobile
   const snackbarErrorLike = ref<boolean>(false)
-  const likeError = ref('')
+  const likeErrorMessage = ref('')
   const dialog = ref<boolean>(false)
   const api_loaded = ref<boolean>(false)
   const filterCategories = ref<Array<string>>([])
   const {doReading, iLiked} = useArticleActions()
 
+  const handleLike = async(id:string, index: number) => {
+    await iLiked(id, index).catch(() => {
+      snackbarErrorLike.value = true
+      likeErrorMessage.value = 'Você já curtiu esse artigo'
+    })
+  }
   const fetchArticles = async () => {
     await article.get_all_articles().then(() => api_loaded.value = true)
   }

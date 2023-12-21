@@ -34,21 +34,21 @@
           </v-hover>
           <v-icon
             class="ml-4"
-            @click="iLiked(article._id, index)"
+            @click="handleLike(article._id, index)"
             color="red" 
             icon="mdi-heart"
           ></v-icon><p class="ml-1">{{ article.likes }}</p>
           <v-icon class="ml-4" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">{{ article.comments }}</p>
           <v-icon class="ml-4" color="light-blue">mdi-eye</v-icon><p class="ml-1">{{ article.views }}</p>
         </v-card-actions>
-        <!-- <v-snackbar
+        <v-snackbar
           v-model="snackbarErrorLike" 
           timeout="1200" 
           variant="flat" 
           color="red-darken-4"
-          :text="likeError"
+          :text="likeErrorMessage"
           location="top"
-        /> -->
+        />
       </v-card>
     </v-col>
   </v-row>
@@ -58,9 +58,17 @@
   import type { PropType } from 'nuxt/dist/app/compat/capi';
   import {useArticleActions} from '~/composables/articleActions'
   import type { ArticleInterface } from '~/utils/interfaces/article.interface';
+  const snackbarErrorLike = ref(false)
+  const likeErrorMessage = ref('')
   const {doReading, iLiked} = useArticleActions()
 
-  const props = defineProps({
+  const handleLike = async(id:string, index: number) => {
+    await iLiked(id, index).catch(() => {
+      snackbarErrorLike.value = true
+      likeErrorMessage.value = 'Você já curtiu esse artigo'
+    })
+  }
+  defineProps({
     filtered_articles: {type: Array as PropType<ArticleInterface[]>, required: true}
   })
 </script>
