@@ -129,6 +129,7 @@
 <script lang="ts" setup>
   import {useAuthStore} from "~/store/user/authStore";
   import { useArticleStore } from "~/store/article_manager";
+  import {useArticleActions} from '~/composables/articleActions'
   import { useDisplay } from 'vuetify/lib/framework.mjs';
   const article = useArticleStore()
   const mobile = useDisplay().mobile
@@ -137,10 +138,8 @@
   const dialog = ref<boolean>(false)
   const api_loaded = ref<boolean>(false)
   const filterCategories = ref<Array<string>>([])
+  const {doReading, iLiked} = useArticleActions()
 
-  const props= defineProps({
-    lastAdded: {type: Array}
-  })
   const fetchArticles = async () => {
     await article.get_all_articles().then(() => api_loaded.value = true)
   }
@@ -153,27 +152,6 @@
   const filterArticles = ((category: any)=>{
     return article.allArticles.filter((article)=> article.category === category)
   })
-
-const iLiked = async (idArticle: string, index: any) => {
-  await api_call(<InterfaceAPI>{
-    method: 'post', 
-    url: '/like/i-liked', 
-    data: {user: localStorage.getItem('user'), article: idArticle}, 
-  })
-  .then((res)=>{
-    if(res) article.allArticles[index].likes++;
-  })
-  .catch((e)=>{
-    if(e.response.data){
-      snackbarErrorLike.value = true
-      likeError.value = e.response.data.message
-    }
-  })
-}
-  const doReading = async (id: string) => {
-    await api_call(<InterfaceAPI>{method: 'post', url: '/article/add-view', data: {id: id}});
-    navigateTo(`/artigos/reading/${id}`)
-  }
 
   const filteringChosenCategories = async() => {
     filterCategories.value.length 
