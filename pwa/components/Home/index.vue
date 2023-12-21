@@ -39,6 +39,28 @@
 
     <v-main>
       <PublicationsUpdated/>
+      <v-card
+        v-if="!api_loaded"
+        class="mx-auto my-8"
+        max-width="344"
+        elevation="16"
+      >
+        <v-card-item>
+          <v-card-title>
+            Carregando Dados......
+          </v-card-title>
+        </v-card-item>
+
+        <v-card-text>
+          Aguarde enquanto os dados estão sendo carregados!
+        </v-card-text>
+        <v-progress-linear
+          model-value="80"
+          color="red-darken-2"
+          indeterminate
+          rounded
+    ></v-progress-linear>
+      </v-card>
       <template v-if="article" v-for="category in article.categories" :key="category">
         <v-sheet
           class="text-center ma-4"
@@ -108,15 +130,19 @@
   const mobile = useDisplay().mobile
   const snackbarErrorLike = ref(false)
   const likeError = ref('')
+  const dialog = ref(false)
+  const api_loaded = ref(false)
   const props= defineProps({
     lastAdded: {type: Array}
   })
 
   const article = useArticleStore()
+
   onMounted(()=>{
     article.get_categories()
-    article.get_all_articles()
+    article.get_all_articles().then(() => api_loaded.value = true)
   })
+
   const filteredArticles = ((category: any)=>{
     return article.allArticles.filter((article)=> article.category === category)
   })
@@ -141,7 +167,6 @@ const iLiked = async (idArticle: string, index: any) => {
     await api_call(<InterfaceAPI>{method: 'post', url: '/article/add-view', data: {id: id}});
     navigateTo(`/artigos/reading/${id}`)
   }
-const dialog = ref(false)
 </script>
 
 <style>

@@ -78,7 +78,7 @@ export class ArticleService {
     return deletedArticle;
   }
 
-  async remove_articles(user_id: string) {
+  async remove_articles(user_id: string): Promise<any> {
     return await this.article.deleteMany({
       createdBy: user_id,
     });
