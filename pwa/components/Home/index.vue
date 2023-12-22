@@ -147,7 +147,7 @@
     })
   }
   const fetchArticles = async () => {
-    await article.get_all_articles().then(() => api_loaded.value = true)
+    await article.get_all_articles()
   }
 
   onMounted(()=>{
@@ -156,14 +156,11 @@
   })
 
   watchEffect(() => {
-    if(article.allArticles.length > 0) return fetchArticles()
+    if(article.allArticles.length > 0){
+      return api_loaded.value = true
+    }
     api_loaded.value = false
   })
-
-  // watch(article.allArticles, () => {
-  //   if(article.allArticles.length > 0) return api_loaded.value = true
-  //   api_loaded.value = false
-  // })
 
   const filterArticles = ((category: any)=>{
     return article.allArticles.filter((article)=> article.category === category)
