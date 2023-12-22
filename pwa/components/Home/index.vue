@@ -40,7 +40,6 @@
     </v-navigation-drawer>
 
     <v-main>
-      <PublicationsUpdated/>
       <v-card
         v-if="!api_loaded"
         class="mx-auto my-8"
@@ -63,7 +62,8 @@
           rounded
         ></v-progress-linear>
       </v-card>
-      <template v-if="!article.filteredArticles.length" v-for="category in article.categories" :key="category">
+      <PublicationsUpdated v-if="api_loaded"/>
+      <template v-if="!article.filteredArticles.length && api_loaded" v-for="category in article.categories" :key="category">
         <v-sheet
           class="text-center ma-4"
           color="grey-lighten-2"
@@ -154,6 +154,16 @@
     article.get_categories()
     fetchArticles()
   })
+
+  watchEffect(() => {
+    if(article.allArticles.length > 0) return fetchArticles()
+    api_loaded.value = false
+  })
+
+  // watch(article.allArticles, () => {
+  //   if(article.allArticles.length > 0) return api_loaded.value = true
+  //   api_loaded.value = false
+  // })
 
   const filterArticles = ((category: any)=>{
     return article.allArticles.filter((article)=> article.category === category)
