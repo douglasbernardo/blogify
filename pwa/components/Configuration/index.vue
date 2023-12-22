@@ -5,6 +5,16 @@
   <v-card-text>
     <v-container>
       <v-alert 
+        v-if="user.errorMessages.length"
+        prominent
+        type="error" 
+        icon="$error"
+        :text="user.errorMessages[0]"
+        variant="outlined"
+        closable 
+        @click:close="user.errorMessage=[]"
+      />
+      <v-alert 
         v-if="user.updated_message"
         prominent
         type="success" 

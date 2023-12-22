@@ -41,15 +41,19 @@ export const userManager = defineStore('userManager',{
       this.userConfigData = JSON.parse(resp)
     },
     async edit_user(user: object){
-      const resp = await api_call(<InterfaceAPI>{
-        method: 'post',
-        url: '/user/edit_user',
-        data: user
-      })
-      const edited_user = JSON.parse(resp)
-      this.updated_message = 'Usuário Editado com sucesso'
-      localStorage.setItem('user',edited_user.email)
-      localStorage.setItem('name',edited_user.name)
+      try{
+        const resp = await api_call(<InterfaceAPI>{
+          method: 'post',
+          url: '/user/edit_user',
+          data: user
+        })
+        const edited_user = JSON.parse(resp)
+        this.updated_message = 'Usuário Editado com sucesso'
+        localStorage.setItem('user',edited_user.email)
+        localStorage.setItem('name',edited_user.name)
+      }catch(e: any){
+        this.errorMessages.push(e.response.data.message)
+      }
     },
     async delete_account(currentEmail: string){
       await api_call(<InterfaceAPI>{
