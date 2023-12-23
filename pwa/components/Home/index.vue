@@ -40,28 +40,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-card
-        v-if="!api_loaded"
-        class="mx-auto my-8"
-        max-width="344"
-        elevation="16"
-      >
-        <v-card-item>
-          <v-card-title>
-            Carregando Dados......
-          </v-card-title>
-        </v-card-item>
-
-        <v-card-text>
-          Aguarde enquanto os dados estão sendo carregados!
-        </v-card-text>
-        <v-progress-linear
-          model-value="80"
-          color="red-darken-2"
-          indeterminate
-          rounded
-        ></v-progress-linear>
-      </v-card>
+      <ApiLoading v-if="!api_loaded" />
       <PublicationsUpdated v-if="api_loaded"/>
       <template v-if="!article.filteredArticles.length && api_loaded" v-for="category in article.categories" :key="category">
         <v-sheet
