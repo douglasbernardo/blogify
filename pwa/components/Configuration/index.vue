@@ -25,7 +25,6 @@
         @click:close="user.updated_message=''"
       />
       <v-switch
-        v-if="!loggedWithGoogle"
         :label="switchd ? 'Editando': 'Editar'"
         v-model="switchd"
         color="blue"
@@ -40,6 +39,7 @@
         </v-col>
         <v-col cols="12">
           <v-text-field
+            v-if="!loggedWithGoogle"
             :disabled="!switchd"
             label="Nome"
             v-model="user.userConfigData.name"
@@ -48,6 +48,7 @@
         </v-col>
         <v-col cols="12">
           <v-text-field
+            v-if="!loggedWithGoogle"
             :disabled="!switchd"
             v-model="user.userConfigData.email"
             label="E-mail"
@@ -55,7 +56,7 @@
           />
         </v-col>
         <v-alert
-          v-if="switchd"
+          v-if="switchd && !loggedWithGoogle"
           density="compact"
           closable
           type="warning"
@@ -65,6 +66,7 @@
         />
         <v-col cols="12">
           <v-text-field
+            v-if="!loggedWithGoogle"
             :disabled="!switchd"
             label="Senha"
             v-model="pass"
@@ -116,8 +118,7 @@
   const dialogDeleteAccount = ref(false)
 
   const loggedWithGoogle = computed(()=>{
-    if(JSON.parse(localStorage.getItem('fromGoogle'))) return true
-    return false
+    return JSON.parse(String(localStorage.getItem('fromGoogle'))) ? true : false
   })
 
   onBeforeUnmount(() => user.updated_message = '')
