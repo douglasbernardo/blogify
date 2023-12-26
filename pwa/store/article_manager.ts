@@ -1,3 +1,4 @@
+import axios from "axios";
 import {defineStore} from "pinia";
 
 export const useArticleStore = defineStore('article',{
@@ -22,19 +23,38 @@ export const useArticleStore = defineStore('article',{
       const resp =  await api_call(<InterfaceAPI>{method: 'get',url: '/article/all'})
       this.allArticles = JSON.parse(resp)
     },
+
     async my_articles(email: string){
-      const res = await api_call(<InterfaceAPI>{method: 'post', url: '/article/my_articles', data: {email: email}})
-      this.articles = JSON.parse(res)
+      const articlesResponse = await api_call({
+        method: 'post',
+        url: '/article/my_articles',
+        data: {email: email},
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      this.articles = JSON.parse(articlesResponse)
     },
+
     async delete_article(data: object){
-      await api_call(<InterfaceAPI>{method: 'post', url: '/article/remove', data: data})
+      await api_call({
+        method: 'post', 
+        url: '/article/remove', 
+        data: data,   
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+      })
     },
 
     async edit_article(article: object){
-      const response = await api_call(<InterfaceAPI>{
+      const response = await api_call({
         method: 'post',
         url: '/article/edit',
-        data: article
+        data: article,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
       })
       if(response){
         navigateTo('/artigos')
