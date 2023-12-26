@@ -1,6 +1,9 @@
 import {defineStore} from "pinia";
 import {useAuthStore} from "~/store/user/authStore";
-import type { InterfaceAPI } from "~/utils/api_call";
+
+
+const token = String(localStorage.getItem('token'))
+
 export const userManager = defineStore('userManager',{
   state: () => ({
     userConfigData: {},
@@ -37,6 +40,9 @@ export const userManager = defineStore('userManager',{
         method: 'post',
         url: '/user',
         data: {currentEmail: localStorage.getItem('user')},
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
       this.userConfigData = JSON.parse(resp)
     },

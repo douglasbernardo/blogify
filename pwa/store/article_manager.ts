@@ -1,5 +1,6 @@
-import axios from "axios";
 import {defineStore} from "pinia";
+
+const token = String(localStorage.getItem('token'))
 
 export const useArticleStore = defineStore('article',{
   state: () => ({
@@ -14,7 +15,10 @@ export const useArticleStore = defineStore('article',{
       const new_article = await api_call({
         method: 'post',
         url: '/article/add',
-        data: article
+        data: article,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
       new_article ? navigateTo('/artigos') : console.log("Failed creating an article")
     },
@@ -30,7 +34,7 @@ export const useArticleStore = defineStore('article',{
         url: '/article/my_articles',
         data: {email: email},
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`
+          'Authorization': `Bearer ${token}`
         }
       })
       this.articles = JSON.parse(articlesResponse)
@@ -42,7 +46,7 @@ export const useArticleStore = defineStore('article',{
         url: '/article/remove', 
         data: data,   
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`
+          'Authorization': `Bearer ${token}`
         }
       })
     },
@@ -53,7 +57,7 @@ export const useArticleStore = defineStore('article',{
         url: '/article/edit',
         data: article,
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`
+          'Authorization': `Bearer ${token}`
         }
       })
       if(response){

@@ -4,13 +4,13 @@
       color="grey-lighten-2"
       height="25"
       rounded="pill"
-      width="180"
+      width="170"
     >
       <p class="text-center font-weight-bold">Ultimas Publicações</p>
     </v-sheet>
     <v-row>
       <template v-for="(article,index) in articleManager.lastArticles">
-        <v-card class="ma-2 pa-2" width="auto">
+        <v-card class="ma-3 mt-5" width="auto">
           <v-img
             :src="article.backgroundImage ? article.backgroundImage : 'no-image-article.avif'"
             class="align-center"

@@ -16,6 +16,7 @@ import { Article } from 'src/schemas/articles.schema';
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
+  @UseGuards(AuthGuard)
   @Post('add')
   addArticle(@Request() req) {
     return this.articleService.add_new_article(req.body);
