@@ -12,7 +12,7 @@ export const userManager = defineStore('userManager',{
   actions:{
     async add_new_user(objUser: object){
       try{
-        const apiResponse = await api_call(<InterfaceAPI>{
+        const apiResponse = await api_call({
           method: 'post',
           url: '/user/new_user',
           data: objUser
@@ -33,7 +33,7 @@ export const userManager = defineStore('userManager',{
       }
     },
     async get_user(){
-      const resp = await api_call(<InterfaceAPI>{
+      const resp = await api_call({
         method: 'post',
         url: '/user',
         data: {currentEmail: localStorage.getItem('user')},
@@ -42,7 +42,7 @@ export const userManager = defineStore('userManager',{
     },
     async edit_user(user: object){
       try{
-        const resp = await api_call(<InterfaceAPI>{
+        const resp = await api_call({
           method: 'post',
           url: '/user/edit_user',
           data: user,
@@ -56,7 +56,7 @@ export const userManager = defineStore('userManager',{
       }
     },
     async delete_account(currentEmail: string){
-      await api_call(<InterfaceAPI>{
+      await api_call({
         method: 'post',
         url: '/user/delete_account',
         data: {currentEmail: currentEmail}

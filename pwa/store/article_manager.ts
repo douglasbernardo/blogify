@@ -11,7 +11,7 @@ export const useArticleStore = defineStore('article',{
   }),
   actions: {
     async add_new_article(article: object){
-      const new_article = await api_call(<InterfaceAPI>{
+      const new_article = await api_call({
         method: 'post',
         url: '/article/add',
         data: article
@@ -20,7 +20,7 @@ export const useArticleStore = defineStore('article',{
     },
 
     async get_all_articles(){
-      const resp =  await api_call(<InterfaceAPI>{method: 'get',url: '/article/all'})
+      const resp =  await api_call({method: 'get',url: '/article/all'})
       this.allArticles = JSON.parse(resp)
     },
 
@@ -61,12 +61,12 @@ export const useArticleStore = defineStore('article',{
       }
     },
     async lastAddedArticles(){
-      const res = await api_call(<InterfaceAPI>{method: 'get', url:'/article/last-added'})
+      const res = await api_call({method: 'get', url:'/article/last-added'})
       this.lastArticles = JSON.parse(res)
     },
 
     async get_categories(){
-      const all_categories = await api_call(<InterfaceAPI>{
+      const all_categories = await api_call({
         method: 'get',
         url: '/article/categories',
       })
@@ -74,7 +74,7 @@ export const useArticleStore = defineStore('article',{
     },
 
     async filter_by_categories(categoriesArray: Array<string>){
-      const filter = await api_call(<InterfaceAPI>{
+      const filter = await api_call({
         method: 'post',
         url: '/article/filter',
         data: {categories: categoriesArray}

@@ -2,7 +2,7 @@
   <v-container>
     <v-sheet
       color="grey-lighten-2"
-      height="24"
+      height="25"
       rounded="pill"
       width="180"
     >
@@ -55,22 +55,22 @@
 </template>
 
 <script lang="ts" setup>
-import { useArticleStore } from '~/store/article_manager';
-import { useAuthStore } from '~/store/user/authStore';
-import { useArticleActions } from '~/composables/articleActions';
-const articleManager = useArticleStore()
-const user = useAuthStore()
-const snackbarErrorLike = ref(false)
-const likeErrorMessage = ref('')
-const { doReading, iLiked } = useArticleActions()
+  import { useArticleStore } from '~/store/article_manager';
+  import { useAuthStore } from '~/store/user/authStore';
+  import { useArticleActions } from '~/composables/articleActions';
+  const articleManager = useArticleStore()
+  const user = useAuthStore()
+  const snackbarErrorLike = ref(false)
+  const likeErrorMessage = ref('')
+  const { doReading, iLiked } = useArticleActions()
 
-const handleLike = async(id:string, index: number) => {
-  await iLiked(id, index).catch(() => {
-    snackbarErrorLike.value = true
-    likeErrorMessage.value = 'Você já curtiu esse artigo'
+  const handleLike = async(id:string, index: number) => {
+    await iLiked(id, index).catch(() => {
+      snackbarErrorLike.value = true
+      likeErrorMessage.value = 'Você já curtiu esse artigo'
+    })
+  }
+  onMounted(()=>{
+    articleManager.lastAddedArticles()
   })
-}
-onMounted(()=>{
-  articleManager.lastAddedArticles()
-})
 </script>

@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from "axios";
+import axios from "axios";
 
 export interface InterfaceAPI{
   method: string,
@@ -20,7 +20,6 @@ export function api_call({method, url, data, params, headers} : InterfaceAPI){
     headers
   }
 
-  console.log(axiosConfig)
   return axios(axiosConfig)
   .then(res => JSON.stringify(res.data))
   .catch(error => {
