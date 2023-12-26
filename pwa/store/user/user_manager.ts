@@ -36,7 +36,7 @@ export const userManager = defineStore('userManager',{
       const resp = await api_call(<InterfaceAPI>{
         method: 'post',
         url: '/user',
-        data: {currentEmail: localStorage.getItem('user')}
+        data: {currentEmail: localStorage.getItem('user')},
       })
       this.userConfigData = JSON.parse(resp)
     },
@@ -45,7 +45,7 @@ export const userManager = defineStore('userManager',{
         const resp = await api_call(<InterfaceAPI>{
           method: 'post',
           url: '/user/edit_user',
-          data: user
+          data: user,
         })
         const edited_user = JSON.parse(resp)
         this.updated_message = 'Usuário Editado com sucesso'

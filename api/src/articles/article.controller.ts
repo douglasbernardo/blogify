@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { articleEditDto } from '../dto/edit_article';
+import { AuthGuard } from '../auth/auth.guard';
 import { Article } from 'src/schemas/articles.schema';
 
 @Controller('article')
@@ -17,6 +26,7 @@ export class ArticleController {
     return this.articleService.get_all_articles();
   }
 
+  @UseGuards(AuthGuard)
   @Post('/edit')
   editArticle(@Body() dataEditDto: articleEditDto) {
     return this.articleService.edit_article(dataEditDto);
@@ -32,11 +42,13 @@ export class ArticleController {
     return this.articleService.get_article(id);
   }
 
+  @UseGuards(AuthGuard)
   @Post('/my_articles')
   getMyArticles(@Request() req) {
     return this.articleService.get_my_articles(req.body.email);
   }
 
+  @UseGuards(AuthGuard)
   @Post('remove')
   deleteArticle(@Request() req) {
     return this.articleService.remove_article(req.body);

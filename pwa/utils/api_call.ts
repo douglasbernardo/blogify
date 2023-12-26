@@ -1,22 +1,27 @@
-import axios from "axios";
+import axios, {AxiosRequestConfig} from "axios";
 
 export interface InterfaceAPI{
   method: string,
   url: string | object,
   data?: string | object | null,
   params?: object | string | null,
-  headers?: string| object | null
+  headers?: {
+    Authorization?: string
+  }
 }
 const runtimeConfig = useRuntimeConfig()
 
 export function api_call({method, url, data, params, headers} : InterfaceAPI){
-  return axios({
+  const axiosConfig = {
     method,
     url: `${runtimeConfig.public.apiBase}${url}`,
     data,
     params,
     headers
-  })
+  }
+
+  console.log(axiosConfig)
+  return axios(axiosConfig)
   .then(res => JSON.stringify(res.data))
   .catch(error => {
     throw error
