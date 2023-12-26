@@ -1,9 +1,6 @@
 import {defineStore} from "pinia";
 import {useAuthStore} from "~/store/user/authStore";
 
-
-const token = String(localStorage.getItem('token'))
-
 export const userManager = defineStore('userManager',{
   state: () => ({
     userConfigData: {},
@@ -41,7 +38,7 @@ export const userManager = defineStore('userManager',{
         url: '/user',
         data: {currentEmail: localStorage.getItem('user')},
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       })
       this.userConfigData = JSON.parse(resp)
@@ -69,6 +66,15 @@ export const userManager = defineStore('userManager',{
       })
       navigateTo('/')
       useAuthStore().logout()
+    },
+
+    async activities(email: string){
+      const res = await api_call({
+        method: 'post',
+        url: '/user/my-activities',
+        data: {email:  email}
+      })
+      return JSON.parse(res)
     },
     clearErrorMessages(){
       this.errorMessages = []

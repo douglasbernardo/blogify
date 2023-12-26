@@ -1,7 +1,5 @@
 import {defineStore} from "pinia";
 
-const token = String(localStorage.getItem('token'))
-
 export const useArticleStore = defineStore('article',{
   state: () => ({
     articles: [],
@@ -17,7 +15,7 @@ export const useArticleStore = defineStore('article',{
         url: '/article/add',
         data: article,
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       })
       new_article ? navigateTo('/artigos') : console.log("Failed creating an article")
@@ -34,7 +32,7 @@ export const useArticleStore = defineStore('article',{
         url: '/article/my_articles',
         data: {email: email},
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
       this.articles = JSON.parse(articlesResponse)
@@ -46,7 +44,7 @@ export const useArticleStore = defineStore('article',{
         url: '/article/remove', 
         data: data,   
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
     },
@@ -57,7 +55,7 @@ export const useArticleStore = defineStore('article',{
         url: '/article/edit',
         data: article,
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
       if(response){

@@ -41,4 +41,9 @@ export class UserController {
   deleteUser(@Request() req) {
     return this.userService.delete_account(req.body.currentEmail);
   }
+
+  @Post('/my-activities')
+  activities(@Request() req) {
+    return this.userService.my_activities(req.body.email);
+  }
 }

@@ -10,6 +10,7 @@ import { User } from '../schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ArticleService } from '../articles/article.service';
+import { LikeService } from 'src/likes/like.service';
 
 @Injectable()
 export class UserService {
@@ -19,6 +20,8 @@ export class UserService {
     private jwtService: JwtService,
     @Inject(forwardRef(() => ArticleService))
     private articleService: ArticleService,
+    @Inject(forwardRef(() => LikeService))
+    private likesService: LikeService,
   ) {}
   async add_user(data) {
     if (!data.fromGoogle) {
@@ -126,5 +129,16 @@ export class UserService {
     } catch (e) {
       throw new UnauthorizedException('Falha ao excluir conta do usuário!');
     }
+  }
+
+  //this function name can change anytime
+  async my_activities(email: string) {
+    //find user id by email
+    const id = await this.find_id_user_by_email(email);
+    const articlesLikedByid = await this.likesService.my_likes_length(id);
+
+    return {
+      articlesLiked: articlesLikedByid,
+    };
   }
 }
