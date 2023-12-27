@@ -42,12 +42,12 @@ export class LikeService {
     }
   }
 
-  async my_likes_length(id: string) {
+  async my_likes(id: string) {
     try {
       if (!id) {
         throw new UnauthorizedException('ID inexistente');
       }
-      return (await this.like.find({ user: id }).exec()).length;
+      return await this.like.find({ user: id }).exec();
     } catch (error) {
       throw new UnauthorizedException('Falha ao contar likes', error);
     }

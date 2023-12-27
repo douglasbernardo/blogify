@@ -39,6 +39,10 @@ export class ArticleService {
     return await this.article.find().exec();
   }
 
+  async get_articles_by_id(id: string): Promise<Article[]> {
+    return await this.article.find({ _id: id }).exec();
+  }
+
   async get_my_articles(email: string) {
     const user = await this.userService.find_id_user_by_email(email);
     if (!user) return [];

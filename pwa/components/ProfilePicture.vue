@@ -39,17 +39,23 @@ const uploadPicture = async () => {
   try {
     const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
     if(response.data) {
-      await axios.post('http://localhost:3030/upload/upload-picture', {
-        email: localStorage.getItem('user'),
-        urlImage: response.data.data.thumb.url,
+      const data = {email: localStorage.getItem('user'), urlImage: response.data.data.thumb.url}
+      const resUpload = await api_call({
+        method: 'post', 
+        url:'/upload/upload-picture', 
+        data: data, 
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       })
-      .then((res)=>{
-        console.log(res)
+      if(resUpload){
         setTimeout(()=>{
           loading.value = false
-          uploaded.value = "Upload Feito com Sucesso"
+          uploaded.value = 'Upload Feito com sucesso'
         },2400)
-      });
+      }else{
+        uploaded.value = 'Falha no upload de imagem'
+      }
     }
   } catch (error) {
     console.error(error);

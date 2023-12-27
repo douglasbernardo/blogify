@@ -4,7 +4,7 @@ import {api_call} from '~/utils/api_call'
 export function useArticleActions(){
 
   async function doReading(id: string){
-    await api_call(<InterfaceAPI>{method: 'post', url: '/article/add-view', data: {id: id}});
+    await api_call({method: 'post', url: '/article/add-view', data: {id: id}});
     navigateTo(`/artigos/reading/${id}`)
   }
 
@@ -12,10 +12,13 @@ export function useArticleActions(){
     
     const article = useArticleStore()
     try{
-      const res = await api_call(<InterfaceAPI>{
+      const res = await api_call({
         method: 'post', 
         url: '/like/i-liked', 
-        data: {user: localStorage.getItem('user'), article: idArticle}, 
+        data: {user: localStorage.getItem('user'), article: idArticle},
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       })
       if(res) article.allArticles[index].likes++;
     }catch(e){

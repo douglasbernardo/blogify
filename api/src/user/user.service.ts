@@ -131,14 +131,27 @@ export class UserService {
     }
   }
 
-  //this function name can change anytime
   async my_activities(email: string) {
     //find user id by email
-    const id = await this.find_id_user_by_email(email);
-    const articlesLikedByid = await this.likesService.my_likes_length(id);
+    const id = await this.find_id_user_by_email(email); // pega o id do usuario com email
+    const articlesLiked = await this.likesService.my_likes(id);
+
+    const articlesPromises = articlesLiked.map(async (item) => {
+      if (item.user === String(id)) {
+        return await this.articleService.get_articles_by_id(item.article);
+      }
+      return null;
+    });
+    const articleDetails = await Promise.all(articlesPromises);
+    const validArticles = articleDetails.reduce((acc, articles) => {
+      if (articles) {
+        acc.push(...articles);
+      }
+      return acc;
+    }, []);
 
     return {
-      articlesLiked: articlesLikedByid,
+      articlesLiked: validArticles,
     };
   }
 }

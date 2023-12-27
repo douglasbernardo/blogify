@@ -20,7 +20,18 @@
           <template v-slot:title>
             <h3 class="text-center mr-6 text-h5 ma-2 pa-2">Artigos Curtidos</h3>
           </template>
-          <p class="text-center text-h1 mt-16">{{ activities?.articlesLiked }}</p>
+          <p class="text-center text-h1 text-center mt-5">
+            {{ activities?.articlesLiked.length }}
+            <v-btn 
+              v-if="activities?.articlesLiked.length" 
+              class="ml-4"
+              color="primary" 
+              @click="articlesLikedDialog=!articlesLikedDialog"
+            >
+              Ver Titulos curtidos
+            </v-btn>
+          </p>
+
         </v-card>
       </v-col>
       <v-col cols="9" md="4" sm="5">
@@ -35,14 +46,38 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-dialog
+      v-model="articlesLikedDialog"
+      width="auto"
+    >
+      <v-card>
+        <v-card-text>
+          <v-list lines="two">
+            <v-list-item
+              v-for="article in activities?.articlesLiked"
+              :key="article"
+              :title="article.title"
+              :subtitle="article.category"
+              slim
+              density="comfortable"
+              :to="`/artigos/reading/${article._id}`"
+            >
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="articlesLikedDialog = false">Fechar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script lang="ts" setup>
 import { userManager } from '~/store/user/user_manager';
 const user = userManager()
-const articleStore = userManager()
 const activities = ref()
+const articlesLikedDialog = ref(false)
 onMounted(async() => {
   activities.value = await user.activities(String(localStorage.getItem('user')))
 })

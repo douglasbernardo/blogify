@@ -14,11 +14,13 @@ import { AuthGuard } from 'src/auth/auth.guard';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
+
   @Post('/new_user')
   addUser(@Body() userData: UserDto) {
     return this.userService.add_user(userData);
   }
 
+  @UseGuards(AuthGuard)
   @Get('/all_users')
   allUsers() {
     return this.userService.get_all_users();
@@ -42,6 +44,7 @@ export class UserController {
     return this.userService.delete_account(req.body.currentEmail);
   }
 
+  @UseGuards(AuthGuard)
   @Post('/my-activities')
   activities(@Request() req) {
     return this.userService.my_activities(req.body.email);
