@@ -132,7 +132,6 @@ export class UserService {
   }
 
   async my_activities(email: string) {
-    //find user id by email
     const id = await this.find_id_user_by_email(email); // pega o id do usuario com email
     const articlesLiked = await this.likesService.my_likes(id);
 

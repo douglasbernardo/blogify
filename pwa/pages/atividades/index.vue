@@ -28,7 +28,7 @@
               color="primary" 
               @click="articlesLikedDialog=!articlesLikedDialog"
             >
-              Ver Titulos curtidos
+              Ver Títulos curtidos
             </v-btn>
           </p>
 
