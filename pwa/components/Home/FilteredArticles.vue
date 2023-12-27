@@ -22,6 +22,7 @@
         >
           <v-card-title class="text-white text-center" v-text="article.title"></v-card-title>
         </v-img>
+        <v-card-subtitle class="mt-2 ml-n2">Criado em: {{ formatDate(article.createdAt) }}</v-card-subtitle>
         <v-card-actions>
           <v-hover v-slot="{ isHovering, props }">
             <v-btn 
@@ -71,4 +72,13 @@
   defineProps({
     filtered_articles: {type: Array as PropType<ArticleInterface[]>, required: true}
   })
+  const formatDate = (date: string) => {
+    const formatter = Intl.DateTimeFormat("pt-br",{
+      year: "numeric",
+      month: "long",
+      day: "2-digit"
+    })
+
+    return formatter.format(Date.parse(date))
+  }
 </script>

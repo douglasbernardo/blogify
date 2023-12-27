@@ -1,9 +1,6 @@
 import {defineStore} from "pinia";
 import {useAuthStore} from "~/store/user/authStore";
 
-
-const token = String(localStorage.getItem('token'))
-
 export const userManager = defineStore('userManager',{
   state: () => ({
     userConfigData: {},
@@ -41,7 +38,7 @@ export const userManager = defineStore('userManager',{
         url: '/user',
         data: {currentEmail: localStorage.getItem('user')},
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       })
       this.userConfigData = JSON.parse(resp)
@@ -52,6 +49,9 @@ export const userManager = defineStore('userManager',{
           method: 'post',
           url: '/user/edit_user',
           data: user,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
         })
         const edited_user = JSON.parse(resp)
         this.updated_message = 'Usuário Editado com sucesso'
@@ -65,10 +65,25 @@ export const userManager = defineStore('userManager',{
       await api_call({
         method: 'post',
         url: '/user/delete_account',
-        data: {currentEmail: currentEmail}
+        data: {currentEmail: currentEmail},
+        headers:{
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       })
       navigateTo('/')
       useAuthStore().logout()
+    },
+
+    async activities(email: string){
+      const res = await api_call({
+        method: 'post',
+        url: '/user/my-activities',
+        data: {email:  email},
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      return JSON.parse(res)
     },
     clearErrorMessages(){
       this.errorMessages = []

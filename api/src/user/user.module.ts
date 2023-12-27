@@ -6,6 +6,7 @@ import { User, userSchema } from '../schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/constants';
 import { ArticleModule } from '../articles/article.module';
+import { LikeModule } from 'src/likes/like.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ArticleModule } from '../articles/article.module';
       secret: jwtConstants.secret,
     }),
     forwardRef(() => ArticleModule),
+    forwardRef(() => LikeModule),
   ],
   controllers: [UserController],
   exports: [UserService],

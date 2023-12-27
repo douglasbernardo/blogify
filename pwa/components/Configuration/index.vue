@@ -12,7 +12,7 @@
         :text="user.errorMessages[0]"
         variant="outlined"
         closable 
-        @click:close="user.errorMessage=[]"
+        @click:close="user.errorMessages=[]"
       />
       <v-alert 
         v-if="user.updated_message"
