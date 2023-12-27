@@ -9,6 +9,9 @@
         :style="{fontFamily: articleOptions.fontText}"
         v-html="formatArticle(articleOptions.article)">
       </article>
+      <v-btn class="ma-2" size="small" color="primary" rounded @click="$router.push('/')">Voltar</v-btn>
+      <v-btn class="ma-2" size="small" color="primary" rounded append-icon="mdi-comment" @click="">Comentar</v-btn>
+      <v-btn class="ma-2" size="small" append-icon="mdi-share" rounded color="primary">Compartilhar</v-btn>
     </v-card>
   </v-container>
 </template>
