@@ -6,7 +6,7 @@
     >
       <p
         :style="{fontFamily: String(articleOptions.titleFont), fontSize: '25px' }" 
-        class="text-center pa-10"
+        class="text-center mt-16"
       >
         {{articleOptions.title}}
       </p>
