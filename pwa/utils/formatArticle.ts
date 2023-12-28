@@ -11,6 +11,6 @@ export function formatArticle(article: string){
       novoTexto = novoTexto.replace(match, novoSubtitulo)
     });
   }
-  novoTexto = novoTexto.replace(/\)\s*(\w+)/g, ') \n$1')
+  novoTexto = novoTexto.replace(/\)\s*(\w+)/g, ')')
   return novoTexto
 }
