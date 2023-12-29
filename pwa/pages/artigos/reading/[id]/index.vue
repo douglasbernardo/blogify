@@ -29,7 +29,7 @@
         </div>
         <v-card-actions>
           <v-btn color="primary" size="small" @click="dialogCreateComment = false" variant="flat" rounded>Cancelar</v-btn>
-          <v-btn color="primary" size="small" @click="" variant="flat" rounded>Comentar</v-btn>
+          <v-btn color="primary" size="small" @click="comment(articleOptions._id)" variant="flat" rounded>Comentar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -37,7 +37,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { useAuthStore } from "~/store/user/authStore";
+  import axios from "axios";
+import { useAuthStore } from "~/store/user/authStore";
   const route = useRoute()
   const articleOptions = ref<string>(null)
   const authStore = useAuthStore()
@@ -47,4 +48,13 @@
     const resp = await api_call({method:'get',url:`/article/reading/${route.params.id}`})
     resp ? articleOptions.value = JSON.parse(resp) : articleOptions.value
   })
+
+  const comment = async(idArticle: string) => {
+    await axios.post('http://localhost:3030/comment', {
+      author: localStorage.getItem('name'),
+      emailAuthor: localStorage.getItem('user'),
+      text: 'hello heres a text just a test',
+      idArticle: String(idArticle),
+    })
+  }
 </script>
