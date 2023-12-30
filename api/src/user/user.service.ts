@@ -14,6 +14,7 @@ import { LikeService } from 'src/likes/like.service';
 
 @Injectable()
 export class UserService {
+  [x: string]: any;
   constructor(
     @InjectModel(User.name)
     private user: Model<User>,
@@ -115,6 +116,10 @@ export class UserService {
   }
   async get_all_users(): Promise<User[]> {
     return await this.user.find({}).exec();
+  }
+
+  async get_users(email: string) {
+    return await this.user.find({ email: email }).exec();
   }
 
   async delete_account(email: string) {

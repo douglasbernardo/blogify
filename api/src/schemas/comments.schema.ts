@@ -10,10 +10,10 @@ export class Comments extends Document {
   emailAuthor: string;
 
   @Prop()
-  idArticle: string;
+  text: string;
 
   @Prop()
-  text: string;
+  idArticle: string;
 }
 
 export const commentsSchema = SchemaFactory.createForClass(Comments);
