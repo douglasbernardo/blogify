@@ -19,6 +19,14 @@ export const useCommentStore = defineStore('comment',{
         method: 'get',
         url: `/comment/all/${id}`,
       }) 
+    },
+
+    async delete_your_comment(comment: object) {
+      await api_call({
+        method: 'post',
+        url: '/comment/delete',
+        data: comment
+      })
     }
   }
 })

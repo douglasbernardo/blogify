@@ -21,7 +21,7 @@
         <v-btn class="ma-2" size="small" variant="flat" append-icon="mdi-share" rounded color="primary">Compartilhar</v-btn>
       </v-card-actions>
     </v-card>
-    <v-dialog persistent width="500" v-model="dialogCreateComment">
+    <v-dialog width="500" v-model="dialogCreateComment">
       <v-card>
         <div class="ma-2 pa-2">
           <v-text-field label="Nome" v-model="my_name" disabled></v-text-field>
@@ -49,7 +49,8 @@
             <v-list-item-content>
               <v-chip 
                 v-if="comment.authorEmail === my_email"
-                class="text-left ma-2" 
+                density="compact"
+                class="text-left" 
                 prepend-icon="mdi-account" 
                 color="primary" 
                 variant="outlined"
@@ -59,6 +60,10 @@
               <v-list-item-title>{{ comment.authorName }}</v-list-item-title>
               <v-list-item-subtitle>{{ comment.text }}</v-list-item-subtitle>
             </v-list-item-content>
+            <template v-if="comment.authorEmail === my_email" #append>
+              <v-btn icon="mdi-pencil" class="ma-1" color="blue" variant="text"></v-btn>
+              <v-btn icon="mdi-delete" class="ma-1" color="red" variant="text" @click="delete_comment(articleOptions._id, comment.authorEmail)"></v-btn>
+            </template>
           </v-list-item>
         </v-list>
       </v-card>
@@ -80,17 +85,23 @@
   const my_comment_text = ref<string>('')
   const commentsArray = ref<Array<string>>([])
 
-  onMounted(async ()=>{
-    const [respArticle, respComments] = await Promise.all([
-      api_call({method:'get',url:`/article/reading/${route.params.id}`}),
-      api_call({
-        method:'post',
-        url:`/comment/all`, 
-        data: { id: route.params.id }
-      })
-    ])
-    respArticle ? articleOptions.value = JSON.parse(respArticle) : []
+  const fetchComments = async() => {
+    const respComments = await api_call({
+      method:'post',
+      url:`/comment/all`, 
+      data: { id: route.params.id }
+    })
     respComments ? commentsArray.value = JSON.parse(respComments) : []
+  }
+
+  const fetchArticle = async () => {
+    const respArticle = await api_call({method:'get',url:`/article/reading/${route.params.id}`})
+    respArticle ? articleOptions.value = JSON.parse(respArticle) : []
+  }
+
+  onMounted(async ()=>{
+    fetchArticle(),
+    fetchComments()
   })
 
   const funcComment = async(idArticle: string) => {
@@ -100,6 +111,7 @@
       text: my_comment_text.value,
       idArticle: String(idArticle),
     })
+    fetchComments()
   }
 
   const fixedComment = computed(() => {
@@ -109,4 +121,12 @@
       return 0; // Caso contrário, mantenha a ordem original
     });
   })
+
+  const delete_comment = async(id: string, user: string) => {
+    comment.delete_your_comment({
+      idArticle: id,
+      user: user
+    })
+    fetchComments()
+  }
 </script>
