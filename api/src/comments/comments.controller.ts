@@ -15,4 +15,9 @@ export class CommentsController {
   get_comments(@Request() req) {
     return this.commentsService.get_all_comments(req.body.id);
   }
+
+  @Post('delete')
+  delete_comment(@Request() req) {
+    return this.commentsService.delete_my_comment(req.body);
+  }
 }

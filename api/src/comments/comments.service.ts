@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { ConnectionStates, Model } from 'mongoose';
 import { CommentsDto } from 'src/dto/comments.dto';
 import { Comments } from 'src/schemas/comments.schema';
 import { UserService } from 'src/user/user.service';
@@ -24,6 +24,14 @@ export class CommentsService {
       idArticle: data.idArticle,
     }).save();
   }
+
+  async delete_my_comment(data): Promise<any> {
+    return await this.comment.deleteOne({
+      idArticle: data.idArticle,
+      emailAuthor: data.user,
+    });
+  }
+
   async get_all_comments(id: string): Promise<any> {
     try {
       const commentsWithUserDetails = await this.comment
@@ -47,6 +55,7 @@ export class CommentsService {
               _id: 0, // Omitir o _id se não for necessário
               text: 1, // Manter o texto do comentário
               authorName: '$authorDetails.name', // Pegar o nome do usuário
+              authorEmail: '$authorDetails.email',
               authorImage: '$authorDetails.urlImage', // Pegar a URL da imagem do usuário
             },
           },

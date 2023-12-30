@@ -118,10 +118,6 @@ export class UserService {
     return await this.user.find({}).exec();
   }
 
-  async get_users(email: string) {
-    return await this.user.find({ email: email }).exec();
-  }
-
   async delete_account(email: string) {
     const user_id = await this.find_id_user_by_email(email);
     if (!user_id)
