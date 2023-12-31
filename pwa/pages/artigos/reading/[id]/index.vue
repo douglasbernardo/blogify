@@ -50,10 +50,10 @@
               <v-chip 
                 v-if="comment.authorEmail === my_email"
                 density="compact"
-                class="text-left" 
+                class="text-left ml-n2" 
                 prepend-icon="mdi-account" 
                 color="primary" 
-                variant="outlined"
+                variant="text"
               >
                 Meu Comentário
               </v-chip>
