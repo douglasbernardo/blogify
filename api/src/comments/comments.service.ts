@@ -13,7 +13,6 @@ export class CommentsService {
   ) {}
 
   async createComment(data: CommentsDto): Promise<Comments> {
-    console.log(data);
     if (!data) {
       throw new UnauthorizedException('Falha ao comentar');
     }
@@ -67,5 +66,14 @@ export class CommentsService {
       console.error('Erro ao obter comentários:', error);
       throw error;
     }
+  }
+
+  async edit_comment(data) {
+    const comment = await this.comment.findOneAndUpdate(
+      { emailAuthor: data.user },
+      { $set: { text: data.text } },
+    );
+    console.log(comment);
+    return comment;
   }
 }

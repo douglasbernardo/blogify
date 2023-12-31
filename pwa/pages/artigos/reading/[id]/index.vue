@@ -29,7 +29,8 @@
         </div>
         <v-card-actions>
           <v-btn color="primary" size="small" @click="dialogCreateComment = false" variant="flat" rounded>Cancelar</v-btn>
-          <v-btn color="primary" size="small" @click="funcComment(articleOptions._id)" variant="flat" rounded>Comentar</v-btn>
+          <v-btn v-if="!isEditing" color="primary" size="small" @click="funcComment(articleOptions._id)" variant="flat" rounded>Comentar</v-btn>
+          <v-btn v-if="isEditing" color="primary" size="small" variant="flat" rounded @click="editMyComment">Editar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -39,7 +40,7 @@
         height="2000"
       >
       <v-list lines="two">
-          <v-btn v-if="authStore.token" size="small" class="d-flex justify-start ma-2" variant="tonal" color="primary" @click="dialogCreateComment=!dialogCreateComment">Criar Comentario</v-btn>
+          <v-btn v-if="authStore.token" size="small" class="d-flex justify-start ma-2" variant="tonal" color="primary" @click="createComment">Criar Comentario</v-btn>
           <v-list-item
             class="text-left"
             v-for="comment in fixedComment"
@@ -50,8 +51,8 @@
               <v-chip 
                 v-if="comment.authorEmail === my_email"
                 density="compact"
-                class="text-left ml-n2" 
-                prepend-icon="mdi-account" 
+                class="text-left ml-n3" 
+                append-icon="mdi-account" 
                 color="primary" 
                 variant="text"
               >
@@ -61,7 +62,7 @@
               <v-list-item-subtitle>{{ comment.text }}</v-list-item-subtitle>
             </v-list-item-content>
             <template v-if="comment.authorEmail === my_email" #append>
-              <v-btn icon="mdi-pencil" class="ma-1" color="blue" variant="text"></v-btn>
+              <v-btn icon="mdi-pencil" class="ma-1" color="blue" variant="text" @click="editComment(comment.authorEmail,comment.text)"></v-btn>
               <v-btn icon="mdi-delete" class="ma-1" color="red" variant="text" @click="delete_comment(articleOptions._id, comment.authorEmail)"></v-btn>
             </template>
           </v-list-item>
@@ -74,6 +75,7 @@
 <script lang="ts" setup>
   import { useAuthStore } from "~/store/user/authStore";
   import { useCommentStore } from "~/store/comment_manager";
+import axios from "axios";
   const route = useRoute()
   const articleOptions = ref<string | null>(null)
   const authStore = useAuthStore()
@@ -84,6 +86,7 @@
   const comment = useCommentStore()
   const my_comment_text = ref<string>('')
   const commentsArray = ref<Array<string>>([])
+  const isEditing = ref<boolean>(false)
 
   const fetchComments = async() => {
     const respComments = await api_call({
@@ -105,13 +108,15 @@
   })
 
   const funcComment = async(idArticle: string) => {
+    isEditing.value = false
     await comment.create({
       author: localStorage.getItem('name'),
       emailAuthor: localStorage.getItem('user'),
       text: my_comment_text.value,
       idArticle: String(idArticle),
     })
-    fetchComments()
+    dialogCreateComment.value = false
+    await fetchComments()
   }
 
   const fixedComment = computed(() => {
@@ -122,11 +127,33 @@
     });
   })
 
+  const createComment = () => {
+    my_comment_text.value = ''
+    dialogCreateComment.value = !dialogCreateComment.value
+  }
+
   const delete_comment = async(id: string, user: string) => {
     comment.delete_your_comment({
       idArticle: id,
       user: user
     })
-    fetchComments()
+    await fetchComments()
+  }
+
+  const emailAuthor = ref()
+  const editComment = async(email: string, text: string) => {
+    dialogCreateComment.value = !dialogCreateComment.value
+    isEditing.value = true
+    my_comment_text.value = text
+    emailAuthor.value = email
+  }
+
+  const editMyComment = async() => {
+    await comment.edit_comment({
+      user: emailAuthor.value,
+      text: my_comment_text.value
+    }) 
+    dialogCreateComment.value = false
+    await fetchComments()
   }
 </script>

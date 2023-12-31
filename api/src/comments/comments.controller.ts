@@ -20,4 +20,9 @@ export class CommentsController {
   delete_comment(@Request() req) {
     return this.commentsService.delete_my_comment(req.body);
   }
+
+  @Post('edit')
+  edit_comment(@Request() req) {
+    return this.commentsService.edit_comment(req.body);
+  }
 }
