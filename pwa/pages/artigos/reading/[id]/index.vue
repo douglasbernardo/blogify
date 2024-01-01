@@ -17,11 +17,12 @@
       </article>
       <v-card-actions class="d-flex justify-end">
         <v-btn class="ma-2" size="small" variant="flat" color="primary" rounded @click="$router.push('/')">Voltar</v-btn>
-        <v-btn class="ma-2" variant="flat" size="small" color="primary" rounded append-icon="mdi-comment" @click="sheet=!sheet">Comentarios</v-btn>
+        <v-btn class="ma-2" variant="flat" size="small" color="primary" rounded append-icon="mdi-comment" @click="sheet=!sheet">Comentários</v-btn>
         <v-btn class="ma-2" size="small" variant="flat" append-icon="mdi-share" rounded color="primary">Compartilhar</v-btn>
       </v-card-actions>
     </v-card>
     <v-dialog width="500" v-model="dialogCreateComment">
+      <p v-if="comment.warning">{{ comment.warning }}</p>
       <v-card>
         <div class="ma-2 pa-2">
           <v-text-field label="Nome" v-model="my_name" disabled></v-text-field>
@@ -39,22 +40,36 @@
         class="text-center"
         height="2000"
       >
+      <v-card-title class="bg-blue">
+        Comentários
+        <v-btn 
+          v-if="authStore.token" 
+          size="small" 
+          class="bg-orange" 
+          variant="flat"
+          elevation="8"
+          @click="createComment"
+        >Criar Comentário</v-btn>
+      </v-card-title>
       <v-list lines="two">
-          <v-btn v-if="authStore.token" size="small" class="d-flex justify-start ma-2" variant="tonal" color="primary" @click="createComment">Criar Comentario</v-btn>
           <v-list-item
             class="text-left"
             v-for="comment in fixedComment"
             :key="comment._id"
             :prepend-avatar="comment.authorImage"
+            lines="three"
+            open-strategy="list"
           >
             <v-list-item-content>
               <v-chip 
                 v-if="comment.authorEmail === my_email"
                 density="compact"
-                class="text-left ml-n3" 
-                append-icon="mdi-account" 
+                class="text-left"
+                size="small"
                 color="primary" 
-                variant="text"
+                pill
+                label
+                variant="tonal"
               >
                 Meu Comentário
               </v-chip>
@@ -75,7 +90,6 @@
 <script lang="ts" setup>
   import { useAuthStore } from "~/store/user/authStore";
   import { useCommentStore } from "~/store/comment_manager";
-import axios from "axios";
   const route = useRoute()
   const articleOptions = ref<string | null>(null)
   const authStore = useAuthStore()
@@ -102,6 +116,7 @@ import axios from "axios";
     respArticle ? articleOptions.value = JSON.parse(respArticle) : []
   }
 
+  onBeforeMount(() => comment.warning = '')
   onMounted(async ()=>{
     fetchArticle(),
     fetchComments()

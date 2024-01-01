@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ConnectionStates, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { CommentsDto } from 'src/dto/comments.dto';
 import { Comments } from 'src/schemas/comments.schema';
 import { UserService } from 'src/user/user.service';
@@ -12,9 +12,20 @@ export class CommentsService {
     private userService: UserService,
   ) {}
 
-  async createComment(data: CommentsDto): Promise<Comments> {
+  async createComment(data: CommentsDto) {
     if (!data) {
       throw new UnauthorizedException('Falha ao comentar');
+    }
+
+    console.log(data);
+
+    const find_my_comments = await this.comment.find({
+      emailAuthor: data.emailAuthor,
+    });
+    if (find_my_comments.length >= 1) {
+      throw new UnauthorizedException(
+        'Aviso: O número máximo de comentários permitidos por interação é três.',
+      );
     }
     return new this.comment({
       author: data.author,
