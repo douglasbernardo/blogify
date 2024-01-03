@@ -21,8 +21,9 @@
         <v-btn class="ma-2" size="small" variant="flat" append-icon="mdi-share" rounded color="primary">Compartilhar</v-btn>
       </v-card-actions>
     </v-card>
-    <v-dialog width="500" v-model="dialogCreateComment">
+    <v-dialog persistent width="500" v-model="dialogCreateComment">
       <v-card>
+        <v-alert class="text-center ma-2" type="error" variant="tonal" v-if="errorMsg">{{ errorMsg }}</v-alert>
         <div class="ma-2 pa-2">
           <v-text-field label="Nome" v-model="my_name" disabled></v-text-field>
           <v-text-field label="Comentário" v-model="my_comment_text"></v-text-field> 
@@ -51,12 +52,11 @@
           <v-col>
             <v-btn 
               v-if="authStore.token" 
-              size="small" 
-              class="bg-orange mt-n1" 
-              variant="elevated"
-              elevation="8"
+              class="font-weight-bold rounded-lg"
+              variant="outlined" 
+              size="small"
               @click="createComment"
-              text="Escreva um Comentário"
+              text="Escreva um comentário"
             />
           </v-col>
         </v-row>
@@ -154,7 +154,20 @@
     fetchComments()
   })
 
+  const errorMsg = ref('')
   const funcComment = async(idArticle: string) => {
+    if(!my_comment_text.value){
+      errorMsg.value = 'O campo comentário deve ser preenchido'
+      return
+    }
+    if(my_comment_text.value.length > 780){
+      errorMsg.value = 'O comentario deve ter no maximo 780 caracteres'
+      return
+    }
+    if(my_comment_text.value.length < 100){
+      errorMsg.value = 'O comentario deve ter no minimo 100 caracteres'
+      return
+    }
     isEditing.value = false
     await comment.create({
       author: localStorage.getItem('name'),
