@@ -134,7 +134,6 @@
 <script lang="ts" setup>
   import { useAuthStore } from "~/store/user/authStore";
   import { useCommentStore } from "~/store/comment_manager";
-  import { useDateFormat, useNow } from '@vueuse/core'
   const route = useRoute()
   const articleOptions = ref<string | null>(null)
   const authStore = useAuthStore()
@@ -146,7 +145,6 @@
   const my_comment_text = ref<string>('')
   const commentsArray = ref<Array<string>>([])
   const isEditing = ref<boolean>(false)
-  const formatted = useDateFormat(useNow(), 'DD-MM-YYYY (ddd)', { locales: 'pt-br' })
 
   const fetchComments = async() => {
     const respComments = await api_call({
