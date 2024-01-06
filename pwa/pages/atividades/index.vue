@@ -1,48 +1,59 @@
 <template>
   <v-container class="pa-0">
-    <v-row class="ma-2 pa-2">
-      <v-col cols="12" md="10" sm="10" lg="4">
-        <v-card color="indigo" variant="tonal" height="300" width="300">
-          <template #prepend>
-            <v-icon size="x-large">mdi-book-open-page-variant</v-icon>
-          </template>
-          <template v-slot:title>
-            <h3 class="text-center mr-6 text-h5 ma-2 pa-2">Artigos Lidos</h3>
-          </template>
-          <p class="text-center text-h1 mt-16">17</p>
-        </v-card>
-      </v-col>
+    <v-row class="ma-2 pa-2" align="center" justify="center" no-gutters>
       <v-col cols="12" md="12" sm="12" lg="4">
-        <v-card variant="tonal" color="indigo" height="300" width="300">
-          <template #prepend>
-            <v-icon size="x-large">mdi-thumb-up</v-icon>
-          </template>
-          <template v-slot:title>
-            <h3 class="text-center mr-6 text-h5 ma-2 pa-2">Artigos Curtidos</h3>
-          </template>
-          <p class="text-center text-h1 text-center mt-5">
-            {{ activities?.articlesLiked.length }}
+        <v-card 
+          variant="tonal" 
+          elevation="10" 
+          max-width="344" 
+          prepend-icon="mdi-thumb-up" 
+          color="indigo" 
+          min-height="300" 
+          title="Artigos Curtidos"
+        >
+          <v-card-text align="center" justify="center" class="mt-16 text-h1">  {{ activities?.articlesLiked.length }}</v-card-text>
+          <v-card-actions>
             <v-btn 
               v-if="activities?.articlesLiked.length" 
-              class="ml-4"
+              class="ml-16 mt-16"
+              variant="outlined"
               color="primary" 
               @click="articlesLikedDialog=!articlesLikedDialog"
             >
               Ver Títulos curtidos
             </v-btn>
-          </p>
-
+          </v-card-actions>
         </v-card>
       </v-col>
-      <v-col cols="9" md="4" sm="5">
-        <v-card color="indigo" variant="tonal" height="300" width="300">
-          <template #prepend>
-            <v-icon size="x-large">mdi-comment</v-icon>
+      <v-col cols="12" md="12" sm="12" lg="4">
+        <v-card 
+          color="indigo" 
+          variant="tonal" 
+          elevation="10" 
+          prepend-icon="mdi-comment"
+          min-height="300" 
+          max-width="344"
+          title="Artigos Comentados"
+        >
+          <template #append>
+            <v-tooltip text="Conta todos os artigos comentados por voce">
+              <template v-slot:activator="{ props }">
+                <v-btn v-bind="props" color="warning" icon="mdi-alert-circle" variant="text"></v-btn>
+              </template>
+            </v-tooltip>
           </template>
-          <template v-slot:title>
-            <h3 class="text-center mr-6 text-h5 ma-2 pa-2">Total Comentários</h3>
-          </template>
-          <p class="text-center text-h1 mt-16">22</p>
+          <v-card-text align="center" justify="center" class="mt-16 text-h1">  {{ commentedArticles.length }}</v-card-text>
+          <v-card-actions>
+            <v-btn 
+              v-if="commentedArticles.length" 
+              class="ml-16 mt-16"
+              variant="outlined"
+              color="primary" 
+              @click="commentedArticlesDialog=!commentedArticlesDialog"
+            >
+              Ver Artigos Comentados
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -70,6 +81,30 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog
+      v-model="commentedArticlesDialog"
+      width="auto"
+    >
+      <v-card>
+        <v-card-text>
+          <v-list lines="two">
+            <v-list-item
+              v-for="article in commentedArticles"
+              :key="article"
+              :title="article.title"
+              :subtitle="article.category"
+              slim
+              density="comfortable"
+              :to="`/artigos/reading/${article._id}`"
+            >
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="commentedArticlesDialog = false">Fechar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -78,7 +113,12 @@ import { userManager } from '~/store/user/user_manager';
 const user = userManager()
 const activities = ref()
 const articlesLikedDialog = ref(false)
+const commentedArticlesDialog = ref(false)
 onMounted(async() => {
   activities.value = await user.activities(String(localStorage.getItem('user')))
+})
+
+const commentedArticles = computed(() => {
+  return activities.value?.articlesCommented || []
 })
 </script>

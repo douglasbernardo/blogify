@@ -11,9 +11,11 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ArticleService } from '../articles/article.service';
 import { LikeService } from 'src/likes/like.service';
+import { CommentsService } from 'src/comments/comments.service';
 
 @Injectable()
 export class UserService {
+  [x: string]: any;
   constructor(
     @InjectModel(User.name)
     private user: Model<User>,
@@ -22,6 +24,8 @@ export class UserService {
     private articleService: ArticleService,
     @Inject(forwardRef(() => LikeService))
     private likesService: LikeService,
+    @Inject(forwardRef(() => CommentsService))
+    private commentService: CommentsService,
   ) {}
   async add_user(data) {
     if (!data.fromGoogle) {
@@ -132,8 +136,16 @@ export class UserService {
   }
 
   async my_activities(email: string) {
-    const id = await this.find_id_user_by_email(email); // pega o id do usuario com email
+    const id = await this.find_id_user_by_email(email); //pega o id do usuario com email
     const articlesLiked = await this.likesService.my_likes(id);
+
+    const my_comments = await this.commentService.get_all_my_comments(email);
+    const commentsPromises = my_comments.map(async (item) => {
+      if (item.emailAuthor === email) {
+        return await this.articleService.get_articles_by_id(item.idArticle);
+      }
+      return null;
+    });
 
     const articlesPromises = articlesLiked.map(async (item) => {
       if (item.user === String(id)) {
@@ -141,8 +153,19 @@ export class UserService {
       }
       return null;
     });
+    const commentsDetails = await Promise.all(commentsPromises);
     const articleDetails = await Promise.all(articlesPromises);
+
+    console.log(commentsDetails);
+
     const validArticles = articleDetails.reduce((acc, articles) => {
+      if (articles) {
+        acc.push(...articles);
+      }
+      return acc;
+    }, []);
+
+    const validArticlesComments = commentsDetails.reduce((acc, articles) => {
       if (articles) {
         acc.push(...articles);
       }
@@ -151,6 +174,7 @@ export class UserService {
 
     return {
       articlesLiked: validArticles,
+      articlesCommented: validArticlesComments,
     };
   }
 }

@@ -1,6 +1,6 @@
-import {IsEmail, IsOptional} from "class-validator";
+import { IsEmail, IsOptional } from 'class-validator';
 
-export class editDto{
+export class editDto {
   @IsEmail()
   readonly currentEmail: string;
   @IsOptional()
@@ -8,5 +8,5 @@ export class editDto{
   @IsOptional()
   readonly email: string;
   @IsOptional()
-  readonly password: string
+  readonly password: string;
 }

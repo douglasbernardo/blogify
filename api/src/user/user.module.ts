@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/constants';
 import { ArticleModule } from '../articles/article.module';
 import { LikeModule } from 'src/likes/like.module';
+import { CommentsModule } from 'src/comments/comments.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { LikeModule } from 'src/likes/like.module';
     }),
     forwardRef(() => ArticleModule),
     forwardRef(() => LikeModule),
+    forwardRef(() => CommentsModule),
   ],
   controllers: [UserController],
   exports: [UserService],

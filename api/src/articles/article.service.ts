@@ -100,7 +100,7 @@ export class ArticleService {
       );
       return result; // ou você pode retornar um feedback personalizado se necessário
     } catch (error) {
-      console.error(`Error deleting articles for user ${user_id}:`, error);
+      console.error(`Error deleting articles:`, error);
       throw error;
     }
   }
