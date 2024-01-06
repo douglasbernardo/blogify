@@ -3,30 +3,25 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CommentsDto } from 'src/dto/comments.dto';
 import { Comments } from 'src/schemas/comments.schema';
-import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class CommentsService {
-  constructor(
-    @InjectModel(Comments.name) private comment: Model<Comments>,
-    private userService: UserService,
-  ) {}
+  constructor(@InjectModel(Comments.name) private comment: Model<Comments>) {}
 
   async createComment(data: CommentsDto) {
     if (!data) {
       throw new UnauthorizedException('Falha ao comentar');
     }
+    // console.log(data);
 
-    console.log(data);
-
-    const find_my_comments = await this.comment.find({
-      emailAuthor: data.emailAuthor,
-    });
-    if (find_my_comments.length >= 1) {
-      throw new UnauthorizedException(
-        'Aviso: O número máximo de comentários permitidos por interação é três.',
-      );
-    }
+    // const find_my_comments = await this.comment.find({
+    //   emailAuthor: data.emailAuthor,
+    // });
+    // if (find_my_comments.length >= 1) {
+    //   throw new UnauthorizedException(
+    //     'Aviso: O número máximo de comentários permitidos por interação é três.',
+    //   );
+    // }
     return new this.comment({
       author: data.author,
       emailAuthor: data.emailAuthor,
@@ -76,6 +71,17 @@ export class CommentsService {
     } catch (error) {
       console.error('Erro ao obter comentários:', error);
       throw error;
+    }
+  }
+
+  async get_all_my_comments(email: string) {
+    try {
+      const my_comments = await this.comment
+        .find({ emailAuthor: email })
+        .exec();
+      return my_comments;
+    } catch (error) {
+      console.log(error);
     }
   }
 

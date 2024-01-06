@@ -40,9 +40,9 @@
         class="text-center"
         height="2000"
       >
-      <v-card-title class="bg-blue">
+      <v-card-title class="bg-blue-darken-3">
         <v-row>
-          <v-col>
+          <v-col class="ml-n12">
             <p style="font-family: Days One;">
               <v-icon>mdi-comment-multiple</v-icon>
               Comentários
@@ -52,11 +52,12 @@
           <v-col>
             <v-btn 
               v-if="authStore.token" 
-              class="font-weight-bold rounded-lg"
-              variant="outlined" 
+              class="bg-blue font-weight-light rounded-lg mt-n2"
+              elevation="10"
               size="small"
+              variant="flat" 
               @click="createComment"
-              text="Escreva um comentário"
+              text="Escrever comentário"
             />
           </v-col>
         </v-row>
@@ -68,7 +69,7 @@
         variant="text"
       >
         <v-img
-          class="align-end text-white"
+          class="align-end text-white rounded-t-xl"
           height="280"
           src="https://www.redegazeta.com.br/residencia/wp-content/uploads/sites/9/2021/09/Internet-gauchazh.jpg"
           cover
@@ -79,7 +80,7 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn color="orange" variant="tonal" block @click="createComment">
+          <v-btn color="orange" variant="tonal" block @click="verifyIfLogged">
             Comentar
           </v-btn>
         </v-card-actions>
@@ -154,6 +155,11 @@
     fetchComments()
   })
 
+  const createComment = () => {
+    my_comment_text.value = ''
+    dialogCreateComment.value = !dialogCreateComment.value
+  }
+
   const errorMsg = ref('')
   const funcComment = async(idArticle: string) => {
     if(!my_comment_text.value){
@@ -164,8 +170,8 @@
       errorMsg.value = 'O comentario deve ter no maximo 780 caracteres'
       return
     }
-    if(my_comment_text.value.length < 100){
-      errorMsg.value = 'O comentario deve ter no minimo 100 caracteres'
+    if(my_comment_text.value.length < 70){
+      errorMsg.value = 'O comentario deve ter no minimo 70 caracteres'
       return
     }
     isEditing.value = false
@@ -186,11 +192,6 @@
       return 0; // Caso contrário, mantenha a ordem original
     });
   })
-
-  const createComment = () => {
-    my_comment_text.value = ''
-    dialogCreateComment.value = !dialogCreateComment.value
-  }
 
   const delete_comment = async(id: string, user: string) => {
     comment.delete_your_comment({
@@ -215,5 +216,13 @@
     }) 
     dialogCreateComment.value = false
     await fetchComments()
+  }
+
+  const verifyIfLogged = () => {
+    if(authStore.token){
+      return createComment()
+    }else{
+      useRouter().push('/user/login')
+    }
   }
 </script>
