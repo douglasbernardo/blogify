@@ -19,7 +19,8 @@ export default defineNuxtConfig({
   modules:[
     '@pinia/nuxt',
     'nuxt-vue3-google-signin',
-    '@nuxtjs/google-fonts'
+    '@nuxtjs/google-fonts',
+    '@vueuse/nuxt'
   ],
   googleFonts: {
     families: {

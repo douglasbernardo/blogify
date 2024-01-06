@@ -59,6 +59,7 @@ export class CommentsService {
             $project: {
               _id: 0, // Omitir o _id se não for necessário
               text: 1, // Manter o texto do comentário
+              createdAt: 1,
               authorName: '$authorDetails.name', // Pegar o nome do usuário
               authorEmail: '$authorDetails.email',
               authorImage: '$authorDetails.urlImage', // Pegar a URL da imagem do usuário
@@ -66,7 +67,6 @@ export class CommentsService {
           },
         ])
         .exec();
-
       return commentsWithUserDetails;
     } catch (error) {
       console.error('Erro ao obter comentários:', error);
