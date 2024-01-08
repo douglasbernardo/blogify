@@ -1,33 +1,42 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { ConnectionStates, Model } from 'mongoose';
+import { ArticleService } from 'src/articles/article.service';
 import { CommentsDto } from 'src/dto/comments.dto';
 import { Comments } from 'src/schemas/comments.schema';
 
 @Injectable()
 export class CommentsService {
-  constructor(@InjectModel(Comments.name) private comment: Model<Comments>) {}
+  constructor(
+    @InjectModel(Comments.name) private comment: Model<Comments>,
+    private articleService: ArticleService,
+  ) {}
 
   async createComment(data: CommentsDto) {
     if (!data) {
       throw new UnauthorizedException('Falha ao comentar');
     }
-    // console.log(data);
+   try{
+      await this.check_max_comments_per_interaction(data.emailAuthor)
+      const add_comment = new this.comment({
+        author: data.author,
+        emailAuthor: data.emailAuthor,
+        text: data.text,
+        idArticle: data.idArticle,
+      })
+      await this.articleService.increment_article_comment(data.idArticle);
+      return add_comment.save()
+    }catch(error){
+      throw new UnauthorizedException('Falha na função comentario')
+    }
+  }
 
-    // const find_my_comments = await this.comment.find({
-    //   emailAuthor: data.emailAuthor,
-    // });
-    // if (find_my_comments.length >= 1) {
-    //   throw new UnauthorizedException(
-    //     'Aviso: O número máximo de comentários permitidos por interação é três.',
-    //   );
-    // }
-    return new this.comment({
-      author: data.author,
-      emailAuthor: data.emailAuthor,
-      text: data.text,
-      idArticle: data.idArticle,
-    }).save();
+  async check_max_comments_per_interaction(emailAuthor: string){
+    const commentsByUser = await this.comment.find({ emailAuthor });
+
+    if (commentsByUser.length >= 1) {
+      throw new UnauthorizedException('Aviso: O número máximo de comentários permitidos por interação é três.');
+    }
   }
 
   async delete_my_comment(data): Promise<any> {

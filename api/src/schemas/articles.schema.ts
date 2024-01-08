@@ -27,6 +27,9 @@ export class Article extends Document {
   @Prop({ default: 0 })
   views: 0;
 
+  @Prop({ default: 0 })
+  comments: 0;
+
   @Prop()
   status: string;
 
