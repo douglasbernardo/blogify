@@ -156,7 +156,7 @@ export class ArticleService {
       }
       return comment_increment;
     } catch (e) {
-      console.log('Error ao tentar dar like no artigo', e);
+      console.log('Error ao tentar comentar no artigo', e);
       throw Error;
     }
   }

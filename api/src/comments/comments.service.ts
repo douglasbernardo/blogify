@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ConnectionStates, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { ArticleService } from 'src/articles/article.service';
 import { CommentsDto } from 'src/dto/comments.dto';
 import { Comments } from 'src/schemas/comments.schema';
@@ -16,27 +16,36 @@ export class CommentsService {
     if (!data) {
       throw new UnauthorizedException('Falha ao comentar');
     }
-   try{
-      await this.check_max_comments_per_interaction(data.emailAuthor)
-      const add_comment = new this.comment({
-        author: data.author,
-        emailAuthor: data.emailAuthor,
-        text: data.text,
-        idArticle: data.idArticle,
-      })
-      await this.articleService.increment_article_comment(data.idArticle);
-      return add_comment.save()
-    }catch(error){
-      throw new UnauthorizedException('Falha na função comentario')
+    if (
+      await this.check_max_comments_per_interaction(
+        data.emailAuthor,
+        data.idArticle,
+      )
+    ) {
+      throw new UnauthorizedException(
+        'Você só póde comentar uma vez no mesmo artigo',
+      );
     }
+    const add_comment = new this.comment({
+      author: data.author,
+      emailAuthor: data.emailAuthor,
+      text: data.text,
+      idArticle: data.idArticle,
+    });
+    await this.articleService.increment_article_comment(data.idArticle);
+    return add_comment.save();
   }
 
-  async check_max_comments_per_interaction(emailAuthor: string){
-    const commentsByUser = await this.comment.find({ emailAuthor });
-
-    if (commentsByUser.length >= 1) {
-      throw new UnauthorizedException('Aviso: O número máximo de comentários permitidos por interação é três.');
-    }
+  async check_max_comments_per_interaction(
+    emailAuthor: string,
+    idArticle: string,
+  ) {
+    return await this.comment
+      .findOne({
+        emailAuthor: emailAuthor,
+        idArticle: idArticle,
+      })
+      .exec();
   }
 
   async delete_my_comment(data): Promise<any> {
@@ -46,7 +55,7 @@ export class CommentsService {
     });
   }
 
-  async get_all_comments(id: string): Promise<any> {
+  async get_all_comments(id: string): Promise<Comments[]> {
     try {
       const commentsWithUserDetails = await this.comment
         .aggregate([
