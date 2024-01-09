@@ -74,12 +74,12 @@
 </template>
 
 <script lang="ts" setup>
-  import axios from "axios";
   import {useArticleStore} from '~/store/article_manager'
   const route = useRoute()
   const articleStore = useArticleStore()
   const articleOptions = ref({})
   const categories = ref<Array<string>>([])
+  const envVariable = useRuntimeConfig()
   const selectedFile = ref(null)
   const handleFileChange = (event: any) => {
     selectedFile.value = event.target.files[0];
@@ -118,11 +118,13 @@
   }
 
   onMounted(async() => {
-    const [categoriesResponse, editingArticleResponse] = await Promise.all([
-      api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',}),
-      api_call(<InterfaceAPI>{method:'get', url: `/article/reading/${route.params.id}`})
-    ])
-    categoriesResponse ? categories.value = JSON.parse(categoriesResponse) : []
-    editingArticleResponse ? articleOptions.value = JSON.parse(editingArticleResponse) : []
+    const {data, error} = await useAsyncData('article-edit', async () => {
+      const [categoriesResponse, editingArticleResponse] = await Promise.all([
+        $fetch<string[]>(`${envVariable.public.apiBase}/article/categories`),
+        $fetch<object>(`${envVariable.public.apiBase}/article/reading/${route.params.id}`),
+      ])
+      categories.value = categoriesResponse, 
+      articleOptions.value = editingArticleResponse
+    })
   })
 </script>
