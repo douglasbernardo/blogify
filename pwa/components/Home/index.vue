@@ -85,7 +85,7 @@
                     class="ml-4" 
                     @click="handleLike(article._id,index)"
                     color="red" 
-                    icon="mdi-heart"
+                    icon="mdi-heart" 
                   ></v-icon><p class="ml-1">{{ article.likes }}</p>
                   <v-icon class="ml-4" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">{{ article.comments }}</p>
                   <v-icon class="ml-4" color="light-blue">mdi-eye</v-icon><p class="ml-1">{{ article.views }}</p>

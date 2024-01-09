@@ -11,7 +11,7 @@
           min-height="300" 
           title="Artigos Curtidos"
         >
-          <v-card-text align="center" justify="center" class="mt-16 text-h1">  {{ activities?.articlesLiked.length }}</v-card-text>
+          <v-card-text align="center" justify="center" class="mt-16 text-h1">{{ activities?.articlesLiked.length }}</v-card-text>
           <v-card-actions>
             <v-btn 
               v-if="activities?.articlesLiked.length" 
@@ -42,7 +42,7 @@
               </template>
             </v-tooltip>
           </template>
-          <v-card-text align="center" justify="center" class="mt-16 text-h1">  {{ commentedArticles.length }}</v-card-text>
+          <v-card-text align="center" justify="center" class="mt-16 text-h1">{{ commentedArticles.length }}</v-card-text>
           <v-card-actions>
             <v-btn 
               v-if="commentedArticles.length" 

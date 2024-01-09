@@ -144,4 +144,20 @@ export class ArticleService {
       throw Error;
     }
   }
+  async increment_article_comment(article_id: string) {
+    try {
+      const comment_increment = await this.article.findOneAndUpdate(
+        { _id: article_id },
+        { $inc: { comments: 1 } },
+        { new: true },
+      );
+      if (!comment_increment) {
+        throw new Error('Artigo não encontrado');
+      }
+      return comment_increment;
+    } catch (e) {
+      console.log('Error ao tentar comentar no artigo', e);
+      throw Error;
+    }
+  }
 }
