@@ -12,39 +12,47 @@ export const useAuthStore = defineStore('authStore',{
 
   actions:{
     async login_user(objUser: object) {
-      await axios.post('http://localhost:3030/auth/login', {
-        email: objUser.email,
-        password: objUser.password
-      }).then((res) => {
-        this.user = res.data
-        this.token = res.data
-        this.userName = res.data.user.name
-        localStorage.setItem('token', res.data.access_token)
-        localStorage.setItem('user', res.data.user.email)
-        localStorage.setItem('name', res.data.user.name)
-        if (res) navigateTo('/')
-      }).catch((e)=>{
-        console.log(e.response.data.message)
-        if (!this.errorMessages.includes(e.response.data.message)) {
-          this.errorMessages.push(e.response.data.message);
+      try{
+        const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/auth/login`,{
+          method: 'post',
+          body: { email: objUser.email, password: objUser.password }
+        })
+        if(data.value){
+          this.user = data.value
+          this.token = data.value
+          this.userName = data.value.user.name
+          localStorage.setItem('token', data.value.access_token)
+          localStorage.setItem('user', data.value.user.email)
+          localStorage.setItem('name', data.value.user.name)
+          navigateTo('/')
         }
-      })
+        if(error.value){
+          console.log(error.value.data.message)
+          if (!this.errorMessages.includes(error.value.data.message)) {
+            this.errorMessages.push(error.value.data.message);
+          }
+        }
+      }catch(error){
+        console.log('Error when trying to login', error)
+      }
     },
     async login_google(token_google: string){
       try {
-        await axios.post('http://localhost:3030/auth/verify-google-token', {
-          access_token: token_google
-        }).then((res) => {
-          this.user = res.data
-          this.token = res.data
-          this.userName = res.data.user.name
-          this.loggedWithGoogle = res.data.fromGoogle
-          localStorage.setItem('token', res.data.access_token)
-          localStorage.setItem('user', res.data.user.email)
-          localStorage.setItem('name', res.data.user.name)
+        const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/auth/verify-google-token`,{
+          method: 'post',
+          body: {access_token: token_google}
+        })
+        if(data.value){
+          this.user = data.value
+          this.token = data.value
+          this.userName = data.value.user.name
+          this.loggedWithGoogle = data.value.fromGoogle
+          localStorage.setItem('token', data.value.access_token)
+          localStorage.setItem('user', data.value.user.email)
+          localStorage.setItem('name', data.value.user.name)
           localStorage.setItem('fromGoogle', true)
           navigateTo('/')
-        })
+        }
       } catch (error) {
         console.error("Erro ao tentar se logar com google:", error);
       }

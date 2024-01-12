@@ -42,7 +42,7 @@ export const userManager = defineStore('userManager',{
         body: { currentEmail: localStorage.getItem('user') },
         headers:{ Authorization: `Bearer ${localStorage.getItem('token')}` },
       })
-      this.userConfigData = data
+      this.userConfigData = data.value
     },
     async edit_user(user: object){
       try{
