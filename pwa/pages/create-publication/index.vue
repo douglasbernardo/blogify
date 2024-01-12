@@ -53,16 +53,12 @@
 </template>
 <script lang="ts" setup>
   import Form from "~/components/User/Form.vue";
-  import axios from "axios";
   import {useArticleStore} from "~/store/article_manager";
   const articleStore = useArticleStore()
   const categories = ref()
   onMounted(async () => {
-    const categoriesDB = await api_call(<InterfaceAPI>{
-      method: 'get',
-      url: '/article/categories',
-    })
-    categoriesDB ? categories.value = JSON.parse(categoriesDB) : null
+    const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/categories`)
+    categories.value = data.value
   })
 
   const fontsTitle = ref([
@@ -108,8 +104,11 @@
     let backgroundImage = null
     try {
       if(selectedFile.value){
-        const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
-        backgroundImage = response ? response.data.data.display_url : ''
+        const {data} = await useFetch('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', {
+          method: 'post',
+          body: formData
+        });
+        backgroundImage = data.value ? data.value.data.display_url : ''
       }
       articleStore.add_new_article({
         backgroundImage: backgroundImage,

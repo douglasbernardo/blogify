@@ -92,14 +92,18 @@
       const formData = new FormData();
       formData.append('image', selectedFile.value);
       try {
-        response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+        response = await useFetch('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974',{
+          method: 'post',
+          body: formData
+        });
       } catch (error) {
         console.error('Error uploading image:', error);
       }
     }
 
     try {
-      const backgroundImage = response ? response.data.data.display_url : articleOptions.value.backgroundImage;
+      console.log(response?.data.value)
+      const backgroundImage = response ? response.data.value.data.display_url : articleOptions.value.backgroundImage;
 
       await articleStore.edit_article({
         id: articleOptions.value._id,
