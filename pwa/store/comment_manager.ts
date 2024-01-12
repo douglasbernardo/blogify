@@ -1,6 +1,4 @@
 import {defineStore} from "pinia";
-import { api_call } from "../utils/api_call";
-
 export const useCommentStore = defineStore('comment',{
   state: () => ({
     comments: [],
@@ -9,36 +7,33 @@ export const useCommentStore = defineStore('comment',{
   actions: {
     async create(commentData: object){
       try{
-        const new_comment = await api_call({
+        const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/comment`,{
           method: 'post',
-          url: '/comment',
-          data: commentData,
+          body: commentData,
         })
+        if(error.value){
+          this.warning = error.value.data.message
+        }
       }catch(e: any){
-        this.warning = e.response.data.message
+        console.log('Error',e)
       }
     },
 
     async get_comments(id: string){
-      await api_call({
-        method: 'get',
-        url: `/comment/all/${id}`,
-      }) 
+      await useFetch(`${useRuntimeConfig().public.apiBase}/comment/all/${id}`)
     },
 
     async delete_your_comment(comment: object) {
-      await api_call({
+      await useFetch(`${useRuntimeConfig().public.apiBase}/comment/delete`,{
         method: 'post',
-        url: '/comment/delete',
-        data: comment
+        body: comment
       })
     },
 
     async edit_comment(commentEditing: object){
-      await api_call({
+      await useFetch(`${useRuntimeConfig().public.apiBase}/comment/edit`,{
         method: 'post',
-        url: '/comment/edit',
-        data: commentEditing
+        body: commentEditing
       })
     }
   }
