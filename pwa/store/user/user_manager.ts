@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {useAuthStore} from "~/store/user/authStore";
+import type { UserInterface } from "~/utils/interfaces/user.interface";
 
 export const userManager = defineStore('userManager',{
   state: () => ({
@@ -11,79 +12,70 @@ export const userManager = defineStore('userManager',{
 
   actions:{
     async add_new_user(objUser: object){
+      interface User {
+        access_token: string,
+        user: UserInterface
+      }
       try{
-        const apiResponse = await api_call({
+        const {data} = await useFetch<User>(`${useRuntimeConfig().public.apiBase}/user/new_user`,{
           method: 'post',
-          url: '/user/new_user',
-          data: objUser
+          body: objUser
         })
-        const user = JSON.parse(apiResponse)
-        if(apiResponse){
+        if(data){
+          const user: User | any = data.value
           this.authStore.token = user.access_token
           this.authStore.user = user.user.email
           this.authStore.userName  = user.user.name
           localStorage.setItem('token', user.access_token)
           localStorage.setItem('user', user.user.email)
           localStorage.setItem('name', user.user.name)
-          navigateTo('/artigos')
+          navigateTo('/')
         }
       }catch(e: any) {
-        this.errorMessages.push(e.response.data.message)
+        this.errorMessages.push(e.response?.data?.message)
         console.log(e.response.data.message)
       }
     },
     async get_user(){
-      const resp = await api_call({
+      const {data} = await useFetch<UserInterface>(`${useRuntimeConfig().public.apiBase}/user`,{
         method: 'post',
-        url: '/user',
-        data: {currentEmail: localStorage.getItem('user')},
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        body: { currentEmail: localStorage.getItem('user') },
+        headers:{ Authorization: `Bearer ${localStorage.getItem('token')}` },
       })
-      this.userConfigData = JSON.parse(resp)
+      this.userConfigData = data.value
     },
     async edit_user(user: object){
       try{
-        const resp = await api_call({
+        const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}/user/edit_user`,{
           method: 'post',
-          url: '/user/edit_user',
-          data: user,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
+          body: user,
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
-        const edited_user = JSON.parse(resp)
-        this.updated_message = 'Usuário Editado com sucesso'
+        const edited_user = data.value
         localStorage.setItem('user',edited_user.email)
         localStorage.setItem('name',edited_user.name)
+        this.updated_message = 'Usuário Editado com sucesso'
       }catch(e: any){
         this.errorMessages.push(e.response.data.message)
       }
     },
     async delete_account(currentEmail: string){
-      await api_call({
+      await useFetch(`${useRuntimeConfig().public.apiBase}/user/delete_account`,{
         method: 'post',
-        url: '/user/delete_account',
-        data: {currentEmail: currentEmail},
-        headers:{
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        body: { currentEmail: currentEmail },
+        headers:{ Authorization: `Bearer ${localStorage.getItem('token')}` },
       })
       navigateTo('/')
       useAuthStore().logout()
     },
 
     async activities(email: string){
-      const res = await api_call({
+      const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}/user/my-activities`,{
         method: 'post',
-        url: '/user/my-activities',
-        data: {email:  email},
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        body:{email: email },
+        headers:{ Authorization: `Bearer ${localStorage.getItem('token')}` },
       })
-      return JSON.parse(res)
+      return data.value
     },
     clearErrorMessages(){
       this.errorMessages = []

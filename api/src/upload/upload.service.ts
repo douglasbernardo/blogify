@@ -2,8 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 
 interface UploadProfileImgBB {
-  email: string,
-  urlImage: string
+  email: string;
+  urlImage: string;
 }
 @Injectable()
 export class uploadService {

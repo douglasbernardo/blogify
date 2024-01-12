@@ -145,19 +145,18 @@
   const my_comment_text = ref<string>('')
   const commentsArray = ref<Array<string>>([])
   const isEditing = ref<boolean>(false)
+  const envVariable = useRuntimeConfig()
 
   const fetchComments = async() => {
-    const respComments = await api_call({
-      method:'post',
-      url:'/comment/all', 
-      data: { id: route.params.id }
-    })
-    respComments ? commentsArray.value = JSON.parse(respComments) : []
+    await $fetch<string[]>(`${envVariable.public.apiBase}/comment/all`, {
+      method: 'post',
+      body: { id: route.params.id }
+    }).then((response) => commentsArray.value = response)
   }
 
   const fetchArticle = async () => {
-    const respArticle = await api_call({method:'get',url:`/article/reading/${route.params.id}`})
-    respArticle ? articleOptions.value = JSON.parse(respArticle) : []
+    const {data} = await useFetch<string>(`${envVariable.public.apiBase}/article/reading/${route.params.id}`)
+    articleOptions.value = data.value
   }
 
   onMounted(async ()=>{

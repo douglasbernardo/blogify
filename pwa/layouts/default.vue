@@ -2,12 +2,12 @@
   <v-layout>
     <v-app-bar height="75" class="bg-black">
       <v-btn v-if="authStore.isAuthenticated" :icon="drawer ? 'mdi-menu-close' : 'mdi-menu-open'" @click="drawer=!drawer"></v-btn>
-      <v-app-bar-title @click="navigateTo('/')" style="cursor: pointer;">Blogify</v-app-bar-title>
+      <v-app-bar-title @click="navigateTo('/')" style="cursor: pointer;">Curious Mind</v-app-bar-title>
       <v-icon v-if="mobile.mobile && useRoute().fullPath == '/'" class="arrow-right d-sm-none" size="x-large">mdi-arrow-left-thick</v-icon>
     </v-app-bar>
     <v-navigation-drawer
       app
-      temporary="true"
+      temporary
       class="mt-n2"
       v-if="authStore.isAuthenticated"
       v-model="drawer"
@@ -73,7 +73,7 @@ onMounted(()=>{
 <style scoped>
 .v-app-bar-title{
 	font-size: 30px;
-	font-family: 'Nosifer', sans-serif;
+	font-family: 'Bungee Spice';
 }
 .arrow-right{
   margin-right: 30px;

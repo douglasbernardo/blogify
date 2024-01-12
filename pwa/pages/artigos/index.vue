@@ -90,7 +90,6 @@
   </v-container>
 </template>
 <script lang="ts" setup>
-  import axios from "axios";
   import {useArticleStore} from "~/store/article_manager";
 
   const articleStore = useArticleStore()

@@ -104,11 +104,9 @@ export class CommentsService {
   }
 
   async edit_comment(data) {
-    const comment = await this.comment.findOneAndUpdate(
+    return await this.comment.updateOne(
       { emailAuthor: data.user },
       { $set: { text: data.text } },
     );
-    console.log(comment);
-    return comment;
   }
 }

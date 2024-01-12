@@ -37,18 +37,18 @@ const uploadPicture = async () => {
   const formData = new FormData();
   formData.append('image', selectedFile.value);
   try {
-    const response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
-    if(response.data) {
-      const data = {email: localStorage.getItem('user'), urlImage: response.data.data.thumb.url}
-      const resUpload = await api_call({
+    const {data, error} = await useFetch('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974',{
+      method: 'post',
+      body: formData
+    });
+    if(data.value) {
+      const dataUpload = {email: localStorage.getItem('user'), urlImage: data.value.data.thumb.url}
+      const {upload ,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/upload/upload-picture`,{
         method: 'post', 
-        url:'/upload/upload-picture', 
-        data: data, 
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        body: dataUpload, 
+        headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
       })
-      if(resUpload){
+      if(upload.value){
         setTimeout(()=>{
           loading.value = false
           uploaded.value = 'Upload Feito com sucesso'

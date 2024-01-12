@@ -74,12 +74,12 @@
 </template>
 
 <script lang="ts" setup>
-  import axios from "axios";
   import {useArticleStore} from '~/store/article_manager'
   const route = useRoute()
   const articleStore = useArticleStore()
   const articleOptions = ref({})
   const categories = ref<Array<string>>([])
+  const envVariable = useRuntimeConfig()
   const selectedFile = ref(null)
   const handleFileChange = (event: any) => {
     selectedFile.value = event.target.files[0];
@@ -92,14 +92,18 @@
       const formData = new FormData();
       formData.append('image', selectedFile.value);
       try {
-        response = await axios.post('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974', formData);
+        response = await useFetch('https://api.imgbb.com/1/upload?key=42dc821a3b9fca8c0dd3764fd1061974',{
+          method: 'post',
+          body: formData
+        });
       } catch (error) {
         console.error('Error uploading image:', error);
       }
     }
 
     try {
-      const backgroundImage = response ? response.data.data.display_url : articleOptions.value.backgroundImage;
+      console.log(response?.data.value)
+      const backgroundImage = response ? response.data.value.data.display_url : articleOptions.value.backgroundImage;
 
       await articleStore.edit_article({
         id: articleOptions.value._id,
@@ -118,11 +122,13 @@
   }
 
   onMounted(async() => {
-    const [categoriesResponse, editingArticleResponse] = await Promise.all([
-      api_call(<InterfaceAPI>{method: 'get',url: '/article/categories',}),
-      api_call(<InterfaceAPI>{method:'get', url: `/article/reading/${route.params.id}`})
-    ])
-    categoriesResponse ? categories.value = JSON.parse(categoriesResponse) : []
-    editingArticleResponse ? articleOptions.value = JSON.parse(editingArticleResponse) : []
+    const {data, error} = await useAsyncData('article-edit', async () => {
+      const [categoriesResponse, editingArticleResponse] = await Promise.all([
+        $fetch<string[]>(`${envVariable.public.apiBase}/article/categories`),
+        $fetch<object>(`${envVariable.public.apiBase}/article/reading/${route.params.id}`),
+      ])
+      categories.value = categoriesResponse, 
+      articleOptions.value = editingArticleResponse
+    })
   })
 </script>
