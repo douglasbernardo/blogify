@@ -55,7 +55,6 @@ export class ArticleService {
   }
 
   async edit_article(article: articleEditDto): Promise<Article> {
-    console.log(article);
     const edit_article = await this.article.findById(article.id);
     const updated_fields = {
       backgroundImage: article.backgroundImage || edit_article.backgroundImage,
@@ -83,24 +82,21 @@ export class ArticleService {
     return deletedArticle;
   }
 
-  async filter_articles(categories) {
-    const articles = await this.article.find({}).exec();
-    const categoriesArray = categories._value;
-
-    return articles.filter((article) =>
-      categoriesArray.includes(article.category),
-    );
+  async filter_articles(categories: string[]) {
+    return await this.article.aggregate([
+      {
+        $match: {
+          category: { $in: categories },
+        },
+      },
+    ]);
   }
 
   async remove_articles(user_id: string): Promise<any> {
     try {
-      const result = await this.article.deleteMany({ createdBy: user_id });
-      console.log(
-        `${result.deletedCount} articles deleted for user ${user_id}`,
-      );
-      return result; // ou você pode retornar um feedback personalizado se necessário
+      if (!user_id) return;
+      return await this.article.deleteMany({ createdBy: user_id });
     } catch (error) {
-      console.error(`Error deleting articles:`, error);
       throw error;
     }
   }
@@ -140,7 +136,6 @@ export class ArticleService {
       }
       return article_liked;
     } catch (e) {
-      console.log('Error ao tentar dar like no artigo', e);
       throw Error;
     }
   }
@@ -156,7 +151,6 @@ export class ArticleService {
       }
       return comment_increment;
     } catch (e) {
-      console.log('Error ao tentar comentar no artigo', e);
       throw Error;
     }
   }
