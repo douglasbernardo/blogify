@@ -17,11 +17,11 @@ export const userManager = defineStore('userManager',{
         user: UserInterface
       }
       try{
-        const {data} = await useFetch<User>(`${useRuntimeConfig().public.apiBase}/user/new_user`,{
+        const {data,error} = await useFetch<User>(`${useRuntimeConfig().public.apiBase}/user/new_user`,{
           method: 'post',
           body: objUser
         })
-        if(data){
+        if(data.value){
           const user: User | any = data.value
           this.authStore.token = user.access_token
           this.authStore.user = user.user.email
@@ -31,9 +31,13 @@ export const userManager = defineStore('userManager',{
           localStorage.setItem('name', user.user.name)
           navigateTo('/')
         }
+        if(error.value){
+          if (!this.errorMessages.includes(error.value.data.message)) {
+            this.errorMessages.push(error.value.data.message);
+          }
+        }
       }catch(e: any) {
-        this.errorMessages.push(e.response?.data?.message)
-        console.log(e.response.data.message)
+        console.log('Error when signing up user',e)
       }
     },
     async get_user(){

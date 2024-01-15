@@ -58,7 +58,7 @@ export class UserService {
       email: data.email,
       password: data.fromGoogle
         ? undefined
-        : await bcrypt.hash(data.password, 14),
+        : await bcrypt.hash(data.password, 12),
       fromGoogle: !!data.fromGoogle,
       urlImage: data.fromGoogle ? data.googlePicture : '',
     }).save();

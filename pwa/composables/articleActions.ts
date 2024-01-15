@@ -1,4 +1,3 @@
-
 export function useArticleActions(){
 
   async function doReading(id: string){
@@ -11,11 +10,15 @@ export function useArticleActions(){
 
   async function iLiked(idArticle: string, index: any){
     try{
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/like/i-liked`,{
+      const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/like/i-liked`,{
         method: 'post',
         body: { user: localStorage.getItem('user'), article: idArticle },
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       })
+
+      if(error.value){
+        return error
+      }
     }catch(e){
       throw e
     }

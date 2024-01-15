@@ -30,9 +30,14 @@
         color="blue"
         inset
       />
-      <v-row>
+      <v-row v-if="user.userConfigData">
         <v-col>
-          <v-img :src="user.userConfigData.urlImage" width="200" alt="Profile Picture"></v-img>
+          <v-img 
+            class="rounded-pill" 
+            :src="user.userConfigData.urlImage" 
+            width="200" 
+            alt="Profile Picture"
+          />
         </v-col>
         <v-col cols="9">
           <ProfilePicture :is-profile="true" :disabled="!switchd"/>
@@ -56,11 +61,13 @@
           />
         </v-col>
         <v-alert
+          class="ml-4"
           v-if="switchd && !loggedWithGoogle"
           density="compact"
           closable
+          variant="outlined"
           type="warning"
-          max-width="800"
+          max-width="900"
           title="Alterar senha"
           text="Se você optar por editar sua senha, ela será automaticamente atualizada para a nova versão escolhida por você."
         />
