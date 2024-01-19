@@ -21,12 +21,12 @@
         <v-btn class="ma-2" size="small" variant="flat" append-icon="mdi-share" rounded color="primary">Compartilhar</v-btn>
       </v-card-actions>
     </v-card>
-    <v-dialog persistent width="500" v-model="dialogCreateComment">
+    <v-dialog persistent width="700" v-model="dialogCreateComment">
       <v-card>
         <v-alert class="text-center ma-2" type="error" variant="tonal" v-if="errorMsg">{{ errorMsg }}</v-alert>
         <div class="ma-2 pa-2">
           <v-text-field label="Nome" v-model="my_name" disabled></v-text-field>
-          <v-text-field label="Comentário" v-model="my_comment_text"></v-text-field> 
+          <v-textarea rows="3" auto-grow label="Comentário" v-model="my_comment_text"></v-textarea> 
         </div>
         <v-card-actions>
           <v-btn color="primary" size="small" @click="dialogCreateComment = false" variant="flat" rounded>Cancelar</v-btn>

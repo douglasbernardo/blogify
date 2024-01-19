@@ -58,15 +58,23 @@
 <script lang="ts" setup>
 const props = defineProps({
   article: {required: true},
-  index: {required: false}
+  index: { required: false}
 })
+import {useAuthStore} from '~/store/user/authStore'
 import { useArticleStore } from '~/store/article_manager';
+const auth = useAuthStore()
 const articleStore = useArticleStore()
 const snackbarErrorLike = ref<boolean>(false)
 const likeErrorMessage = ref('')
 const {doReading} = useArticleActions()
 
 const handleLike = async(id:string) => {
+  if(!auth.isAuthenticated){
+    snackbarErrorLike.value = true
+    likeErrorMessage.value = 'Faça o login para curtir o artigo'
+
+    return
+  }
   const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/like/i-liked`,{
     method: 'post',
     body: { user: localStorage.getItem('user'), article: id },

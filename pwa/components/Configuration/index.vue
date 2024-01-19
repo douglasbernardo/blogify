@@ -24,28 +24,36 @@
         closable 
         @click:close="user.updated_message=''"
       />
-      <v-switch
-        :label="switchd ? 'Editando': 'Editar'"
-        v-model="switchd"
-        color="blue"
-        inset
-      />
+      <v-row>
+        <v-switch
+          :label="updateAllData ? 'Editando': 'Editar Todos'"
+          v-model="updateAllData"
+          color="blue"
+          inset
+        />
+        <v-switch
+          :label="updateOnlyImage ? 'Editando sua foto de perfil': 'Editar Foto'"
+          v-model="updateOnlyImage"
+          color="blue"
+          inset
+        />
+      </v-row>
       <v-row v-if="user.userConfigData">
         <v-col>
           <v-img 
             class="rounded-pill" 
-            :src="user.userConfigData.urlImage" 
+            :src="user.userConfigData && user.userConfigData.imageOptions.addImageUrl ? user.userConfigData.imageOptions.addImageUrl : 'undefined'" 
             width="200" 
             alt="Profile Picture"
           />
         </v-col>
         <v-col cols="9">
-          <ProfilePicture :is-profile="true" :disabled="!switchd"/>
+          <ProfilePicture :is-profile="true" :disabled="!updateOnlyImage && !updateAllData"/>
         </v-col>
         <v-col cols="12">
           <v-text-field
             v-if="!loggedWithGoogle"
-            :disabled="!switchd"
+            :disabled="!updateAllData"
             label="Nome"
             v-model="user.userConfigData.name"
             required
@@ -54,7 +62,7 @@
         <v-col cols="12">
           <v-text-field
             v-if="!loggedWithGoogle"
-            :disabled="!switchd"
+            :disabled="!updateAllData"
             v-model="user.userConfigData.email"
             label="E-mail"
             required
@@ -62,7 +70,7 @@
         </v-col>
         <v-alert
           class="ml-4"
-          v-if="switchd && !loggedWithGoogle"
+          v-if="updateAllData && !loggedWithGoogle"
           density="compact"
           closable
           variant="outlined"
@@ -74,7 +82,7 @@
         <v-col cols="12">
           <v-text-field
             v-if="!loggedWithGoogle"
-            :disabled="!switchd"
+            :disabled="!updateAllData"
             label="Senha"
             v-model="pass"
             type="password"
@@ -85,7 +93,7 @@
       <v-card-actions>
         <v-row>
           <v-btn
-            :disabled="!switchd"
+            :disabled="!updateAllData"
             color="blue-darken-1"
             variant="flat"
             @click="edit"
@@ -120,9 +128,10 @@
   import {useAuthStore} from "~/store/user/authStore";
   const authStore = useAuthStore()
   const user = userManager()
-  const switchd = ref(false)
   const pass = ref('')
   const dialogDeleteAccount = ref(false)
+  const updateOnlyImage = ref(false)
+  const updateAllData = ref(false)
 
   const loggedWithGoogle = computed(()=>{
     return JSON.parse(String(localStorage.getItem('fromGoogle'))) ? true : false
