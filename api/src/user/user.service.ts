@@ -75,8 +75,9 @@ export class UserService {
   }
 
   async find_user(email: string): Promise<User | undefined> {
+    console.log(email);
     try {
-      return await this.user.findOne({ email: email }).exec();
+      return await this.user.findOne({ email }).exec();
     } catch (e) {
       throw new UnauthorizedException('E-mail não encontrado', e);
     }

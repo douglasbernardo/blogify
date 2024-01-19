@@ -15,8 +15,11 @@ export class User extends Document {
   @Prop()
   fromGoogle: boolean;
 
-  @Prop({ default: '' })
-  urlImage: string;
+  @Prop({ type: Object })
+  imageOptions: {
+    addImageUrl: string;
+    deleteImageUrl: string;
+  };
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
