@@ -61,49 +61,13 @@
       v-model="articlesLikedDialog"
       width="auto"
     >
-      <v-card>
-        <v-card-text>
-          <v-list lines="two">
-            <v-list-item
-              v-for="article in activities?.articlesLiked"
-              :key="article"
-              :title="article.title"
-              :subtitle="article.category"
-              slim
-              density="comfortable"
-              :to="`/artigos/reading/${article._id}`"
-            >
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" block @click="articlesLikedDialog = false">Fechar</v-btn>
-        </v-card-actions>
-      </v-card>
+      <ArticleActivities :article-array="activities.articlesLiked"/>
     </v-dialog>
     <v-dialog
       v-model="commentedArticlesDialog"
       width="auto"
     >
-      <v-card>
-        <v-card-text>
-          <v-list lines="two">
-            <v-list-item
-              v-for="article in commentedArticles"
-              :key="article"
-              :title="article.title"
-              :subtitle="article.category"
-              slim
-              density="comfortable"
-              :to="`/artigos/reading/${article._id}`"
-            >
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" block @click="commentedArticlesDialog = false">Fechar</v-btn>
-        </v-card-actions>
-      </v-card>
+      <ArticleActivities :article-array="commentedArticles"/>
     </v-dialog>
   </v-container>
 </template>
@@ -114,6 +78,7 @@ const user = userManager()
 const activities = ref()
 const articlesLikedDialog = ref(false)
 const commentedArticlesDialog = ref(false)
+
 onMounted(async() => {
   activities.value = await user.activities(String(localStorage.getItem('user')))
 })

@@ -41,7 +41,7 @@
 
     <v-main>
       <ApiLoading v-if="!api_loaded" />
-      <PublicationsUpdated v-if="api_loaded"/>
+      <PublicationsUpdated v-if="api_loaded && !article.filteredArticles.length"/>
       <template v-if="!article.filteredArticles.length && api_loaded" v-for="category in article.categories" :key="category">
         <v-sheet
           class="text-center ma-4"
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-  import {useAuthStore} from "~/store/user/authStore";
+  import { useAuthStore } from "~/store/user/authStore";
   import { useArticleStore } from "~/store/article_manager";
   import { useDisplay } from 'vuetify/lib/framework.mjs';
   const article = useArticleStore()

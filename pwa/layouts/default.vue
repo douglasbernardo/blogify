@@ -18,12 +18,12 @@
           :title="authStore.userName || userStore.userName"
           subtitle="Logado"
         >
-          <template #prepend v-if="userStore.userConfigData?.urlImage">
+          <template #prepend v-if="userStore.userConfigData?.imageOptions">
             <v-avatar size="46">
-              <v-img :src="userStore.userConfigData?.urlImage"></v-img>
+              <v-img :src="userStore.userConfigData?.imageOptions.addImageUrl"></v-img>
             </v-avatar>
           </template>
-          <template #prepend v-if="!userStore.userConfigData?.urlImage">
+          <template #prepend v-if="!userStore.userConfigData?.imageOptions.addImageUrl">
             <v-btn icon="mdi-image-plus" @click="dialogPicture=!dialogPicture" variant="text"></v-btn>
           </template>
       </v-list-item>

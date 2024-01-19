@@ -17,18 +17,16 @@
   </v-sheet>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import axios from 'axios';
+<script lang="ts" setup>
 const props = defineProps({
   disabled: {type: Boolean,required:true},
   isProfile: {type: Boolean}
 })
-const selectedFile = ref(null);
-const loading = ref(false)
-const uploaded = ref(false)
+const selectedFile = ref<string | null>(null);
+const loading = ref<boolean | null>(false)
+const uploaded = ref<string | undefined>()
 
-const handleFileChange = (event) => {
+const handleFileChange = (event: any) => {
   selectedFile.value = event.target.files[0];
 };
 
@@ -41,21 +39,29 @@ const uploadPicture = async () => {
       method: 'post',
       body: formData
     });
+    console.log('Primeiro console',data.value)
     if(data.value) {
-      const dataUpload = {email: localStorage.getItem('user'), urlImage: data.value.data.thumb.url}
-      const {upload ,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/upload/upload-picture`,{
+      await useFetch(`${useRuntimeConfig().public.apiBase}/upload/upload-picture`,{
         method: 'post', 
-        body: dataUpload, 
+        body: {
+          email: localStorage.getItem('user'),
+          imageOptions:{
+            addImageUrl: data.value.data.thumb.url,
+            deleteImageUrl: data.value.data.delete_url
+          }
+        }, 
         headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
+      }).then((res) => {
+        console.log('Primeiro console',res.data.value)
+        if(res.data.value){
+          setTimeout(()=>{
+            loading.value = false
+            uploaded.value = 'Upload Feito com sucesso'
+          },2400)
+        }else{
+          uploaded.value = 'Falha no upload de imagem'
+        }
       })
-      if(upload.value){
-        setTimeout(()=>{
-          loading.value = false
-          uploaded.value = 'Upload Feito com sucesso'
-        },2400)
-      }else{
-        uploaded.value = 'Falha no upload de imagem'
-      }
     }
   } catch (error) {
     console.error(error);

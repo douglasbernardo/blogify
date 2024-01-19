@@ -43,7 +43,7 @@ export const userManager = defineStore('userManager',{
     async get_user(){
       const {data} = await useFetch<UserInterface>(`${useRuntimeConfig().public.apiBase}/user`,{
         method: 'post',
-        body: { currentEmail: localStorage.getItem('user') },
+        body: { currentEmail: String(localStorage.getItem('user')) },
         headers:{ Authorization: `Bearer ${localStorage.getItem('token')}` },
       })
       this.userConfigData = data.value
