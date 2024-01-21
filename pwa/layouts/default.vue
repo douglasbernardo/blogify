@@ -12,7 +12,7 @@
       v-if="authStore.isAuthenticated"
       v-model="drawer"
     >
-      <template v-slot:prepend v-if="userStore.userConfigData.imageOptions">
+      <template v-slot:prepend v-if="userStore.userConfigData?.imageOptions">
         <v-list-item
           lines="two"
           :title="authStore.userName || userStore.userName"
@@ -20,10 +20,10 @@
         >
           <template #prepend v-if="userStore.userConfigData?.imageOptions">
             <v-avatar size="46">
-              <v-img :src="userStore.userConfigData?.imageOptions.addImageUrl ? userStore.userConfigData?.imageOptions.addImageUrl : 'undefined'"></v-img>
+              <v-img :src="userStore?.userConfigData?.imageOptions?.addImageUrl || undefined"></v-img>
             </v-avatar>
           </template>
-          <template #prepend v-if="!userStore.userConfigData?.imageOptions.addImageUrl">
+          <template #prepend v-if="!userStore.userConfigData?.imageOptions?.addImageUrl">
             <v-btn icon="mdi-image-plus" @click="dialogPicture=!dialogPicture" variant="text"></v-btn>
           </template>
         </v-list-item>

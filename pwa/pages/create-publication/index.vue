@@ -45,33 +45,36 @@
           @change="handleFileChange"
           label="Escolher Imagem"
         ></v-file-input>
-        <span v-if="selectedOption === 'externo'">Arquivo com o texto</span>
-        <v-file-input
-          v-if="selectedOption === 'externo'"
+        <div v-if="selectedOption === 'externo'">
+          <span>Arquivo com o texto</span>
+          <v-file-input
           type="file"
-          @change="handleFileChange"
-          label="Seu arquivo"
+          @change="handleFileTextChange"
+          label="Escolher Texto"
         ></v-file-input>
-          <div v-if="selectedOption === 'integrada'">
-            <span class="mb-3">Título</span>
-            <v-text-field
-              v-model="articleTitle"
-              :style="fontChosen.title ? `font-family: ${fontChosen.title}` : ''"
-            ></v-text-field>
-            <span>Escolha um fonte para seu título</span>
-            <v-select
-              :items="fontsTitle"
-              v-model="fontChosen.title"
-            ></v-select>
-            <span>Escreva aqui</span>
-            <v-textarea v-model="article" :style="{fontFamily: fontChosen.text}" />
-            <span>Escolha um fonte para seu texto</span>
-            <v-select
-              :items="fontsText"
-              v-model="fontChosen.text"
-            ></v-select>
-          </div>
-          <span>Escolha a categoria</span>
+          <!-- <UploadArticle v-model="fileText" @file-selected="uploadFile" /> -->
+          {{ selectedTextFile }}
+        </div>
+        <div v-else>
+          <span class="mb-3">Título</span>
+          <v-text-field
+            v-model="articleTitle"
+            :style="fontChosen.title ? `font-family: ${fontChosen.title}` : ''"
+          ></v-text-field>
+          <span>Escolha um fonte para seu título</span>
+          <v-select
+            :items="fontsTitle"
+            v-model="fontChosen.title"
+          ></v-select>
+          <span>Escreva aqui</span>
+          <v-textarea v-model="article" :style="{fontFamily: fontChosen.text}" />
+          <span>Escolha um fonte para seu texto</span>
+          <v-select
+            :items="fontsText"
+            v-model="fontChosen.text"
+          ></v-select>
+        </div>
+        <span>Escolha a categoria</span>
           <v-combobox
             :items="categories"
             v-model="categoryChosen"
@@ -87,11 +90,18 @@
       <template v-slot:item.3>
         <v-card
           class="mx-auto"
-          max-width="450"
-          title="Confirme se irá realizar a criação"
-          text="Update your weak or re-used passwords with Password Checkup. It's free and only takes a few minutes. Click the Take Checkup button to get started."
+          max-width="500"
+          elevation="12"
+          title="Confirme a criação do Artigo"
         >
+          <v-card-text>Tem certeza de que deseja postar este artigo? Este é um passo importante, e queremos garantir que você esteja ciente de que, após a postagem, as informações serão compartilhadas com a comunidade. Lembre-se de revisar cuidadosamente o conteúdo e as configurações antes de confirmar a postagem.
 
+Ao postar, você concorda que o conteúdo é de sua autoria e está em conformidade com nossos Termos de Serviço. A postagem será visível para outros usuários e pode ser compartilhada em nossas plataformas.
+
+Se você estiver pronto para prosseguir, clique em POSTAR. Caso contrário, clique em VOLTAR para revisar ou fazer alterações adicionais.
+
+Agradecemos por contribuir para a nossa comunidade e esperamos que sua postagem seja valiosa para outros usuários
+          </v-card-text>
           <template v-slot:actions>
             <v-btn height="48" @click="navigateTo('/artigos')">
               Cancelar
@@ -115,7 +125,6 @@
 <script lang="ts" setup>
   import Form from "~/components/User/Form.vue";
   import {useArticleStore} from "~/store/article_manager";
-  const answeredAboutCreation = ref(false)
   const selectedOption = ref()
   const articleStore = useArticleStore()
   const categories = ref()
@@ -123,7 +132,14 @@
     const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/categories`)
     categories.value = data.value
   })
-
+  const uploadFile = (file?: File | null) => {
+    if(file){
+      const formData = new FormData()
+      formData.append('file',file)
+      return formData
+    }
+    return null
+  }
   const fontsTitle = ref([
     'Anton',
     'Bebas Neue',
@@ -157,11 +173,15 @@
     title: ''
   })
   const selectedFile = ref(null)
+  const selectedTextFile = ref(null)
   const handleFileChange = (event: any) => {
     selectedFile.value = event.target.files[0];
   };
 
-  const submit = async () => {
+  const handleFileTextChange = (event: any) => {
+    selectedTextFile.value = event.target.files[0];
+  };
+  const uploadBackgroundImage = async() => {
     const formData = new FormData();
     formData.append('image', selectedFile.value);
     let backgroundImage = null
@@ -173,6 +193,14 @@
         });
         backgroundImage = data.value ? data.value.data.display_url : ''
       }
+      return backgroundImage
+    }catch(e){
+      console.log(e)
+    }
+  }
+  const submit = async () => {
+    try{  
+      const backgroundImage = await uploadBackgroundImage() // get the image link from the imgbb
       articleStore.add_new_article({
         backgroundImage: backgroundImage,
         title: articleTitle.value,
@@ -183,7 +211,7 @@
         status: statusChosen.value,
         createdBy: localStorage.getItem('user')
       })
-    } catch (error) {
+    }catch (error) {
       console.error(error);
     }
   }
