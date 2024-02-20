@@ -31,25 +31,28 @@
           color="blue"
           inset
         />
-        <v-switch
-          :label="updateOnlyImage ? 'Editando sua foto de perfil': 'Editar Foto'"
-          v-model="updateOnlyImage"
-          color="blue"
-          inset
-        />
       </v-row>
-      <v-row v-if="user.userConfigData">
+      <v-row v-if="user?.userConfigData">
         <v-col>
-          <v-img 
-            class="rounded-pill" 
-            :src="user.userConfigData && user.userConfigData.imageOptions.addImageUrl ? user.userConfigData.imageOptions.addImageUrl : 'undefined'" 
-            width="200" 
-            alt="Profile Picture"
-          />
+          <v-hover v-slot:default="{isHovering, props}">
+            <v-card v-bind="props" width="250" class="rounded-pill">
+              <v-img 
+                :src="user.userConfigData && user.userConfigData?.imageOptions?.addImageUrl ?
+                user.userConfigData?.imageOptions?.addImageUrl : 'https://as2.ftcdn.net/v2/jpg/01/86/29/31/1000_F_186293166_P4yk3uXQBDapbDFlR17ivpM6B1ux0fHG.jpg'" 
+                alt="Profile Picture"
+              >
+                <v-btn style="margin-top: 6rem;margin-left: 6.5rem;" v-if="isHovering" icon="mdi-pencil" @click="updateImage = true"></v-btn>
+              </v-img>
+            </v-card>
+          </v-hover>
         </v-col>
-        <v-col cols="9">
-          <ProfilePicture :is-profile="true" :disabled="!updateOnlyImage && !updateAllData"/>
-        </v-col>
+        <v-dialog
+          v-model="updateImage"
+          width="auto"
+          persistent
+        >
+          <ProfilePicture @close="updateImage=false"/>
+        </v-dialog>
         <v-col cols="12">
           <v-text-field
             v-if="!loggedWithGoogle"
@@ -130,7 +133,7 @@
   const user = userManager()
   const pass = ref('')
   const dialogDeleteAccount = ref(false)
-  const updateOnlyImage = ref(false)
+  const updateImage = ref(false)
   const updateAllData = ref(false)
 
   const loggedWithGoogle = computed(()=>{
