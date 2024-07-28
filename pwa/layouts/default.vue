@@ -3,6 +3,7 @@
     <v-app-bar height="75" class="bg-black">
       <v-btn v-if="authStore.isAuthenticated" :icon="drawer ? 'mdi-menu-close' : 'mdi-menu-open'" @click="drawer=!drawer"></v-btn>
       <v-app-bar-title @click="navigateTo('/')" style="cursor: pointer;">Curious Mind</v-app-bar-title>
+      <v-btn text="Login" class="mx-8 bg-orange text-white" variant="tonal" to="/user/login"/>
       <v-icon v-if="mobile.mobile && useRoute().fullPath == '/'" class="arrow-right d-sm-none" size="x-large">mdi-arrow-left-thick</v-icon>
     </v-app-bar>
     <v-navigation-drawer
@@ -12,7 +13,7 @@
       v-if="authStore.isAuthenticated"
       v-model="drawer"
     >
-      <template v-slot:prepend>
+      <template v-slot:prepend v-if="userStore.userConfigData?.imageOptions">
         <v-list-item
           lines="two"
           :title="authStore.userName || userStore.userName"
@@ -20,13 +21,13 @@
         >
           <template #prepend v-if="userStore.userConfigData?.imageOptions">
             <v-avatar size="46">
-              <v-img :src="userStore.userConfigData?.imageOptions.addImageUrl"></v-img>
+              <v-img :src="userStore?.userConfigData?.imageOptions?.addImageUrl || undefined"></v-img>
             </v-avatar>
           </template>
-          <template #prepend v-if="!userStore.userConfigData?.imageOptions.addImageUrl">
+          <template #prepend v-if="!userStore.userConfigData?.imageOptions?.addImageUrl">
             <v-btn icon="mdi-image-plus" @click="dialogPicture=!dialogPicture" variant="text"></v-btn>
           </template>
-      </v-list-item>
+        </v-list-item>
       </template>
       <v-divider></v-divider>
       <v-list density="comfortable" nav>

@@ -6,7 +6,7 @@
         class="align-center"
         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
         height="300px"
-        width="350px"
+        width="345"
         cover
       >
         <v-card-title v-if="!isHovering" class="text-white text-center" v-text="article.title"></v-card-title>

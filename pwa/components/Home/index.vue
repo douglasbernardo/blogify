@@ -44,12 +44,12 @@
       <PublicationsUpdated v-if="api_loaded && !article.filteredArticles.length"/>
       <template v-if="!article.filteredArticles.length && api_loaded" v-for="category in article.categories" :key="category">
         <v-sheet
-          class="text-center ma-4"
+          class="text-center ma-2 pa-2 d-inline-block"
           color="grey-lighten-2"
-          height="25"
+          height="35"
+          position="relative"
           rounded="pill"
           v-text="category"
-          width="200"
         />
         <v-slide-group
           show-arrows
