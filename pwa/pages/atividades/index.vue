@@ -35,13 +35,6 @@
           max-width="344"
           title="Artigos Comentados"
         >
-          <template #append>
-            <v-tooltip text="Conta todos os artigos comentados por voce">
-              <template v-slot:activator="{ props }">
-                <v-btn v-bind="props" color="warning" icon="mdi-alert-circle" variant="text"></v-btn>
-              </template>
-            </v-tooltip>
-          </template>
           <v-card-text align="center" justify="center" class="mt-16 text-h1">{{ commentedArticles.length }}</v-card-text>
           <v-card-actions>
             <v-btn 

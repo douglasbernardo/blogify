@@ -11,7 +11,7 @@
     </v-sheet>
     <v-row>
       <template v-for="(article,index) in articleManager.lastArticles">
-        <Article :article="article" :index="index" />
+          <Article :article="article" :index="index" />
       </template>
     </v-row>
   </v-container>
