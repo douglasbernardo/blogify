@@ -1,6 +1,7 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer 
+      v-if="useAuthStore().isAuthenticated"
       elevation="3"
       width="200"
       location="right"
@@ -26,7 +27,6 @@
           @update:model-value="filteringChosenCategories"
         ></v-select>
       </div>
-      <v-btn @click="dialog=!dialog" size="small" elevation="5" location="end" class="ml-7" color="purple" variant="outlined">Enviar FeedBacks</v-btn>
       <div class="text-center">
         <v-dialog
           v-model="dialog"
