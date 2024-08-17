@@ -38,7 +38,7 @@
         </v-dialog>
       </div>
     </v-navigation-drawer>
-
+    <SearchArticle/>
     <v-main>
       <ApiLoading v-if="!api_loaded" />
       <PublicationsUpdated v-if="api_loaded && !article.filteredArticles.length"/>
