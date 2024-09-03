@@ -1,18 +1,9 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer 
+    <!-- <v-navigation-drawer 
       v-if="useAuthStore().isAuthenticated"
       elevation="3"
-      width="200"
-      location="right"
-      >
-      <div class="px-2">
-        <v-btn 
-          class="ma-2 ml-3 pa-2 bg-orange-lighten-1" 
-          id="newPubBtn" 
-          :to="useAuthStore().isAuthenticated ? '/create-publication' : '/user/login'"
-          text="Nova Publicação"
-        />
+
         <v-divider class="my-6"></v-divider>
         <v-row class="ma-2">
           <p>Filtro</p>
@@ -37,8 +28,8 @@
           <FeedBack @close="dialog=false"/>
         </v-dialog>
       </div>
-    </v-navigation-drawer>
-    <SearchArticle/>
+    </v-navigation-drawer> -->
+    <SearchArticle :user="useAuthStore().isAuthenticated"/>
     <v-main>
       <ApiLoading v-if="!api_loaded" />
       <PublicationsUpdated v-if="api_loaded && !article.filteredArticles.length"/>
