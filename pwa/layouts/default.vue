@@ -3,7 +3,7 @@
     <v-app-bar height="75" class="bg-black">
       <v-btn v-if="authStore.isAuthenticated" :icon="drawer ? 'mdi-menu-close' : 'mdi-menu-open'" @click="drawer=!drawer"></v-btn>
       <v-app-bar-title @click="navigateTo('/')" style="cursor: pointer;">Curious Mind</v-app-bar-title>
-      <v-btn text="Login" class="mx-8 bg-orange text-white" variant="tonal" to="/user/login"/>
+      <v-btn v-if="!authStore.isAuthenticated" style="font-family: 'Bungee Spice';" text="Login" class="login-btn mx-8 text-white" variant="tonal" to="/user/login"/>
       <v-icon v-if="mobile.mobile && useRoute().fullPath == '/'" class="arrow-right d-sm-none" size="x-large">mdi-arrow-left-thick</v-icon>
     </v-app-bar>
     <v-navigation-drawer
@@ -57,6 +57,7 @@ import {useRoute} from 'vue-router'
 import {useAuthStore} from '~/store/user/authStore'
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { userManager } from '~/store/user/user_manager';
+import { useArticleStore } from '~/store/article_manager';
 const mobile = useDisplay()
 const dialog = ref(false)
 const dialogPicture = ref(false)
@@ -66,10 +67,12 @@ const userStore = userManager()
 const isRouteDifferent = computed(() => {
   return useRoute().fullPath !== '/';
 })
+const show = ref(false)
 
 onMounted(()=>{
   userStore.get_user()
 })
+
 </script>
 <style scoped>
 .v-app-bar-title{

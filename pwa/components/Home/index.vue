@@ -1,44 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer 
-      elevation="3"
-      width="200"
-      location="right"
-      >
-      <div class="px-2">
-        <v-btn 
-          class="ma-2 ml-3 pa-2 bg-orange-lighten-1" 
-          id="newPubBtn" 
-          :to="useAuthStore().isAuthenticated ? '/create-publication' : '/user/login'"
-          text="Nova Publicação"
-        />
-        <v-divider class="my-6"></v-divider>
-        <v-row class="ma-2">
-          <p>Filtro</p>
-          <v-icon>mdi-filter</v-icon>
-        </v-row>
-        <v-select
-          v-model="filterCategories"
-          :items="article.categories"
-          chips
-          label="Categorias"
-          multiple
-          @update:model-value="filteringChosenCategories"
-        ></v-select>
-      </div>
-      <v-btn @click="dialog=!dialog" size="small" elevation="5" location="end" class="ml-7" color="purple" variant="outlined">Enviar FeedBacks</v-btn>
-      <div class="text-center">
-        <v-dialog
-          v-model="dialog"
-          location="center"
-          justify="d-flex justify-center"
-          :width="mobile ? '500 ': '650'"
-        >
-          <FeedBack @close="dialog=false"/>
-        </v-dialog>
-      </div>
-    </v-navigation-drawer>
-
+    <SearchArticle :user="useAuthStore().isAuthenticated"/>
     <v-main>
       <ApiLoading v-if="!api_loaded" />
       <PublicationsUpdated v-if="api_loaded && !article.filteredArticles.length"/>
