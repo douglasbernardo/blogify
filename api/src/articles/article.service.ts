@@ -35,7 +35,7 @@ export class ArticleService {
     }).save();
   }
 
-  async get_all_articles(): Promise<any> {
+  async get_all_articles(): Promise<Article[] | any> {
     return Promise.all(
       (await this.article.find()).map(async (article) => {
         //mapeia todos os artigos, depois procura no banco do usuario o id createdBy
@@ -113,11 +113,25 @@ export class ArticleService {
     }
   }
 
-  async last_added(): Promise<Article[]> {
-    return await this.article
-      .find({ status: 'publicado' })
-      .sort({ _id: -1 })
-      .limit(3);
+  async last_added(): Promise<Article | any> {
+    // Filtra os artigos publicados que foram criados pelos autores encontrados
+    return Promise.all(
+      (
+        await this.article
+          .find({ status: 'publicado' })
+          .sort({ _id: -1 })
+          .limit(3)
+      ).map(async (article) => {
+        //mapeia todos os artigos, depois procura no banco do usuario o id createdBy
+        const author = await this.userService.find_article_author(
+          article.createdBy,
+        );
+        return {
+          ...article.toObject(),
+          author,
+        };
+      }),
+    );
   }
 
   async add_views(id: string) {
