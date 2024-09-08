@@ -92,6 +92,14 @@ export class UserService {
     }
   }
 
+  async find_article_author(id: string) {
+    try {
+      const author = await this.user.findById(id).exec();
+      return author;
+    } catch (e) {
+      throw new UnauthorizedException('id Não encontrado', e);
+    }
+  }
   async edit_user(userData) {
     const user_editing = await this.user.findOne({
       email: userData.currentEmail,
