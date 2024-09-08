@@ -36,9 +36,9 @@ export class ArticleService {
   }
 
   async get_all_articles(): Promise<any> {
-    const articles = await this.article.find().exec();
     return Promise.all(
-      articles.map(async (article) => {
+      (await this.article.find()).map(async (article) => {
+        //mapeia todos os artigos, depois procura no banco do usuario o id createdBy
         const author = await this.userService.find_article_author(
           article.createdBy,
         );
