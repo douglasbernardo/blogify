@@ -23,7 +23,7 @@
       </v-img>
       <v-card-subtitle class="mt-2 ml-n2">
         <p>Criado em: {{ useDateFormat(article?.createdAt, `DD MMMM YYYY`, { locales: 'pt-br' }).value }}</p>
-        <p>Autor: {{ article.createdBy }}</p>
+        <p>Autor: {{ article?.author?.name }}</p>
       </v-card-subtitle>
       <v-card-actions>
         <v-hover v-slot="{ isHovering, props }">
