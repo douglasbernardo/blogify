@@ -36,7 +36,10 @@ export class ArticleService {
   }
 
   async get_all_articles(): Promise<Article[]> {
-    return await this.article.find().exec();
+    const teste = await this.article.find().exec();
+    console.log(teste);
+    // a função deve mostrar todos os artigos, contendo neles o id e o nome do autor(criador) deste artigo
+    return teste;
   }
 
   async get_articles_by_id(id: string): Promise<Article[]> {
