@@ -1,34 +1,5 @@
 <template>
   <v-app id="inspire">
-    <!-- <v-navigation-drawer 
-      v-if="useAuthStore().isAuthenticated"
-      elevation="3"
-
-        <v-divider class="my-6"></v-divider>
-        <v-row class="ma-2">
-          <p>Filtro</p>
-          <v-icon>mdi-filter</v-icon>
-        </v-row>
-        <v-select
-          v-model="filterCategories"
-          :items="article.categories"
-          chips
-          label="Categorias"
-          multiple
-          @update:model-value="filteringChosenCategories"
-        ></v-select>
-      </div>
-      <div class="text-center">
-        <v-dialog
-          v-model="dialog"
-          location="center"
-          justify="d-flex justify-center"
-          :width="mobile ? '500 ': '650'"
-        >
-          <FeedBack @close="dialog=false"/>
-        </v-dialog>
-      </div>
-    </v-navigation-drawer> -->
     <SearchArticle :user="useAuthStore().isAuthenticated"/>
     <v-main>
       <ApiLoading v-if="!api_loaded" />
