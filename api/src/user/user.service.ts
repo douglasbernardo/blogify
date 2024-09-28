@@ -186,4 +186,14 @@ export class UserService {
       articlesCommented: validArticlesComments,
     };
   }
+
+  async getUsersByIds(userIds: string[]) {
+    const users = await this.user
+      .find({
+        _id: { $in: userIds },
+      })
+      .lean(); // Lean otimiza a consulta retornando objetos JavaScript "puros"
+
+    return users;
+  }
 }

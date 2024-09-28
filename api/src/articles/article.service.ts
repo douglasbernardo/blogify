@@ -13,6 +13,7 @@ import {
   AddArticleInterface,
   DeleteArticleInterface,
 } from '../interfaces/article.interface';
+import { filterArticleDto } from 'src/dto/filterArticle.dto';
 
 @Injectable()
 export class ArticleService {
@@ -83,6 +84,12 @@ export class ArticleService {
   all_categories() {
     return this.article.distinct('category').exec();
   }
+
+  async all_authors() {
+    const ids = await this.article.distinct('createdBy');
+    const users = this.userService.getUsersByIds(ids);
+    return users;
+  }
   async remove_article(data: DeleteArticleInterface) {
     const [emailExists, deletedArticle] = await Promise.all([
       this.userService.verify_existing_email(data.email),
@@ -94,14 +101,61 @@ export class ArticleService {
     return deletedArticle;
   }
 
-  async filter_articles(categories: string[]) {
-    return await this.article.aggregate([
-      {
-        $match: {
-          category: { $in: categories },
+  async filter_articles(filters: filterArticleDto) {
+    const currentDate = new Date();
+    let startDate: Date | null = null;
+    let endDate: Date | null = null;
+
+    // Definindo a data inicial e final com base no filtro
+    if (filters.data === 'Mês Passado') {
+      startDate = new Date(currentDate);
+      startDate.setDate(currentDate.getDate() - 30);
+    } else if (filters.data === 'Semana Passada') {
+      startDate = new Date(currentDate);
+      startDate.setDate(currentDate.getDate() - 7);
+    } else if (filters.data === 'Ano Passado') {
+      const lastYear = currentDate.getFullYear() - 1;
+      startDate = new Date(`${lastYear}-01-01T00:00:00Z`);
+      endDate = new Date(`${lastYear}-12-31T23:59:59Z`);
+    }
+
+    // Ajustando a data para começar à meia-noite, se necessário
+    if (startDate) startDate.setUTCHours(0, 0, 0, 0);
+
+    // Criação da etapa de $match para a agregação
+    const matchStage: any = {};
+
+    // Aplicando o filtro de categorias, caso existam
+    if (filters.categories && filters.categories.length > 0) {
+      matchStage.category = { $in: filters.categories };
+    }
+
+    // Aplicando o filtro de data, caso tenha sido fornecido
+    if (startDate) {
+      if (endDate) {
+        matchStage.createdAt = { $gte: startDate, $lte: endDate }; // Intervalo de datas
+      } else {
+        matchStage.createdAt = { $gte: startDate }; // Apenas a data inicial
+      }
+    }
+
+    // Realizando a agregação com os filtros
+    const optionsFilter = await this.article
+      .aggregate([
+        {
+          $match: matchStage,
         },
-      },
-    ]);
+      ])
+      .exec();
+
+    // Verificando se encontrou resultados
+    if (!optionsFilter.length) {
+      return {
+        message: 'Nenhum artigo encontrado para os filtros selecionados.',
+      };
+    }
+
+    return optionsFilter;
   }
 
   async remove_articles(user_id: string): Promise<any> {
