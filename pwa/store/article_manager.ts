@@ -1,3 +1,4 @@
+import type { RefSymbol } from "@vue/reactivity";
 import {defineStore} from "pinia";
 import type { ArticleInterface } from "~/utils/interfaces/article.interface";
 
@@ -7,6 +8,7 @@ export const useArticleStore = defineStore('article',{
     allArticles: [],
     lastArticles: [],
     categories: [],
+    authors: [],
     filteredArticles: [],
   }),
   actions: {
@@ -59,10 +61,16 @@ export const useArticleStore = defineStore('article',{
       this.categories = data.value
     },
 
-    async filter_by_categories(categoriesArray: Array<string>){
+    async get_authors(){
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/authors`)
+      this.authors = data
+    },
+
+
+    async filtering_articles(filters: object){
       const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/filter`,{
         method: 'post',
-        body: {categories: categoriesArray}
+        body: filters
       })
       this.filteredArticles = data.value
     }

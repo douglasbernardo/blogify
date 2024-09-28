@@ -9,7 +9,7 @@
     >
     <h3>Artigos Exibidos</h3>
   </v-sheet>
-  <v-row>
+  <v-row class="d-flex justify-center">
     <template v-for="(article,index) in filtered_articles" :key="index">
       <Article :article="article" :index="index"></Article>
     </template>

@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <SearchArticle :user="useAuthStore().isAuthenticated"/>
+    <FiltersArticle @filterArticles="handleFilter"/>
     <v-main>
       <ApiLoading v-if="!api_loaded" />
       <PublicationsUpdated v-if="api_loaded && !article.filteredArticles.length"/>
@@ -24,24 +24,31 @@
           </template>
         </v-slide-group>
       </template>
-      <HomeFilteredArticles v-if="article.filteredArticles" :filtered_articles="article.filteredArticles" />
+      <HomeFilteredArticles v-if="article.filteredArticles.length" :filtered_articles="article.filteredArticles" />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
-  import { useAuthStore } from "~/store/user/authStore";
   import { useArticleStore } from "~/store/article_manager";
   import { useDisplay } from 'vuetify/lib/framework.mjs';
   const article = useArticleStore()
   const mobile = useDisplay().mobile
   const dialog = ref<boolean>(false)
   const api_loaded = ref<boolean>(false)
-  const filterCategories = ref<Array<string>>([])
+  const teste = ref()
+
   const fetchArticles = async () => {
     await article.get_all_articles()
   }
 
+  const handleFilter = (filters: Object) => {
+    if (filters) {
+      article.filtering_articles(filters);
+    } else {
+      article.filteredArticles = article.allArticles; // Exibe todos os artigos se nenhum filtro estiver selecionado
+    }
+  };
   onMounted(()=>{
     article.get_categories()
     fetchArticles()
@@ -54,14 +61,11 @@
     api_loaded.value = false
   })
 
+  // show the article by its category
   const filterArticles = ((category: any)=>{
     return article.allArticles.filter((article)=> article.category === category)
   })
 
-  const filteringChosenCategories = async() => {
-    filterCategories.value.length 
-      ? article.filter_by_categories(filterCategories.value) : article.filteredArticles = []
-  }
 
 </script>
 

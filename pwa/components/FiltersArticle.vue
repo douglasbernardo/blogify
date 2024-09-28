@@ -30,9 +30,9 @@
             <v-btn @click="dialogFilter = !dialogFilter" class="ma-2" icon color="grey darken-1">
               <v-icon>mdi-filter-variant</v-icon>
             </v-btn>
-            <v-btn :to="props.user ? '/create-publication' : '/user/login'" class="ma-2" icon color="grey darken-1">
+            <!-- <v-btn :to="props.user ? '/create-publication' : '/user/login'" class="ma-2" icon color="grey darken-1">
               <v-icon>mdi-plus</v-icon>
-            </v-btn>
+            </v-btn> -->
           </v-col>
         </v-row>
       </v-card>
@@ -51,58 +51,79 @@
         <template v-slot>
           <div class="ma-4">
             <v-select
-              v-model="filterCategories"
+              v-model="categoriesChosen"
               :items="article.categories"
               chips
               label="Categorias"
               multiple
-              @update:model-value="filteringChosenCategories"
             ></v-select>
             <v-select
+              v-model="dataChosen"
               :items="['Semana Passada','Mês Passado','Ano Passado']"
               chips
               label="Filtrar por data"
             ></v-select>
             <v-select
-              :items="['Douglas B','Marcos','Breno','João','Lepo','teste','só teste']"
+              v-model="authorsChosen"
+              :items="authorsNames"
               chips
               multiple
               label="Filtrar por Autor"
             ></v-select>
           </div>
+          <v-btn @click="applyCategories" class="bg-green ma-2">Aplicar Filtros</v-btn>
+          <v-btn @click="cleanFilters" class="bg-pink ma-2">Limpar Filtros</v-btn>
         </template>
       </v-card>
     </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { useArticleStore } from "~/store/article_manager";
-import { useAuthStore } from "~/store/user/authStore";
+  import { useArticleStore } from "~/store/article_manager";
 
-const props = defineProps({
-  user: {required:true}
-})
-const dialogFilter = ref(false)
+  const props = defineProps({
+    user: {required:true}
+  })
+  const emit = defineEmits(['filterArticles'])
+  const dialogFilter = ref(false)
   const article = useArticleStore()
   const dialog = ref<boolean>(false)
-  const filterCategories = ref<Array<string>>([])
+  const categoriesChosen = ref<Array<string>>([])
+  const dataChosen = ref<string>()
+  const authorsChosen = ref<Array<string>>([])
+
+  const filters = reactive<{ categories: string[], data: string, authors: string[] }>({
+    categories: categoriesChosen,
+    data: dataChosen,
+    authors: authorsChosen
+  })
   const fetchArticles = async () => {
     await article.get_all_articles()
   }
 
+  const applyCategories = (()=>{
+    if(!categoriesChosen.value || !dataChosen.value || authorsChosen.value){
+      console.log('preencha pelo menos um filtro')
+    }else{
+      emit('filterArticles', filters)
+    }
+  })
+
+  const cleanFilters = (() => {
+    categoriesChosen.value = ''
+    dataChosen.value = ''
+    authorsChosen.value = ''
+  })
+
   onMounted(()=>{
-    article.get_categories()
+    article.get_categories(),
+    article.get_authors()
     fetchArticles()
   })
 
-  const filterArticles = ((category: any)=>{
-    return article.allArticles.filter((article)=> article.category === category)
+  const authorsNames = computed(()=>{
+    return article.authors.map((author)=> author?.name)
   })
-
-  const filteringChosenCategories = async() => {
-    filterCategories.value.length 
-      ? article.filter_by_categories(filterCategories.value) : article.filteredArticles = []
-  }
 
 </script>
 
