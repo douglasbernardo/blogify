@@ -49,6 +49,7 @@
         title="Criação de Filtros"
       >
         <template v-slot>
+          <p class="bg-red ma-2 text-center">{{messageError}}</p>
           <div class="ma-4">
             <v-select
               v-model="categoriesChosen"
@@ -91,6 +92,7 @@
   const categoriesChosen = ref<Array<string>>([])
   const dataChosen = ref<string>()
   const authorsChosen = ref<Array<string>>([])
+  const messageError = ref<string>()
 
   const filters = reactive<{ categories: string[], data: string, authors: string[] }>({
     categories: categoriesChosen,
@@ -102,17 +104,20 @@
   }
 
   const applyCategories = (()=>{
-    if(!categoriesChosen.value || !dataChosen.value || authorsChosen.value){
-      console.log('preencha pelo menos um filtro')
+    const hasFilters = [categoriesChosen.value.length, dataChosen.value?.length, authorsChosen.value.length]
+      .some((filter) => Boolean(filter))
+    if(!hasFilters){
+      messageError.value = 'Preencha pelo menos um filtro'
+      setTimeout(()=> messageError.value = undefined,3000)
     }else{
       emit('filterArticles', filters)
     }
   })
 
   const cleanFilters = (() => {
-    categoriesChosen.value = ''
-    dataChosen.value = ''
-    authorsChosen.value = ''
+    categoriesChosen.value = []
+    dataChosen.value = undefined
+    authorsChosen.value = []
   })
 
   onMounted(()=>{
