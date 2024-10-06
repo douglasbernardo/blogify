@@ -45,7 +45,7 @@
       <v-card
         max-width="400"
         prepend-icon="mdi-filter"
-        text="Crie filtros para ter uma melhor busca dos artigos que queira ler."
+        text="Crie filtros para melhorar a busca pelos artigos que queira ler."
         title="Criação de Filtros"
       >
         <template v-slot>

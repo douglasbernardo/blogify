@@ -102,6 +102,7 @@ export class ArticleService {
   }
 
   async filter_articles(filters: filterArticleDto) {
+    console.log(filters);
     const currentDate = new Date();
     let startDate: Date | null = null;
     let endDate: Date | null = null;
@@ -139,6 +140,19 @@ export class ArticleService {
       }
     }
 
+    //Filtro por Autor
+
+    if (filters.authors) {
+      const users = await this.userService.getUsersByNamesFilter(
+        filters.authors,
+      );
+      const ids = users.map((author) => author._id.toString());
+      if (ids.length > 0) {
+        matchStage.createdBy = { $in: ids };
+        console.log(matchStage.createdBy);
+      }
+    }
+
     // Realizando a agregação com os filtros
     const optionsFilter = await this.article
       .aggregate([
@@ -147,15 +161,23 @@ export class ArticleService {
         },
       ])
       .exec();
-
     // Verificando se encontrou resultados
     if (!optionsFilter.length) {
       return {
         message: 'Nenhum artigo encontrado para os filtros selecionados.',
       };
     }
-
-    return optionsFilter;
+    return await Promise.all(
+      optionsFilter.map(async (article) => {
+        const author = await this.userService.find_article_author(
+          article.createdBy,
+        );
+        return {
+          ...article,
+          author,
+        };
+      }),
+    );
   }
 
   async remove_articles(user_id: string): Promise<any> {

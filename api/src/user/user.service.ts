@@ -196,4 +196,9 @@ export class UserService {
 
     return users;
   }
+
+  async getUsersByNamesFilter(authors: string[]) {
+    const users = await this.user.find({ name: { $in: authors } }).exec();
+    return users;
+  }
 }
