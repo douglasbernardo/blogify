@@ -73,6 +73,18 @@ export const useArticleStore = defineStore('article',{
         body: filters
       })
       this.filteredArticles = data.value
+    },
+
+    async search_article(query){
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/search`,{
+        method: 'get',
+        query: {q: query}
+      })
+      if(error.value){
+        console.error('Erro ao buscar artigos:', error.value);
+        return [];
+      }
+      this.filteredArticles = data.value
     }
   }
 })

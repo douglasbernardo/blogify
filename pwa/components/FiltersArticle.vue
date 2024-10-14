@@ -16,11 +16,13 @@
           <!-- Campo de pesquisa -->
           <v-col cols="5">
             <v-text-field
+              v-model="query"
               placeholder="Pesquise por artigos..."
               append-inner-icon="mdi-magnify"
               variant="solo"
               hide-details
               class="elevation-1"
+              @input="fetchSearchResults"
               color="grey lighten-5"
             />
           </v-col>
@@ -113,6 +115,17 @@
       emit('filterArticles', filters)
     }
   })
+
+  const query = ref("")
+  const results = ref([])
+  const fetchSearchResults = async () => {
+    if(!query.value) results.value = []
+    try{
+      return await useArticleStore().search_article(query);
+    }catch(error){
+      console.log('Erro ao buscar artigos', error)
+    }
+  }
 
   const cleanFilters = (() => {
     categoriesChosen.value = []

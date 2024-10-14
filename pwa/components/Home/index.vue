@@ -17,14 +17,15 @@
           show-arrows
           show-arrows-on-hover
         >
-          <template v-for="(article, index) in filterArticles(category)">
+          <template v-if="!article.filteredArticles.length" v-for="(article, index) in filterArticles(category)">
             <v-slide-group-item>
               <Article :article="article" :index="index"></Article>
             </v-slide-group-item>
           </template>
         </v-slide-group>
       </template>
-      <HomeFilteredArticles v-if="article.filteredArticles.length" :filtered_articles="article.filteredArticles" />
+      <!--<HomeFilteredArticles v-if="article.filteredArticles.length" :filtered_articles="article.filteredArticles" />-->
+      <HomeFilteredArticles v-else :filtered_articles="article.filteredArticles" />
     </v-main>
   </v-app>
 </template>
@@ -36,7 +37,6 @@
   const mobile = useDisplay().mobile
   const dialog = ref<boolean>(false)
   const api_loaded = ref<boolean>(false)
-  const teste = ref()
 
   const fetchArticles = async () => {
     await article.get_all_articles()
