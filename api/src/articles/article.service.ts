@@ -180,6 +180,14 @@ export class ArticleService {
     );
   }
 
+  async searchArticle(query: string): Promise<Article[]> {
+    return this.article
+      .find({
+        title: { $regex: query, $options: 'i' },
+      })
+      .exec();
+  }
+
   async remove_articles(user_id: string): Promise<any> {
     try {
       if (!user_id) return;

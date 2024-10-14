@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -73,5 +74,10 @@ export class ArticleController {
   @Post('filter')
   async filteringArticles(@Request() req) {
     return this.articleService.filter_articles(req.body);
+  }
+
+  @Get('search')
+  async searchArticles(@Query('q') query: string) {
+    return this.articleService.searchArticle(query);
   }
 }
