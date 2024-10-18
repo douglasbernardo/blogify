@@ -24,7 +24,6 @@
           </template>
         </v-slide-group>
       </template>
-      <!--<HomeFilteredArticles v-if="article.filteredArticles.length" :filtered_articles="article.filteredArticles" />-->
       <HomeFilteredArticles v-else :filtered_articles="article.filteredArticles" />
     </v-main>
   </v-app>
@@ -38,20 +37,14 @@
   const dialog = ref<boolean>(false)
   const api_loaded = ref<boolean>(false)
 
-  const fetchArticles = async () => {
-    await article.get_all_articles()
-  }
-
   const handleFilter = (filters: Object) => {
     if (filters) {
       article.filtering_articles(filters);
-    } else {
-      article.filteredArticles = article.allArticles; // Exibe todos os artigos se nenhum filtro estiver selecionado
     }
   };
   onMounted(()=>{
     article.get_categories()
-    fetchArticles()
+    article.get_all_articles()
   })
 
   watchEffect(() => {

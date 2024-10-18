@@ -102,7 +102,7 @@ export class ArticleService {
   }
 
   async filter_articles(filters: filterArticleDto) {
-    console.log(filters);
+    if (!filters) return [];
     const currentDate = new Date();
     let startDate: Date | null = null;
     let endDate: Date | null = null;
@@ -181,6 +181,7 @@ export class ArticleService {
   }
 
   async searchArticle(query: string): Promise<Article[]> {
+    if (!query) return [];
     return this.article
       .find({
         title: { $regex: query, $options: 'i' },

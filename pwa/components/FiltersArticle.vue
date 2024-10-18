@@ -32,9 +32,6 @@
             <v-btn @click="dialogFilter = !dialogFilter" class="ma-2" icon color="grey darken-1">
               <v-icon>mdi-filter-variant</v-icon>
             </v-btn>
-            <!-- <v-btn :to="props.user ? '/create-publication' : '/user/login'" class="ma-2" icon color="grey darken-1">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn> -->
           </v-col>
         </v-row>
       </v-card>
@@ -101,10 +98,6 @@
     data: dataChosen,
     authors: authorsChosen
   })
-  const fetchArticles = async () => {
-    await article.get_all_articles()
-  }
-
   const applyCategories = (()=>{
     const hasFilters = [categoriesChosen.value.length, dataChosen.value?.length, authorsChosen.value.length]
       .some((filter) => Boolean(filter))
@@ -117,11 +110,9 @@
   })
 
   const query = ref("")
-  const results = ref([])
   const fetchSearchResults = async () => {
-    if(!query.value) results.value = []
     try{
-      return await useArticleStore().search_article(query);
+      await useArticleStore().search_article(query);
     }catch(error){
       console.log('Erro ao buscar artigos', error)
     }
@@ -136,7 +127,6 @@
   onMounted(()=>{
     article.get_categories(),
     article.get_authors()
-    fetchArticles()
   })
 
   const authorsNames = computed(()=>{
