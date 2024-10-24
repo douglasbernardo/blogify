@@ -92,6 +92,14 @@ export class UserService {
     }
   }
 
+  async find_article_author(id: string) {
+    try {
+      const author = await this.user.findById(id).exec();
+      return author;
+    } catch (e) {
+      throw new UnauthorizedException('id Não encontrado', e);
+    }
+  }
   async edit_user(userData) {
     const user_editing = await this.user.findOne({
       email: userData.currentEmail,
@@ -177,5 +185,20 @@ export class UserService {
       articlesLiked: validArticles,
       articlesCommented: validArticlesComments,
     };
+  }
+
+  async getUsersByIds(userIds: string[]) {
+    const users = await this.user
+      .find({
+        _id: { $in: userIds },
+      })
+      .lean(); // Lean otimiza a consulta retornando objetos JavaScript "puros"
+
+    return users;
+  }
+
+  async getUsersByNamesFilter(authors: string[]) {
+    const users = await this.user.find({ name: { $in: authors } }).exec();
+    return users;
   }
 }
