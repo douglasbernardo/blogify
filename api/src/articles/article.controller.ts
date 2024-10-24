@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -38,6 +39,11 @@ export class ArticleController {
     return this.articleService.all_categories();
   }
 
+  @Get('/authors')
+  getAuthors() {
+    return this.articleService.all_authors();
+  }
+
   @Get('/reading/:id')
   getArticle(@Param('id') id: string) {
     return this.articleService.get_article(id);
@@ -67,6 +73,11 @@ export class ArticleController {
 
   @Post('filter')
   async filteringArticles(@Request() req) {
-    return this.articleService.filter_articles(req.body.categories);
+    return this.articleService.filter_articles(req.body);
+  }
+
+  @Get('search')
+  async searchArticles(@Query('q') query: string) {
+    return this.articleService.searchArticle(query);
   }
 }

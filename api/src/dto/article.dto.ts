@@ -16,4 +16,5 @@ export class ArticleDto {
   readonly status: string;
 
   readonly createdBy: string;
+  readonly author: object;
 }
