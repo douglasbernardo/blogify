@@ -187,7 +187,7 @@ export class UserService {
     };
   }
 
-  async getUsersByIds(userIds: string[]) {
+  async getUsersByIds(userIds: string[]): Promise<any> {
     const users = await this.user
       .find({
         _id: { $in: userIds },
@@ -197,7 +197,7 @@ export class UserService {
     return users;
   }
 
-  async getUsersByNamesFilter(authors: string[]) {
+  async getUsersByNamesFilter(authors: string[]): Promise<any> {
     const users = await this.user.find({ name: { $in: authors } }).exec();
     return users;
   }

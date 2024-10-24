@@ -85,7 +85,7 @@ export class ArticleService {
     return this.article.distinct('category').exec();
   }
 
-  async all_authors() {
+  async all_authors(): Promise<any> {
     const ids = await this.article.distinct('createdBy');
     const users = this.userService.getUsersByIds(ids);
     return users;
@@ -189,7 +189,7 @@ export class ArticleService {
       .exec();
   }
 
-  async remove_articles(user_id: string): Promise<any> {
+  async remove_articles(user_id): Promise<any> {
     try {
       if (!user_id) return;
       return await this.article.deleteMany({ createdBy: user_id });

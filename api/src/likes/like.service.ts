@@ -42,7 +42,7 @@ export class LikeService {
     }
   }
 
-  async my_likes(id: string) {
+  async my_likes(id) {
     try {
       if (!id) {
         throw new UnauthorizedException('ID inexistente');
