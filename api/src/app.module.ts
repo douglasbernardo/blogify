@@ -12,7 +12,11 @@ import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.DATA_BASE),
+    MongooseModule.forRoot(
+      process.env.NODE_ENV === 'production'
+        ? process.env.DATA_BASE
+        : 'mongodb://root:example@localhost:27017/blogify?authSource=admin',
+    ),
     UserModule,
     AuthModule,
     ArticleModule,
