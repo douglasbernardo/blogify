@@ -53,6 +53,9 @@ export class UserService {
     if (await this.verify_existing_email(data.email)) {
       throw new UnauthorizedException('Esse e-mail já existe');
     }
+    if (!(await this.is_valid_email(data.email))) {
+      throw new UnauthorizedException('Você digitou um e-mail inválido');
+    }
     const user = await new this.user({
       name: data.name,
       email: data.email,
