@@ -50,16 +50,25 @@ export const userManager = defineStore('userManager',{
     },
     async edit_user(user: object){
       try{
-        const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}/user/edit_user`,{
+        const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/user/edit_user`,{
           method: 'post',
           body: user,
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
-        const edited_user = data.value
-        localStorage.setItem('user',edited_user.email)
-        localStorage.setItem('name',edited_user.name)
-        this.updated_message = 'Usuário Editado com sucesso'
+        if(error.value){
+          if (!this.errorMessages.includes(error.value.data.message)) {
+            this.errorMessages.push(error.value.data.message);
+            return
+          }
+        }else{
+          console.log(data.value)
+          localStorage.setItem('user',user.email)
+          localStorage.setItem('name',user.name)
+          this.updated_message = 'Usuário Editado com sucesso'
+        }
       }catch(e: any){
+        console.log(e)
+        console.log(e.response.data.message)
         this.errorMessages.push(e.response.data.message)
       }
     },

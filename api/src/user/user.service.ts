@@ -70,6 +70,20 @@ export class UserService {
       }),
     };
   }
+  async is_valid_email(email: string) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!email || typeof email !== 'string') {
+      return false;
+    }
+
+    const domainPart = email.split('@')[1];
+    if (domainPart && /^[0-9]/.test(domainPart)) {
+      return false;
+    }
+
+    return emailRegex.test(email);
+  }
   async verify_existing_email(email): Promise<boolean> {
     return !!(await this.user.findOne({ email: email }).exec());
   }
@@ -109,6 +123,10 @@ export class UserService {
         'Você só pode editar seu usuário na sua conta google',
       );
     }
+    console.log(await this.is_valid_email(userData.email));
+    if (!(await this.is_valid_email(userData.email))) {
+      throw new UnauthorizedException('Vocẽ digitou um e-mail inválido!');
+    }
     if (!user_editing) {
       throw new UnauthorizedException('E-mail não existe');
     }
@@ -123,7 +141,6 @@ export class UserService {
     if (userData.password !== '') {
       user_editing.password = bcrypt.hashSync(userData.password, 14);
     }
-
     return await user_editing.save();
   }
   async get_all_users(): Promise<User[]> {

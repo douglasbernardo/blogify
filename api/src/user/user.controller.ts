@@ -35,6 +35,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Post('/edit_user')
   editUser(@Body() data: editDto) {
+    console.log(data);
     return this.userService.edit_user(data);
   }
 

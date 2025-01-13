@@ -151,7 +151,7 @@
   }
   const edit = () => {
     user.edit_user({
-      currentEmail:  localStorage.getItem('user'),
+      currentEmail: localStorage.getItem('user'),
       name: user.userConfigData.name,
       email: user.userConfigData.email,
       password: pass.value
