@@ -1,3 +1,4 @@
+import axios from "axios";
 import {defineStore} from "pinia";
 import {useAuthStore} from "~/store/user/authStore";
 import type { UserInterface } from "~/utils/interfaces/user.interface";
@@ -12,33 +13,35 @@ export const userManager = defineStore('userManager',{
 
   actions:{
     async add_new_user(objUser: object){
+      console.log(objUser)
       interface User {
         access_token: string,
         user: UserInterface
       }
-      try{
-        const {data,error} = await useFetch<User>(`${useRuntimeConfig().public.apiBase}/user/new_user`,{
-          method: 'post',
-          body: objUser
-        })
-        if(data.value){
-          const user: User | any = data.value
-          this.authStore.token = user.access_token
-          this.authStore.user = user.user.email
-          this.authStore.userName  = user.user.name
-          localStorage.setItem('token', user.access_token)
-          localStorage.setItem('user', user.user.email)
-          localStorage.setItem('name', user.user.name)
-          navigateTo('/')
-        }
-        if(error.value){
-          if (!this.errorMessages.includes(error.value.data.message)) {
-            this.errorMessages.push(error.value.data.message);
-          }
-        }
-      }catch(e: any) {
-        console.log('Error when signing up user',e)
-      }
+      await axios.post("http://localhost:3030/user/new_user",objUser)
+      // try{
+      //   const {data,error} = await useFetch<User>(`${useRuntimeConfig().public.apiBase}/user/new_user`,{
+      //     method: 'post',
+      //     body: objUser
+      //   })
+      //   if(data.value){
+      //     const user: User | any = data.value
+      //     this.authStore.token = user.access_token
+      //     this.authStore.user = user.user.email
+      //     this.authStore.userName  = user.user.name
+      //     localStorage.setItem('token', user.access_token)
+      //     localStorage.setItem('user', user.user.email)
+      //     localStorage.setItem('name', user.user.name)
+      //     navigateTo('/')
+      //   }
+      //   if(error.value){
+      //     if (!this.errorMessages.includes(error.value.data.message)) {
+      //       this.errorMessages.push(error.value.data.message);
+      //     }
+      //   }
+      // }catch(e: any) {
+      //   console.log('Error when signing up user',e)
+      // }
     },
     async get_user(){
       const {data} = await useFetch<UserInterface>(`${useRuntimeConfig().public.apiBase}/user`,{
