@@ -67,6 +67,7 @@
             v-model="fontChosen.title"
           ></v-select>
           <span>Escreva aqui</span>
+          <v-btn class="ma-2" variant="outlined" size="small" @click="tipsToWrite=true"  prepend-icon="mdi-lightbulb-question">Dicas</v-btn>
           <v-textarea v-model="article" :style="{fontFamily: fontChosen.text}" />
           <span>Escolha um fonte para seu texto</span>
           <v-select
@@ -86,6 +87,30 @@
             v-model="statusChosen"
           ></v-select>
         </form>
+        <v-dialog 
+          transition="dialog-top-transition"
+          width="auto" 
+          v-model="tipsToWrite"
+        >
+           <v-card
+            max-width="auto"
+            append-icon="mdi-help"
+            title="Como eu posso escrever o meu artigo"
+          >
+            <v-card-subtitle>Para escrever seu artigo siga os seguintes comandos</v-card-subtitle>
+            <v-card-text>
+              Para Adicionar um subtitulo use: ((texto))<br>
+              Para Adicionar negrito ao texto use: **texto**
+            </v-card-text>
+            <template v-slot:actions>
+              <v-btn
+                class="ms-auto"
+                text="Entendi"
+                @click="tipsToWrite = false"
+              ></v-btn>
+            </template>
+          </v-card>
+        </v-dialog>
       </template>
       <template v-slot:item.3>
         <v-card
@@ -128,6 +153,7 @@ Agradecemos por contribuir para a nossa comunidade e esperamos que sua postagem 
   const selectedOption = ref()
   const articleStore = useArticleStore()
   const categories = ref()
+  const tipsToWrite = ref(false)
   onMounted(async () => {
     const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/categories`)
     categories.value = data.value
