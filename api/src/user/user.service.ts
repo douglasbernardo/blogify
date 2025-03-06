@@ -28,6 +28,7 @@ export class UserService {
     private commentService: CommentsService,
   ) {}
   async add_user(data) {
+    console.log(data)
     if (!data.fromGoogle) {
       if (
         !data.name ||
