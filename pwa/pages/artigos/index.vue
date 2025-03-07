@@ -37,7 +37,7 @@
         <template v-slot:item.status="{ item }">
           <div class="text-end">
             <v-chip
-              :color="item.status === 'publicado' ? 'green' : 'red'"
+              :color="item.status === 'Publico' ? 'green' : 'red'"
               :text="item.status"
               class="text-uppercase"
               variant="elevated"

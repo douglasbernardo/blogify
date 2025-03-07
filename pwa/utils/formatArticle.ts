@@ -1,34 +1,28 @@
-// export function formatArticle(article: string){
-//   const regexFindSubtitles = /\(\((.*?)\)\)/g; // Captura ((subtítulo))
-
-//   let novoTexto = article;
-//   novoTexto = novoTexto.replace(/^\d+\.\s(.+)$/gm, '<ol><li>$1</li></ol>');
-//   const matches = novoTexto.match(regexFindSubtitles);
-//   if (matches) {
-//     matches.forEach((match: string) => {
-//       const textoSemParenteses = match.replace(/\(\(|\)\)/g, '').trim();
-//       const novoSubtitulo = `<h3>${textoSemParenteses}</h3>`;
-
-//       novoTexto = novoTexto.replace(match, `<br>${novoSubtitulo}`); // Adicionando <br> antes e depois de cada subtítulo
-//     });
-//   }
-//   novoTexto = novoTexto.replace(/\n\s*\n/g, '</p><p>'); // Separando parágrafos com tags <p>
-//   novoTexto = `<p>${novoTexto}</p>`; // Adicionando tags <p> ao redor de todo o texto
-//   novoTexto = novoTexto.replace(/\)\s*(\w+)/g, ')');
-//   return novoTexto;
-// }
-
 export function formatArticle(article: string) {
   let novoTexto = article;
 
-  // Subtítulos ((Texto)) → <h3>Texto</h3>
+  // Subtítulos ((Texto))
   novoTexto = novoTexto.replace(/\(\((.*?)\)\)/g, '<br><h3>$1</h3>');
 
-  //negrito **texto**
+  // Negrito **Texto**
   novoTexto = novoTexto.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-  // Citações > Texto → <blockquote>Texto</blockquote>
-  novoTexto = novoTexto.replace(/^>\s*(.*)$/gm, '<blockquote>$1</blockquote>');
+  // Listas (.texto)
+  novoTexto = novoTexto.replace(/\(\s*\.\s*([\s\S]+?)\s*\)/g, '<li>$1</li>');
+
+  //imagens (%link)
+  novoTexto = novoTexto.replace(/\(\%\s*(https?:\/\/\S+\.(jpg|jpeg|png|gif|bmp|svg|webp))\s*\)/gi, '<img src="$1" height="300px" width="500" /><br>');
+
+  //links[texto](link)
+  novoTexto = novoTexto.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2">$1</a>');
+
+  //colorir um texto ($text)[cor]
+  novoTexto = novoTexto.replace(/\(\$([^\)]+)\)\[([^\]]+)\]/g, '<span style="color:$2">$1</span>');
+
+  //details um texto {titulo}[conteudo]
+  novoTexto = novoTexto.replace(/\{([^\}]+)\}\[([^\]]+)\]/g, 
+    '<details><summary>$1</summary><p>$2</p></details>'
+  );
 
   // Quebra de linha extra → transforma em parágrafo
   novoTexto = novoTexto.replace(/\n\s*\n/g, '</p><p>');
@@ -36,4 +30,3 @@ export function formatArticle(article: string) {
 
   return novoTexto;
 }
-

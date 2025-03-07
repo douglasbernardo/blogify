@@ -3,7 +3,7 @@
     <v-stepper
       next-text="Próximo"
       prev-text="Voltar"
-      :items="['Opções de Criação', 'Criação do Artigo', 'Confirmação']"
+      :items="['Opções de Criação','Criação do Artigo', 'Escrevendo Artigo', 'Confirmação']"
       >
       <template v-slot:item.1>
         <v-row>
@@ -39,12 +39,49 @@
       </template>
       <template v-slot:item.2>
         <form @submit.prevent="submit">
-          <span>Imagem de Background (opcional)</span>
+          <v-row>
+            <v-col>
+              <span class="mb-3">Título</span>
+              <v-text-field
+                v-model="articleTitle"
+                :style="fontChosen.title ? `font-family: ${fontChosen.title}` : ''"
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <span>Escolha um fonte para seu título</span>
+              <v-select
+                :items="fontsTitle"
+                v-model="fontChosen.title"
+              ></v-select>
+            </v-col>
+          </v-row>
+        <v-row>
+          <v-col>
+            <span>Escolha uma Categoria</span>
+            <v-combobox
+              :items="categories"
+              v-model="categoryChosen"
+            ></v-combobox>
+          </v-col>
+          <v-col>
+            <span>Status</span>
+            <v-select
+              :items="status"
+              default="default"
+              v-model="statusChosen"
+            ></v-select>
+          </v-col>
+        </v-row>
+        <span>Imagem de Background (opcional)</span>
           <v-file-input
           type="file"
           @change="handleFileChange"
           label="Escolher Imagem"
         ></v-file-input>
+        </form>
+      </template>
+      <template v-slot:item.3>
+        <form @submit.prevent="submit">
         <div v-if="selectedOption === 'externo'">
           <span>Arquivo com o texto</span>
           <v-file-input
@@ -56,16 +93,6 @@
           {{ selectedTextFile }}
         </div>
         <div v-else>
-          <span class="mb-3">Título</span>
-          <v-text-field
-            v-model="articleTitle"
-            :style="fontChosen.title ? `font-family: ${fontChosen.title}` : ''"
-          ></v-text-field>
-          <span>Escolha um fonte para seu título</span>
-          <v-select
-            :items="fontsTitle"
-            v-model="fontChosen.title"
-          ></v-select>
           <span>Escreva aqui</span>
           <v-btn class="ma-2" variant="outlined" size="small" @click="tipsToWrite=true"  prepend-icon="mdi-lightbulb-question">Dicas</v-btn>
           <v-textarea v-model="article" :style="{fontFamily: fontChosen.text}" />
@@ -75,44 +102,61 @@
             v-model="fontChosen.text"
           ></v-select>
         </div>
-        <span>Escolha a categoria</span>
-          <v-combobox
-            :items="categories"
-            v-model="categoryChosen"
-          ></v-combobox>
-          <span>Status</span>
-          <v-select
-            :items="status"
-            default="default"
-            v-model="statusChosen"
-          ></v-select>
         </form>
         <v-dialog 
           transition="dialog-top-transition"
           width="auto" 
           v-model="tipsToWrite"
         >
-           <v-card
-            max-width="auto"
-            append-icon="mdi-help"
-            title="Como eu posso escrever o meu artigo"
-          >
-            <v-card-subtitle>Para escrever seu artigo siga os seguintes comandos</v-card-subtitle>
+          <v-card max-width="600px" class="mx-auto pa-4">
+            <v-card-title class="d-flex align-center">
+              Como eu posso escrever o meu artigo?
+              <v-tooltip text="Dicas para formatação" location="bottom">
+                <template v-slot:activator="{ props }">
+                  <v-icon v-bind="props" class="ms-2" color="primary">mdi-help-circle</v-icon>
+                </template>
+              </v-tooltip>
+            </v-card-title>
+            <v-card-subtitle>Use os seguintes comandos para formatar seu artigo:</v-card-subtitle>
             <v-card-text>
-              Para Adicionar um subtitulo use: ((texto))<br>
-              Para Adicionar negrito ao texto use: **texto**
+              <v-list density="compact">
+                <v-list-item>
+                  <v-icon color="primary" class="me-2">mdi-format-header-2</v-icon>
+                  <strong>Subtítulo:</strong> <code>((texto))</code>
+                </v-list-item>
+                <v-list-item>
+                  <v-icon color="primary" class="me-2">mdi-format-bold</v-icon>
+                  <strong>Negrito:</strong> <code>**texto**</code>
+                </v-list-item>
+                <v-list-item>
+                  <v-icon color="primary" class="me-2">mdi-format-list-bulleted</v-icon>
+                  <strong>Lista:</strong> <code>(.texto)</code>
+                </v-list-item>
+                <v-list-item>
+                  <v-icon color="primary" class="me-2">mdi-image</v-icon>
+                  <strong>Imagem:</strong> <code>(%https://dd.com.br/Gl.jpg)</code>
+                </v-list-item>
+                <v-list-item>
+                  <v-icon color="primary" class="me-2">mdi-link</v-icon>
+                  <strong>Link:</strong> <code>[texto](link)</code>
+                </v-list-item>
+                <v-list-item>
+                  <v-icon color="primary" class="me-2">mdi-palette</v-icon>
+                  <strong>Cor:</strong> <code>($Perigo)[red]</code>
+                </v-list-item>
+                <v-list-item>
+                  <v-icon color="primary" class="me-2">mdi-chevron-down</v-icon>
+                  <strong>Detalhes:</strong> <code>{título}[descrição]</code>
+                </v-list-item>
+              </v-list>
             </v-card-text>
-            <template v-slot:actions>
-              <v-btn
-                class="ms-auto"
-                text="Entendi"
-                @click="tipsToWrite = false"
-              ></v-btn>
-            </template>
+            <v-card-actions class="justify-end">
+              <v-btn color="primary" @click="tipsToWrite = false">Entendi</v-btn>
+            </v-card-actions>
           </v-card>
         </v-dialog>
       </template>
-      <template v-slot:item.3>
+      <template v-slot:item.4>
         <v-card
           class="mx-auto"
           max-width="500"
@@ -190,7 +234,7 @@ Agradecemos por contribuir para a nossa comunidade e esperamos que sua postagem 
     'Red Hat Text'
   ])
   const articleTitle = ref('')
-  const status = ref(['publicado','oculto'])
+  const status = ref(['Publico','Oculto'])
   const article = ref('')
   const categoryChosen= ref('')
   const statusChosen = ref('')
