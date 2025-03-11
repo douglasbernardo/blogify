@@ -99,9 +99,9 @@
     { key: 'title', title: 'Nome' },
     { key: 'category', title: 'Categoria' },
     { key: 'likes', title: 'Likes' },
-    { key: 'comments.length', title: 'Comentários' },
+    { key: 'comments', title: 'Comentários' },
     { key: 'views', title: 'Visualizações' },
-    { key: 'status', title: 'Status', align: 'end' },
+    { key: 'status', title: 'Status', align: 'end', sortable: true },
     { key: 'actions', title: 'Acões', align: 'end', sortable: false },
   ])
   const dialog = ref(false)

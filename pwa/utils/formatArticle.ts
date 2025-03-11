@@ -1,6 +1,11 @@
-export function formatArticle(article: string) {
+export default function formatArticle(title: string | null, article: string) {
+  if(!article) return ''
+
   let novoTexto = article;
 
+  if (title) {
+    novoTexto = `<h1 style="text-align: center">${title}</h1><br>` + novoTexto;
+  }
   // Subtítulos ((Texto))
   novoTexto = novoTexto.replace(/\(\((.*?)\)\)/g, '<br><h3>$1</h3>');
 
@@ -18,11 +23,6 @@ export function formatArticle(article: string) {
 
   //colorir um texto ($text)[cor]
   novoTexto = novoTexto.replace(/\(\$([^\)]+)\)\[([^\]]+)\]/g, '<span style="color:$2">$1</span>');
-
-  //details um texto {titulo}[conteudo]
-  novoTexto = novoTexto.replace(/\{([^\}]+)\}\[([^\]]+)\]/g, 
-    '<details><summary>$1</summary><p>$2</p></details>'
-  );
 
   // Quebra de linha extra → transforma em parágrafo
   novoTexto = novoTexto.replace(/\n\s*\n/g, '</p><p>');

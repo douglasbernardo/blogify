@@ -144,10 +144,6 @@
                   <v-icon color="primary" class="me-2">mdi-palette</v-icon>
                   <strong>Cor:</strong> <code>($Perigo)[red]</code>
                 </v-list-item>
-                <v-list-item>
-                  <v-icon color="primary" class="me-2">mdi-chevron-down</v-icon>
-                  <strong>Detalhes:</strong> <code>{título}[descrição]</code>
-                </v-list-item>
               </v-list>
             </v-card-text>
             <v-card-actions class="justify-end">

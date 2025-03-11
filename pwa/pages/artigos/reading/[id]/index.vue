@@ -5,7 +5,7 @@
       elevation="12"
     >
       <p
-        :style="{fontFamily: String(articleOptions.titleFont), fontSize: '25px' }" 
+        :style="{fontFamily: String(articleOptions.titleFont), fontSize: '30px' }" 
         class="text-center mt-16"
       >
         {{articleOptions.title}}
@@ -13,12 +13,32 @@
       <article
         class="pa-5 ma-5"
         :style="{fontFamily: String(articleOptions.textFont)}"
-        v-html="formatArticle(articleOptions.article)">
+        v-html="formatArticle('',articleOptions.article)">
       </article>
       <v-card-actions class="d-flex justify-end">
         <v-btn class="ma-2" size="small" variant="flat" color="primary" rounded @click="$router.push('/')">Voltar</v-btn>
         <v-btn class="ma-2" variant="flat" size="small" color="primary" rounded append-icon="mdi-comment" @click="sheet=!sheet">Comentários</v-btn>
-        <v-btn class="ma-2" size="small" variant="flat" append-icon="mdi-share" rounded color="primary">Compartilhar</v-btn>
+        <div class="text-center">
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="primary"
+                v-bind="props"
+              >
+                Mais Opções
+              </v-btn>
+            </template>
+
+            <v-list width="auto">
+              <v-list-item>
+                <v-btn class="ma-2" size="small" @click="downloadArticle()" variant="flat" append-icon="mdi-download" rounded color="primary">Fazer Download</v-btn>
+              </v-list-item>
+               <v-list-item>
+                 <v-btn class="ma-2" size="small" @click="sharingDialog()" variant="flat" append-icon="mdi-share" rounded color="primary">Compartilhar</v-btn>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
       </v-card-actions>
     </v-card>
     <v-dialog persistent width="700" v-model="dialogCreateComment">
@@ -132,8 +152,10 @@
 </template>
 
 <script lang="ts" setup>
+  import formatArticle from '~/utils/formatArticle'
   import { useAuthStore } from "~/store/user/authStore";
   import { useCommentStore } from "~/store/comment_manager";
+  import html2pdf from 'html2pdf.js'
   const route = useRoute()
   const articleOptions = ref<string | null>(null)
   const authStore = useAuthStore()
@@ -233,5 +255,39 @@
     }else{
       useRouter().push('/user/login')
     }
+  }
+
+  const sharingDialog = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "Confira este artigo!",
+        text: "Dá uma olhada neste artigo incrível!",
+        url: window.location.href, // URL do artigo atual
+      }).then(() => console.log("Compartilhamento feito com sucesso!"))
+    .catch((error) => console.log("Erro ao compartilhar:", error));
+    } else {
+      alert("Seu navegador não suporta compartilhamento nativo.");
+    }
+  }
+  const downloadArticle = async() => {
+
+    const formattedArticle = await formatArticle(articleOptions.value.title, articleOptions.value.article);
+    console.log(formattedArticle)
+    // Cria o conteúdo HTML para o PDF
+    const pdfOptions = {
+      margin: 5,
+      filename: articleOptions.value.title + '.pdf',
+    };
+
+    // Gerar o PDF
+    html2pdf()
+      .from(formattedArticle)
+      .set({
+        margin: 5,
+        filename: articleOptions.value.title,
+        html2canvas: { useCORS: true, scale: 2 },
+        jsPDF: { orientation: "portrait" }
+      })
+      .save();
   }
 </script>

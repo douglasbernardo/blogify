@@ -10,6 +10,7 @@ export const useArticleStore = defineStore('article',{
     categories: [],
     authors: [],
     filteredArticles: [],
+    reviewArticle: {}
   }),
   actions: {
     async add_new_article(article: object){
@@ -85,6 +86,11 @@ export const useArticleStore = defineStore('article',{
         return [];
       }
       this.filteredArticles = data.value
+    },
+
+    async get_article_by_id(id: string){
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/reading/${id}`)
+      this.reviewArticle = data.value
     }
   }
 })

@@ -13,19 +13,20 @@
       v-if="authStore.isAuthenticated"
       v-model="drawer"
     >
-      <template v-slot:prepend v-if="userStore.userConfigData?.imageOptions">
+      <template v-slot:prepend>
         <v-list-item
           lines="two"
           :title="authStore.userName || userStore.userName"
           subtitle="Logado"
         >
-          <template #prepend v-if="userStore.userConfigData?.imageOptions">
+          <template #prepend>
             <v-avatar size="46">
-              <v-img :src="userStore?.userConfigData?.imageOptions?.addImageUrl || undefined"></v-img>
+               <v-img 
+                :src="user.userConfigData && user.userConfigData?.imageOptions?.addImageUrl ?
+                user.userConfigData?.imageOptions?.addImageUrl : 'https://as2.ftcdn.net/v2/jpg/01/86/29/31/1000_F_186293166_P4yk3uXQBDapbDFlR17ivpM6B1ux0fHG.jpg'" 
+                alt="Profile Picture"
+              ></v-img>
             </v-avatar>
-          </template>
-          <template #prepend v-if="!userStore.userConfigData?.imageOptions?.addImageUrl">
-            <v-btn icon="mdi-image-plus" @click="dialogPicture=!dialogPicture" variant="text"></v-btn>
           </template>
         </v-list-item>
       </template>
@@ -35,7 +36,7 @@
         <v-list-item @click="navigateTo('/profile')" prepend-icon="mdi-account" title="Minha Conta" value="account"></v-list-item>
         <v-list-item @click="navigateTo('/artigos')" prepend-icon="mdi-sticker-text" title="Meus Artigos" value="users"></v-list-item>
         <v-list-item @click="navigateTo('/atividades')" prepend-icon="mdi-ticket" title="Suas Atividades" value="users"></v-list-item>
-        <v-list-item @click="authStore.logout()" prepend-icon="mdi-logout" title="Logout" value="Logout"></v-list-item>
+        <v-list-item @click="logout()" prepend-icon="mdi-logout" title="Logout" value="Logout"></v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -58,20 +59,27 @@ import {useAuthStore} from '~/store/user/authStore'
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { userManager } from '~/store/user/user_manager';
 import { useArticleStore } from '~/store/article_manager';
+
 const mobile = useDisplay()
 const dialog = ref(false)
 const dialogPicture = ref(false)
 const drawer = ref(false)
 const authStore = useAuthStore()
 const userStore = userManager()
+const user = userManager()
 const isRouteDifferent = computed(() => {
   return useRoute().fullPath !== '/';
 })
 const show = ref(false)
 
 onMounted(()=>{
-  userStore.get_user()
+  userStore.get_user();
 })
+
+const logout = () => {
+  userStore.userConfigData.imageOptions.addImageUrl = null
+  authStore.logout()
+}
 
 </script>
 <style scoped>

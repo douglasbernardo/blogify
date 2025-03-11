@@ -1,14 +1,14 @@
 <template>
   <v-container>
-    <v-card v-if="articleOptions">
-      <v-img class="" width="460" :lazy-src="articleOptions.backgroundImage" :src="articleOptions.backgroundImage"></v-img>
-      <v-card-title :style="{fontFamily: articleOptions.fontTitle}" class="text-center">
-        Titulo do Artigo: {{articleOptions.title}}
+    <v-card v-if="article.reviewArticle.article">
+      <v-card-title :style="{fontFamily: article.reviewArticle.article.fontTitle}" class="text-center">
+        Titulo do Artigo: {{article.reviewArticle.title}}
       </v-card-title>
       <article
         class="pa-5"
-        :style="{fontFamily: articleOptions.fontText}"
-        v-html="formatArticle(articleOptions.article)">
+        :style="{fontFamily: article.reviewArticle.article.fontText}"
+        v-html="formatArticle(article.reviewArticle.article || undefined)"
+      >
       </article>
       <v-btn class="bg-blue ma-2 pa-2" @click="useRouter().go(-1)">Voltar</v-btn>
     </v-card>
@@ -26,11 +26,10 @@
 </template>
 
 <script lang="ts" setup>
-  const route = useRoute()
-  const articleOptions = ref<object | null>({})
-  const envVariable = useRuntimeConfig()
+  import { useRoute } from "vue-router";
+  import {useArticleStore} from "~/store/article_manager";
+  const article = useArticleStore()
   onMounted(async () => {
-    const {data} = await useFetch<object>(`${envVariable.public.apiBase}/article/reading/${route.params.id}`)
-    articleOptions.value = data.value
+    await article.get_article_by_id(useRoute().params.id)
   })
 </script>

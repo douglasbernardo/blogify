@@ -18,6 +18,7 @@ export const useAuthStore = defineStore('authStore',{
           body: { email: objUser.email, password: objUser.password }
         })
         if(data.value){
+          console.log(data.value)
           this.user = data.value
           this.token = data.value
           this.userName = data.value.user.name
