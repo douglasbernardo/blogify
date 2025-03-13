@@ -1,8 +1,17 @@
 <template>
   <v-container>
-    <v-card 
+    <v-switch
+      v-model="bgColor"
+      :label="bgColor"
+      false-value="Claro"
+      true-value="Escuro"
+      hide-details
+      inset
+    ></v-switch>
+    <v-card
+      :class="{'bg-grey-darken-3': bgColor === 'Escuro'}"
       v-if="articleOptions" 
-      elevation="12"
+      elevation="10"
     >
       <p
         :style="{fontFamily: String(articleOptions.titleFont), fontSize: '30px' }" 
@@ -168,6 +177,8 @@
   const commentsArray = ref<Array<string>>([])
   const isEditing = ref<boolean>(false)
   const envVariable = useRuntimeConfig()
+  const colorMode = useColorMode()
+  const bgColor = ref('Claro')
 
   const fetchComments = async() => {
     await $fetch<string[]>(`${envVariable.public.apiBase}/comment/all`, {

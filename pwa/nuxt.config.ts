@@ -34,7 +34,8 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-vue3-google-signin',
     '@nuxtjs/google-fonts',
-    '@vueuse/nuxt'
+    '@vueuse/nuxt',
+    "@nuxtjs/color-mode"
   ],
   googleFonts: {
     families: {
@@ -71,4 +72,3 @@ export default defineNuxtConfig({
     clientId:'335638704279-dg7t8s2qnmrogjkj3lkfo6jbfste7417.apps.googleusercontent.com',
   }
 })
-

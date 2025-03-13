@@ -13,10 +13,9 @@
         <v-card 
           v-if="isHovering"
           density="comfortable"
-          elevation="12"
-          variant="plain"
+          elevation="16"
           style="font-family: Kanit;"
-          class="text-center rounded-lg bg-blue-darken-4 ma-2 pa-2 text-h7"
+          class="text-center bg-grey-darken-3 pa-2 ma-2 opacity-60 text-white text-h7"
         >
         {{ article.title }}
         </v-card>

@@ -203,7 +203,7 @@ export class ArticleService {
     return Promise.all(
       (
         await this.article
-          .find({ status: 'publicado' })
+          .find({ status: 'Publico' })
           .sort({ _id: -1 })
           .limit(3)
       ).map(async (article) => {

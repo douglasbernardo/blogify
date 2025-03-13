@@ -10,8 +10,8 @@
       <p class="text-center font-weight-bold">Ultimas Publicações</p>
     </v-sheet>
     <v-row>
-      <template v-for="(article,index) in articleManager.lastArticles">
-          <Article :article="article" :index="index" />
+      <template v-for="(article,index) in articleManager.lastArticles" :key="article.id">
+        <Article :article="article" :index="index" />
       </template>
     </v-row>
   </v-container>

@@ -77,7 +77,7 @@ onMounted(()=>{
 })
 
 const logout = () => {
-  userStore.userConfigData.imageOptions.addImageUrl = null
+  //userStore.userConfigData.imageOptions.addImageUrl = null
   authStore.logout()
 }
 
