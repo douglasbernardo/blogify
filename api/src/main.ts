@@ -13,6 +13,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+  app.useLogger(['error', 'warn', 'log'])
   app.enableCors();
   // app.enableCors({origin: process.env.MOBILE_URL_REMOTE,});
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
