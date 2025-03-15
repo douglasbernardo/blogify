@@ -14,7 +14,17 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
   app.useLogger(['error', 'warn', 'log'])
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'Authorization',
+    ],
+  });
   // app.enableCors({origin: process.env.MOBILE_URL_REMOTE,});
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.listen({ port: parseInt(process.env.PORT) || 4000 }, (err, address) => {
