@@ -12,7 +12,7 @@ import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    //MongooseModule.forRoot("mongodb+srv://douglasmelo:blogify@cluster0.4wemo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"),
+    MongooseModule.forRoot("mongodb+srv://douglasmelo:blogify@cluster0.4wemo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"),
     UserModule,
     AuthModule,
     ArticleModule,
