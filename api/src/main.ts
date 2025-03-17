@@ -27,7 +27,8 @@ async function bootstrap() {
   });
   // app.enableCors({origin: process.env.MOBILE_URL_REMOTE,});
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  app.listen({ port: parseInt(process.env.PORT) || 4000 }, (err, address) => {
+  const port = parseInt(process.env.PORT) || 4000
+  app.listen(port, '0.0.0.0', (err, address) => {
     if (err) {
       console.error(err);
       process.exit(1);
