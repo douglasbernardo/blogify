@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      apiBase: process.env.API_URL_PROD,
+      apiBase: process.env.API_URL_PROD?.replace('/\/$/', '')
     }
   },
   modules:[
