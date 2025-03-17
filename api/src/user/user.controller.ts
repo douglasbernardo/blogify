@@ -15,13 +15,13 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('new_user')
+  @Post('/new_user')
   addUser(@Body() userData: UserDto) {
     return this.userService.add_user(userData);
   }
 
   @UseGuards(AuthGuard)
-  @Get('all_users')
+  @Get('/all_users')
   allUsers() {
     return this.userService.get_all_users();
   }
@@ -33,20 +33,20 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('edit_user')
+  @Post('/edit_user')
   editUser(@Body() data: editDto) {
     console.log(data);
     return this.userService.edit_user(data);
   }
 
   @UseGuards(AuthGuard)
-  @Post('delete_account')
+  @Post('/delete_account')
   deleteUser(@Request() req) {
     return this.userService.delete_account(req.body.currentEmail);
   }
 
   @UseGuards(AuthGuard)
-  @Post('my-activities')
+  @Post('/my-activities')
   activities(@Request() req) {
     return this.userService.my_activities(req.body.email);
   }

@@ -29,28 +29,28 @@ export class ArticleController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('edit')
+  @Post('/edit')
   editArticle(@Body() dataEditDto: articleEditDto) {
     return this.articleService.edit_article(dataEditDto);
   }
 
-  @Get('categories')
+  @Get('/categories')
   getCategories() {
     return this.articleService.all_categories();
   }
 
-  @Get('authors')
+  @Get('/authors')
   getAuthors() {
     return this.articleService.all_authors();
   }
 
-  @Get('reading/:id')
+  @Get('/reading/:id')
   getArticle(@Param('id') id: string) {
     return this.articleService.get_article(id);
   }
 
   @UseGuards(AuthGuard)
-  @Post('my_articles')
+  @Post('/my_articles')
   getMyArticles(@Request() req) {
     return this.articleService.get_my_articles(req.body.email);
   }
