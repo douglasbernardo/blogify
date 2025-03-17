@@ -17,7 +17,7 @@ export const userManager = defineStore('userManager',{
         user: UserInterface
       }
       try{
-        const {data,error} = await useFetch<User>(`${useRuntimeConfig().public.apiBase}user/new_user`,{
+        const {data,error} = await useFetch<User>(`${useRuntimeConfig().public.apiBase}/user/new_user`,{
           method: 'post',
           body: objUser
         })
@@ -41,7 +41,7 @@ export const userManager = defineStore('userManager',{
       }
     },
     async get_user(){
-      const {data} = await useFetch<UserInterface>(`${useRuntimeConfig().public.apiBase}user`,{
+      const {data} = await useFetch<UserInterface>(`${useRuntimeConfig().public.apiBase}/user`,{
         method: 'post',
         body: { currentEmail: String(localStorage.getItem('user')) },
         headers:{ Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -50,7 +50,7 @@ export const userManager = defineStore('userManager',{
     },
     async edit_user(user: object){
       try{
-        const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}user/edit_user`,{
+        const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/user/edit_user`,{
           method: 'post',
           body: user,
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -73,7 +73,7 @@ export const userManager = defineStore('userManager',{
       }
     },
     async delete_account(currentEmail: string){
-      await useFetch(`${useRuntimeConfig().public.apiBase}user/delete_account`,{
+      await useFetch(`${useRuntimeConfig().public.apiBase}/user/delete_account`,{
         method: 'post',
         body: { currentEmail: currentEmail },
         headers:{ Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -83,7 +83,7 @@ export const userManager = defineStore('userManager',{
     },
 
     async activities(email: string){
-      const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}user/my-activities`,{
+      const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}/user/my-activities`,{
         method: 'post',
         body:{email: email },
         headers:{ Authorization: `Bearer ${localStorage.getItem('token')}` },

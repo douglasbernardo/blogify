@@ -14,7 +14,7 @@ export const useArticleStore = defineStore('article',{
   }),
   actions: {
     async add_new_article(article: object){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/add`,{
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/add`,{
         method: 'post',
         body: article,
         headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
@@ -23,12 +23,12 @@ export const useArticleStore = defineStore('article',{
     },
 
     async get_all_articles(){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/all`)
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/all`)
       this.allArticles = data.value
     },
 
     async my_articles(email: string){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/my_articles`,{
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/my_articles`,{
         method: 'post',
         body: {email: email},
         headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
@@ -45,7 +45,7 @@ export const useArticleStore = defineStore('article',{
     },
 
     async edit_article(article: object){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/edit`,{
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/edit`,{
         method: 'post',
         body: article,
         headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
@@ -53,23 +53,23 @@ export const useArticleStore = defineStore('article',{
       navigateTo('/artigos')
     },
     async lastAddedArticles(){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/last-added`)
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/last-added`)
       this.lastArticles = data.value
     },
 
     async get_categories(){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/categories`)
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/categories`)
       this.categories = data.value
     },
 
     async get_authors(){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/authors`)
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/authors`)
       this.authors = data
     },
 
 
     async filtering_articles(filters: object){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/filter`,{
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/filter`,{
         method: 'post',
         body: filters
       })
@@ -77,7 +77,7 @@ export const useArticleStore = defineStore('article',{
     },
 
     async search_article(query){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/search`,{
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/search`,{
         method: 'get',
         query: {q: query}
       })
@@ -89,7 +89,7 @@ export const useArticleStore = defineStore('article',{
     },
 
     async get_article_by_id(id: string){
-      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}article/reading/${id}`)
+      const {data,error} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/reading/${id}`)
       this.reviewArticle = data.value
     }
   }
