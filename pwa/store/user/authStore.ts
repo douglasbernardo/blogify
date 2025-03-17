@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('authStore',{
   actions:{
     async login_user(objUser: object) {
       try{
-        const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}auth/login`,{
+        const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/auth/login`,{
           method: 'post',
           body: { email: objUser.email, password: objUser.password }
         })
@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('authStore',{
     },
     async login_google(token_google: string){
       try {
-        const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}auth/verify-google-token`,{
+        const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/auth/verify-google-token`,{
           method: 'post',
           body: {access_token: token_google}
         })
