@@ -13,11 +13,11 @@ import { signInDto } from '../dto/user.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
   @HttpCode(HttpStatus.OK)
-  @Post('/login')
+  @Post('login')
   signIn(@Body() signData: signInDto) {
     return this.authService.signIn(signData.email, signData.password);
   }
-  @Post('/verify-google-token')
+  @Post('verify-google-token')
   signIn_with_google(@Request() req) {
     return this.authService.verify_google_token(req.body.access_token);
   }
