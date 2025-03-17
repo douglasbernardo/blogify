@@ -190,7 +190,7 @@
   const categories = ref()
   const tipsToWrite = ref(false)
   onMounted(async () => {
-    const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}/article/categories`)
+    const {data} = await useFetch(`${useRuntimeConfig().public.apiBase}article/categories`)
     categories.value = data.value
   })
   const uploadFile = (file?: File | null) => {

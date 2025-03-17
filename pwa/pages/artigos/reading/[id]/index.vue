@@ -181,14 +181,14 @@
   const bgColor = ref('Claro')
 
   const fetchComments = async() => {
-    await $fetch<string[]>(`${envVariable.public.apiBase}/comment/all`, {
+    await $fetch<string[]>(`${envVariable.public.apiBase}comment/all`, {
       method: 'post',
       body: { id: route.params.id }
     }).then((response) => commentsArray.value = response)
   }
 
   const fetchArticle = async () => {
-    const {data} = await useFetch<string>(`${envVariable.public.apiBase}/article/reading/${route.params.id}`)
+    const {data} = await useFetch<string>(`${envVariable.public.apiBase}article/reading/${route.params.id}`)
     articleOptions.value = data.value
   }
 

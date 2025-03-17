@@ -124,8 +124,8 @@
   onMounted(async() => {
     const {data, error} = await useAsyncData('article-edit', async () => {
       const [categoriesResponse, editingArticleResponse] = await Promise.all([
-        $fetch<string[]>(`${envVariable.public.apiBase}/article/categories`),
-        $fetch<object>(`${envVariable.public.apiBase}/article/reading/${route.params.id}`),
+        $fetch<string[]>(`${envVariable.public.apiBase}article/categories`),
+        $fetch<object>(`${envVariable.public.apiBase}article/reading/${route.params.id}`),
       ])
       categories.value = categoriesResponse, 
       articleOptions.value = editingArticleResponse
