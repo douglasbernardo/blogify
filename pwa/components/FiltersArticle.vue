@@ -4,24 +4,18 @@
     <v-col cols="12" md="8">
       <v-card class="pa-6 rounded-xl elevation-2 card-background" color="orange-darken-1" height="auto">
         <v-row no-gutters align="center" justify="space-between" class="fill-height">
-          <!-- Card com texto -->
-          <v-col cols="4">
-            <div class="d-flex align-center pa-2" style="height: 100%;">
-              <span class="search-text text-h6 font-weight-medium font-weight-bold">
-                Busque por artigos ou aplique filtros
-              </span>
-            </div>
-          </v-col>
-          
           <!-- Campo de pesquisa -->
           <v-col cols="5">
+            <span class="text-h7 ma-2">
+              Busque por artigos ou aplique filtros
+            </span>
             <v-text-field
               v-model="query"
               placeholder="Pesquise por artigos..."
               append-inner-icon="mdi-magnify"
               variant="solo"
               hide-details
-              class="elevation-1"
+              class="elevation-1 ma-2"
               @input="fetchSearchResults"
               color="grey lighten-5"
             />
