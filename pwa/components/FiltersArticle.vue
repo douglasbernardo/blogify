@@ -6,9 +6,6 @@
         <v-row no-gutters align="center" justify="space-between" class="fill-height">
           <!-- Campo de pesquisa -->
           <v-col>
-            <span class="text-h7 ma-2">
-              Busque por artigos ou aplique filtros
-            </span>
             <v-text-field
               v-model="query"
               placeholder="Pesquise por artigos..."
