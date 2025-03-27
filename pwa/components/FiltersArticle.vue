@@ -5,7 +5,7 @@
       <v-card class="pa-6 rounded-xl elevation-2 card-background" color="orange-darken-1" height="auto">
         <v-row no-gutters align="center" justify="space-between" class="fill-height">
           <!-- Campo de pesquisa -->
-          <v-col cols="5">
+          <v-col>
             <span class="text-h7 ma-2">
               Busque por artigos ou aplique filtros
             </span>
