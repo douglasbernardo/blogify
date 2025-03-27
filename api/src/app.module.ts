@@ -13,8 +13,9 @@ import { AppController } from './app.controller';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      process.env.ENVIROMENT === 'DEV' ? process.env.DATABASE_URL_DEV 
-      : process.env.DATABASE_URL 
+      process.env.ENVIRONMENT == 'DEVELOPMENT' ?
+      process.env.DATABASE_URL_DEV :
+      process.env.DATABASE_URL 
     ),
     UserModule,
     AuthModule,
