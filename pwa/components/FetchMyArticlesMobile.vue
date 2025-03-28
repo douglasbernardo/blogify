@@ -6,7 +6,7 @@
                     <v-list>
                         <v-list-item title="Categoria">
                             <template v-slot:subtitle>
-                                <span>Seu artigo é da categoria: <v-chip density="comfortable">{{ article.category }}</v-chip></span>
+                                <span><v-chip density="comfortable">{{ article.category }}</v-chip></span>
                             </template>
                         </v-list-item>
                         <v-list-item title="Likes">

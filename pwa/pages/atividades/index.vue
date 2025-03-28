@@ -1,8 +1,9 @@
 <template>
   <v-container class="pa-0">
     <v-row class="ma-2 pa-2" align="center" justify="center" no-gutters>
-      <v-col cols="12" md="12" sm="12" lg="4">
+      <v-col cols="10" md="10" sm="10" lg="4">
         <v-card 
+          class="mb-6"
           variant="tonal" 
           elevation="10" 
           max-width="344" 
@@ -25,7 +26,7 @@
           </v-card-actions>
         </v-card>
       </v-col>
-      <v-col cols="12" md="12" sm="12" lg="4">
+      <v-col cols="10" md="10" sm="10" lg="4">
         <v-card 
           color="indigo" 
           variant="tonal" 

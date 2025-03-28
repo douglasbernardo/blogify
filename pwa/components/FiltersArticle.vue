@@ -1,6 +1,6 @@
 <template>
   <v-card 
-    class="pa-4 mx-auto card-background rounded-b-xl"
+    class="pa-3 mx-auto card-background rounded-b-xl"
     :class="mobile ? 'w-100' : 'w-66'"
   >
     <v-row>
