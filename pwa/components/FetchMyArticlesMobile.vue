@@ -6,22 +6,22 @@
                     <v-list>
                         <v-list-item title="Categoria">
                             <template v-slot:subtitle>
-                                <span>Seu artigo faz parte da categoria de: <v-chip density="comfortable">{{ article.category }}</v-chip></span>
+                                <span>Seu artigo é da categoria: <v-chip density="comfortable">{{ article.category }}</v-chip></span>
                             </template>
                         </v-list-item>
                         <v-list-item title="Likes">
                             <template v-slot:subtitle>
-                                <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.likes }}</v-chip> likes</span>
+                                <span class="">Seu artigo tem <v-chip density="comfortable">{{ article.likes }}</v-chip> curtidas</span>
                             </template>
                         </v-list-item>
                         <v-list-item title="Comentários">
                             <template v-slot:subtitle>
-                                <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.comments }}</v-chip> comentários</span>
+                                <span class="">Seu artigo tem <v-chip density="comfortable">{{ article.comments }}</v-chip> comentários</span>
                             </template>
                         </v-list-item>
                         <v-list-item title="Vizualizações">
                             <template v-slot:subtitle>
-                                <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.views }}</v-chip> vizualizações</span>
+                                <span class="">Seu tem <v-chip density="comfortable">{{ article.views }}</v-chip> vizualizações</span>
                             </template>
                         </v-list-item>
                         <v-list-item title="Status">
