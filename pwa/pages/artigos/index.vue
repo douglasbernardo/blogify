@@ -7,6 +7,7 @@
         <v-spacer></v-spacer>
 
         <v-text-field
+            v-if="!mobile"
             v-model="search"
             prepend-inner-icon="mdi-magnify"
             density="compact"
@@ -20,6 +21,7 @@
 
       <v-divider></v-divider>
       <v-data-table
+          v-if="!mobile"
           v-model:search="search"
           :items="articleStore.articles"
           :headers="headers"
@@ -37,7 +39,7 @@
         <template v-slot:item.status="{ item }">
           <div class="text-end">
             <v-chip
-              :color="item.status === 'Publico' ? 'green' : 'red'"
+              :color="item.status === 'publico' ? 'green' : 'red'"
               :text="item.status"
               class="text-uppercase"
               variant="elevated"
@@ -86,12 +88,15 @@
           </v-dialog>
         </template>
       </v-data-table>
+      <fetch-my-articles-mobile v-else :articles="articleStore.articles"/>
     </v-card>
   </v-container>
 </template>
 <script lang="ts" setup>
   import {useArticleStore} from "~/store/article_manager";
+  import { useDisplay } from "vuetify/lib/framework.mjs";
 
+  const {mobile} = useDisplay()
   const articleStore = useArticleStore()
   const search = ref('')
   const loading = ref(true)

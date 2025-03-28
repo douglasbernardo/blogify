@@ -52,7 +52,7 @@
       <span>Status</span>
       <v-select
         default="default"
-        :items="['publicado','oculto']"
+        :items="['publico','oculto']"
         v-model="articleOptions.status"
       ></v-select>
 
