@@ -1,33 +1,30 @@
 <template>
-  <v-row justify="center">
-    <!-- Card azul claro -->
-    <v-col cols="12" md="8">
-      <v-card class="pa-6 rounded-xl elevation-2 card-background" color="orange-darken-1" height="auto">
-        <v-row no-gutters align="center" justify="space-between" class="fill-height">
-          <!-- Campo de pesquisa -->
-          <v-col>
-            <v-text-field
-              v-model="query"
-              placeholder="Pesquise por artigos..."
-              append-inner-icon="mdi-magnify"
-              variant="solo"
-              hide-details
-              class="elevation-1 ma-2"
-              @input="fetchSearchResults"
-              color="grey lighten-5"
-            />
-          </v-col>
-
-          <!-- Botão de filtro -->
-          <v-col cols="3" class="d-flex justify-end">
-            <v-btn @click="dialogFilter = !dialogFilter" class="ma-2" icon color="grey darken-1">
-              <v-icon>mdi-filter-variant</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+  <v-card 
+    class="pa-4 mx-auto card-background rounded-b-xl"
+    :class="mobile ? 'w-100' : 'w-66'"
+  >
+    <v-row>
+      <!-- Campo de pesquisa -->
+      <v-col>
+        <v-text-field
+          v-model="query"
+          placeholder="Pesquise por artigos..."
+          append-inner-icon="mdi-magnify"
+          variant="solo"
+          hide-details
+          class="elevation-1 ma-2"
+          @input="fetchSearchResults"
+          color="grey lighten-5"
+        />
+      </v-col>
+      <!-- Botão de filtro -->
+      <v-col cols="3">
+        <v-btn @click="dialogFilter = !dialogFilter" class="ma-2" icon color="grey darken-1">
+          <v-icon>mdi-filter-variant</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-card>
   <v-dialog
     v-model="dialogFilter"
     width="auto"
@@ -71,6 +68,7 @@
 
 <script setup lang="ts">
   import { useArticleStore } from "~/store/article_manager";
+  import { useDisplay } from "vuetify/lib/framework.mjs";
 
   const props = defineProps({
     user: {required:true}
@@ -83,6 +81,7 @@
   const dataChosen = ref<string>()
   const authorsChosen = ref<Array<string>>([])
   const messageError = ref<string>()
+  const {mobile} = useDisplay()
 
   const filters = reactive<{ categories: string[], data: string, authors: string[] }>({
     categories: categoriesChosen,
@@ -127,24 +126,6 @@
 </script>
 
 <style scoped>
-.text-h6 {
-  font-size: 1.25rem; /* Tamanho de fonte moderno */
-}
-.search-text{
-  font-family: 'Bungee Spice';
-}
-
-.rounded-xl {
-  border-radius: 16px; /* Borda arredondada mais moderna */
-}
-
-.v-text-field {
-  border-radius: 8px;
-}
-
-.pa-6 {
-  padding: 24px !important;
-}
 .card-background{
   background-image: url('/searchBackground.jpg');
   background-size: cover;
