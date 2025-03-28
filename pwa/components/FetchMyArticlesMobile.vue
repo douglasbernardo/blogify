@@ -8,7 +8,7 @@
                 <v-row class="ma-2">
                     <v-card max-width="425">
                         <v-list lines="one">
-                            <v-list-item title="Categoria?">
+                            <v-list-item title="Categoria">
                                 <template v-slot:subtitle>
                                     <span>Seu artigo faz parte da categoria de: <v-chip density="comfortable">{{ article.category }}</v-chip></span>
                                 </template>
