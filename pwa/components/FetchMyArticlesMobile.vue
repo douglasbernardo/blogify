@@ -1,42 +1,37 @@
 <template>
-    <v-expansion-panels
-        v-for="article in articles"
-        :key="article.id"
-      >
+    <v-expansion-panels v-for="(article,index) in articles" :key="index">
         <v-expansion-panel :title="article.title">
             <v-expansion-panel-text>
                 <v-row class="ma-2">
-                    <v-card max-width="425">
-                        <v-list lines="one">
-                            <v-list-item title="Categoria">
-                                <template v-slot:subtitle>
-                                    <span>Seu artigo faz parte da categoria de: <v-chip density="comfortable">{{ article.category }}</v-chip></span>
-                                </template>
-                            </v-list-item>
-                            <v-list-item title="Likes">
-                                <template v-slot:subtitle>
-                                    <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.likes }}</v-chip> likes</span>
-                                </template>
-                            </v-list-item>
-                            <v-list-item title="Comentários">
-                                <template v-slot:subtitle>
-                                    <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.comments }}</v-chip> comentários</span>
-                                </template>
-                            </v-list-item>
-                            <v-list-item title="Vizualizações">
-                                <template v-slot:subtitle>
-                                    <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.views }}</v-chip> vizualizações</span>
-                                </template>
-                            </v-list-item>
-                            <v-list-item title="Status">
-                                <template v-slot:subtitle>
-                                    <span class="">Está com o status de <v-chip density="comfortable">{{ article.status }}</v-chip></span>
-                                </template>
-                            </v-list-item>
-                        </v-list>
-                    </v-card>
+                    <v-list>
+                        <v-list-item title="Categoria">
+                            <template v-slot:subtitle>
+                                <span>Seu artigo faz parte da categoria de: <v-chip density="comfortable">{{ article.category }}</v-chip></span>
+                            </template>
+                        </v-list-item>
+                        <v-list-item title="Likes">
+                            <template v-slot:subtitle>
+                                <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.likes }}</v-chip> likes</span>
+                            </template>
+                        </v-list-item>
+                        <v-list-item title="Comentários">
+                            <template v-slot:subtitle>
+                                <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.comments }}</v-chip> comentários</span>
+                            </template>
+                        </v-list-item>
+                        <v-list-item title="Vizualizações">
+                            <template v-slot:subtitle>
+                                <span class="">Seu artigo conta com <v-chip density="comfortable">{{ article.views }}</v-chip> vizualizações</span>
+                            </template>
+                        </v-list-item>
+                        <v-list-item title="Status">
+                            <template v-slot:subtitle>
+                                <span class="">Está com o status <v-chip density="comfortable" :color="article.status === 'publico' ? 'green' : 'red'">{{ article.status }}</v-chip></span>
+                            </template>
+                        </v-list-item>
+                    </v-list>
                     <v-btn
-                        class="ma-2"
+                        class="ma-2 ml-6"
                         color="primary"
                         size="small"
                     > Opções
