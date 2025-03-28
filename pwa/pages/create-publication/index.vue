@@ -225,7 +225,7 @@
     'Red Hat Text'
   ])
   const articleTitle = ref('')
-  const status = ref(['Publico','Oculto'])
+  const status = ref(['publico','oculto'])
   const article = ref('')
   const categoryChosen= ref('')
   const statusChosen = ref('')
