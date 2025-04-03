@@ -25,7 +25,7 @@ export const useAuthStore = defineStore('authStore',{
           localStorage.setItem('token', data.value.access_token)
           localStorage.setItem('user', data.value.user.email)
           localStorage.setItem('name', data.value.user.name)
-          navigateTo('/')
+          navigateTo('/profile')
         }
         if(error.value){
           console.log(error.value.data.message)
