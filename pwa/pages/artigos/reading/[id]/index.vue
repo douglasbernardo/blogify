@@ -33,9 +33,8 @@
               <v-btn
                 color="primary"
                 v-bind="props"
-              >
-                Mais Opções
-              </v-btn>
+                icon="mdi-dots-horizontal"
+              />
             </template>
 
             <v-list width="auto">
@@ -165,6 +164,7 @@
   import { useAuthStore } from "~/store/user/authStore";
   import { useCommentStore } from "~/store/comment_manager";
   import html2pdf from 'html2pdf.js'
+  import { useDisplay } from 'vuetify/lib/framework.mjs';
   const route = useRoute()
   const articleOptions = ref<string | null>(null)
   const authStore = useAuthStore()
@@ -179,6 +179,7 @@
   const envVariable = useRuntimeConfig()
   const colorMode = useColorMode()
   const bgColor = ref('Claro')
+  const {mobile} = useDisplay()
 
   const fetchComments = async() => {
     await $fetch<string[]>(`${envVariable.public.apiBase}/comment/all`, {

@@ -29,7 +29,7 @@ export const userManager = defineStore('userManager',{
           localStorage.setItem('token', user.access_token)
           localStorage.setItem('user', user.user.email)
           localStorage.setItem('name', user.user.name)
-          navigateTo('/')
+          navigateTo('/profile')
         }
         if(error.value){
           if (!this.errorMessages.includes(error.value.data.message)) {
