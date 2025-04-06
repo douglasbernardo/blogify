@@ -72,7 +72,8 @@
             ></v-select>
           </v-col>
         </v-row>
-        <span>Imagem de Background (opcional)</span>
+        <span>Imagem de Background (opcional)</span><br>
+        <p style="color: grey">Tamanho ideal: 630x340, Outros tamanhos podem não ficar ajustado corretamente!</p>
           <v-file-input
           type="file"
           @change="handleFileChange"

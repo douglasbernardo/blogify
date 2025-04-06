@@ -19,7 +19,9 @@
         >
           <template v-if="!article.filteredArticles.length" v-for="(article, index) in filterArticles(category)">
             <v-slide-group-item>
-              <Article :article="article" :index="index"></Article>
+              <div :style="mobile ? 'width: 298px;' : 'auto'">
+                <Article :article="article" :index="index"></Article>
+              </div>
             </v-slide-group-item>
           </template>
         </v-slide-group>
@@ -33,7 +35,7 @@
   import { useArticleStore } from "~/store/article_manager";
   import { useDisplay } from 'vuetify/lib/framework.mjs';
   const article = useArticleStore()
-  const mobile = useDisplay().mobile
+  const {mobile} = useDisplay()
   const dialog = ref<boolean>(false)
   const api_loaded = ref<boolean>(false)
 

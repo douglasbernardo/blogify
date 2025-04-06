@@ -7,7 +7,7 @@
       <v-btn
         icon
         dark
-        @click="useRouter().go(-1)"
+        @click="navigateTo('/')"
       >
         <v-icon>mdi-close</v-icon>
       </v-btn>
