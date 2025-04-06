@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-expansion-panels v-for="(article,index) in articles" :key="index">
+        <v-expansion-panels v-for="(article,index) in articles" :key="index" variant="inset">
             <v-expansion-panel :title="article.title">
                 <v-expansion-panel-text>
                     <v-list density="compact">
@@ -47,19 +47,15 @@
                             size="small"
                         > Opções
                             <v-menu activator="parent" location="end">
-                            <v-list>
-                                <v-list-item density="comfortable" style="cursor: pointer">
-                                <v-list-item-title @click="delete_article(article._id)">
-                                    <v-icon class="ma-2" color="red">mdi-delete</v-icon>Deletar
-                                </v-list-item-title>
-                                <v-list-item-title @click="navigateTo(`/artigos/edicao/${article._id}`)">
-                                    <v-icon class="ma-2" color="blue">mdi-pencil</v-icon>Editar
-                                </v-list-item-title>
-                                <v-list-item-title @click="navigateTo(`/artigos/${article._id}`)">
-                                    <v-icon class="ma-2" color="blue">mdi-eye</v-icon>Revisar
-                                </v-list-item-title>
-                                </v-list-item>
-                            </v-list>
+                                <v-list>
+                                    <v-list-item>
+                                        <v-row justify="center">
+                                        <v-btn @click="delete_article(article._id)" color="red" icon="mdi-delete" variant="text"/>
+                                        <v-btn @click="navigateTo(`/artigos/edicao/${article._id}`)" color="blue" variant="text" icon="mdi-pencil" />
+                                        <v-btn @click="navigateTo(`/artigos/${article._id}`)" color="green" variant="text" icon="mdi-eye"/>
+                                        </v-row>
+                                    </v-list-item>
+                                </v-list>
                         </v-menu>
                     </v-btn>
                 </v-expansion-panel-text>

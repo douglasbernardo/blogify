@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-sheet
-      class="ma-2"
+      class="ma-4"
       color="grey-lighten-2"
       height="25"
       rounded="pill"
@@ -9,9 +9,11 @@
     >
       <p class="text-center font-weight-bold">Ultimas Publicações</p>
     </v-sheet>
-    <v-row>
+    <v-row class="d-flex mx-auto">
       <template v-for="(article,index) in articleManager.lastArticles" :key="article.id">
-        <Article :article="article" :index="index" />
+        <div class="mx-auto">
+          <Article :article="article" :index="index" />
+        </div>
       </template>
     </v-row>
   </v-container>

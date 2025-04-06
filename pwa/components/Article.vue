@@ -1,12 +1,12 @@
 <template>
   <v-hover v-slot:default="{isHovering, props}">
-    <v-card v-bind="props" class="pa-2 ma-2" width="auto">
+    <v-card v-bind="props" class="ma-2">
       <v-img
         :src="article.backgroundImage ? article.backgroundImage : 'no-image-article.avif'"
-        class="align-center"
+        class="align-center pa-2 rounded-t-lg"
         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-        height="300px"
-        width="345"
+        height="200px"
+        width="300"
         cover
       >
         <v-card-title v-if="!isHovering" class="text-white text-center" v-text="article.title"></v-card-title>
@@ -15,7 +15,7 @@
           density="comfortable"
           elevation="16"
           style="font-family: Kanit;"
-          class="text-center bg-grey-darken-3 pa-2 ma-2 opacity-60 text-white text-h7"
+          class="text-center bg-grey-darken-3 pa-2 ma-2 opacity-60 text-white text-h7 rounded-t-lg"
         >
         {{ article.title }}
         </v-card>

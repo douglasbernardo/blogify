@@ -1,22 +1,21 @@
 <template>
   <v-container class="pa-0">
-    <v-row class="ma-2 pa-2" align="center" justify="center" no-gutters>
-      <v-col cols="10" md="10" sm="10" lg="4">
+    <v-row class="ma-2 pa-2" align="center" justify="center">
+      <v-col cols="10" lg="4">
         <v-card 
-          class="mb-6"
           variant="tonal" 
           elevation="10" 
-          max-width="344" 
           prepend-icon="mdi-thumb-up" 
           color="indigo" 
-          min-height="300" 
+          min-height="300"
+          width="auto" 
           title="Artigos Curtidos"
         >
           <v-card-text align="center" justify="center" class="mt-16 text-h1">{{ activities?.articlesLiked.length }}</v-card-text>
           <v-card-actions>
             <v-btn 
               v-if="activities?.articlesLiked.length" 
-              class="ml-16 mt-16"
+              class="d-flex mx-auto mt-16 text-center"
               variant="outlined"
               color="primary" 
               @click="articlesLikedDialog=!articlesLikedDialog"
@@ -26,21 +25,21 @@
           </v-card-actions>
         </v-card>
       </v-col>
-      <v-col cols="10" md="10" sm="10" lg="4">
+      <v-col cols="10" lg="4">
         <v-card 
           color="indigo" 
           variant="tonal" 
           elevation="10" 
           prepend-icon="mdi-comment"
           min-height="300" 
-          max-width="344"
+          width="auto"
           title="Artigos Comentados"
         >
           <v-card-text align="center" justify="center" class="mt-16 text-h1">{{ commentedArticles.length }}</v-card-text>
           <v-card-actions>
             <v-btn 
               v-if="commentedArticles.length" 
-              class="ml-16 mt-16"
+              class="mx-auto mt-16"
               variant="outlined"
               color="primary" 
               @click="commentedArticlesDialog=!commentedArticlesDialog"
