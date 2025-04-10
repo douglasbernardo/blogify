@@ -95,6 +95,7 @@
 <script lang="ts" setup>
   import {useArticleStore} from "~/store/article_manager";
   import { useDisplay } from "vuetify/lib/framework.mjs";
+import { VCardItem } from "vuetify/lib/components/index.mjs";
 
   const {mobile} = useDisplay()
   const articleStore = useArticleStore()
