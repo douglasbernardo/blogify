@@ -29,19 +29,19 @@
           <v-btn 
             v-bind="props"
             :class="isHovering ? 'bg-blue' : 'text-blue'" 
-            size="small"
+            :size="mobile ? 'x-small': 'small'"
             variant="outlined"
             @click="doReading(article._id)"
             >Fazer leitura</v-btn>
         </v-hover>
         <v-icon
-          class="ml-4" 
+          class="ml-2" 
           @click="handleLike(article._id)"
           color="red" 
           icon="mdi-heart" 
-        ></v-icon><p class="ml-1">{{ article.likes }}</p>
-        <v-icon class="ml-4" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">{{ article.comments }}</p>
-        <v-icon class="ml-4" color="light-blue">mdi-eye</v-icon><p class="ml-1">{{ article.views }}</p>
+        ></v-icon><p class="ml-2">{{ article.likes }}</p>
+        <v-icon class="ml-2" color="orange-lighten-2">mdi-comment</v-icon><p class="ml-1">{{ article.comments }}</p>
+        <v-icon class="ml-2" color="light-blue">mdi-eye</v-icon><p class="ml-1">{{ article.views }}</p>
       </v-card-actions>
       <v-snackbar 
         v-model="snackbarErrorLike" 
@@ -62,11 +62,13 @@ defineProps({
 })
 import {useAuthStore} from '~/store/user/authStore'
 import { useArticleStore } from '~/store/article_manager';
+import { useDisplay } from 'vuetify/lib/framework.mjs';
 const auth = useAuthStore()
 const articleStore = useArticleStore()
 const snackbarErrorLike = ref<boolean>(false)
 const likeErrorMessage = ref('')
 const {doReading} = useArticleActions()
+const {mobile} = useDisplay()
 
 const handleLike = async(id:string) => {
   if(!auth.isAuthenticated){
