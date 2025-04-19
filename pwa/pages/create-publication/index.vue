@@ -35,6 +35,7 @@
           :fontsTitle="fontsTitle"
           :categories="categories"
           :status="status"
+          @handleFileChange="handleFileChange"
           @update:canProceedStep2="canProceed.step2 = $event"
         />
       </template>

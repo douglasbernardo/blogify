@@ -71,18 +71,18 @@
 
           <v-dialog
             v-model="dialog"
-            width="auto"
+            width="350"
           >
-            <v-card>
-              <v-card-title class="bg-blue">
-                Deseja deletar este artigo?
+            <v-card class="rounded-xl">
+              <v-card-title class="bg-grey-darken-2 text-center">
+                Você está excluindo um artigo
               </v-card-title>
               <v-card-text>
-                Tem certeza que deseja deletar? Esta ação não pode ser desfeita.
+                <v-icon class="ma-1 text-orange">mdi-alert-circle</v-icon>Ao excluir este item, não será possível recuperá-lo. Deseja continuar?
               </v-card-text>
-              <v-card-actions>
-                <v-btn color="primary" variant="flat" @click="dialog = false">Cancelar</v-btn>
-                <v-btn color="red" @click="deleting">Deletar</v-btn>
+              <v-card-actions class="ml-4">
+                <v-btn color="blue" variant="tonal" density="comfortable" @click="dialog = false">Cancelar</v-btn>
+                <v-btn color="red" size="small" @click="deleting">Excluir</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -95,7 +95,6 @@
 <script lang="ts" setup>
   import {useArticleStore} from "~/store/article_manager";
   import { useDisplay } from "vuetify/lib/framework.mjs";
-import { VCardItem } from "vuetify/lib/components/index.mjs";
 
   const {mobile} = useDisplay()
   const articleStore = useArticleStore()

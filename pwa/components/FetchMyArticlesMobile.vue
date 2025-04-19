@@ -58,13 +58,16 @@
 							</v-list>
 						</v-menu>
 					</v-btn>
-					<v-dialog v-model="deleteDialog">
-						<v-card>
-							<v-card-title class="bg-red-lighten-2 rounded-t-lg">Excluir Artigo?</v-card-title>
-							<v-card-text>Não há como recupera-lo depois de excluido</v-card-text>
-							<v-card-actions>
-								<v-btn class="bg-green" @click="deleteDialog=false">Voltar</v-btn>
-								<v-btn color="red" @click="delete_article(article._id)">Excluir</v-btn>
+					<v-dialog v-model="deleteDialog" width="350">
+						<v-card class="rounded-xl">
+							<v-card-title class="bg-grey-darken-2 text-center">Você está excluindo um artigo</v-card-title>
+							<v-card-text>
+								<v-icon class="ma-1 text-orange">mdi-alert-circle</v-icon>
+								Ao excluir este item, não será possível recuperá-lo. Deseja continuar?
+							</v-card-text>
+							<v-card-actions class="ml-4">
+								<v-btn color="blue" variant="tonal" @click="deleteDialog=false">Voltar</v-btn>
+								<v-btn color="red" size="small" @click="delete_article(article._id)">Excluir</v-btn>
 							</v-card-actions>
 						</v-card>
 					</v-dialog>
