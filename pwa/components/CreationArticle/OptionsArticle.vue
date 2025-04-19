@@ -41,6 +41,7 @@
     <v-file-input
       type="file"
       label="Escolher Imagem"
+      @change="$emit('handleFileChange',$event)"
     ></v-file-input>
   </form>
 </template>
@@ -62,6 +63,7 @@ const localcategoryChosen = ref(props.categoryChosen)
 const localstatusChosen = ref(props.statusChosen)
 
 const emit = defineEmits([
+  'handleFileChange',
   'update:articleTitle',
   'update:fontChosen',
   'update:categoryChosen',
