@@ -7,15 +7,15 @@
         <v-spacer></v-spacer>
 
         <v-text-field
-            v-if="!mobile"
-            v-model="search"
-            prepend-inner-icon="mdi-magnify"
-            density="compact"
-            label="Pesquisar"
-            single-line
-            flat
-            hide-details
-            variant="solo-filled"
+          v-if="!mobile"
+          v-model="search"
+          prepend-inner-icon="mdi-magnify"
+          density="compact"
+          label="Pesquisar"
+          single-line
+          flat
+          hide-details
+          variant="solo-filled"
         ></v-text-field>
       </v-card-title>
 

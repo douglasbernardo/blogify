@@ -49,8 +49,18 @@
             Fazer o Login
           </v-btn>
         </v-col>
-        <v-col cols="12" sm="10" md="10" lg="12">
+        <v-col>
           <GoogleButton/>
+        </v-col>
+        <v-col cols="5">
+          <v-btn
+            @click=""
+            class="text-none"
+            color="indigo-darken-4"
+            variant="text"
+          >
+            Esqueceu a senha ?
+          </v-btn>
         </v-col>
       </v-row>
       <v-btn
