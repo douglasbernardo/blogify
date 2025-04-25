@@ -9,6 +9,7 @@ import { uploadModule } from './upload/upload.module';
 import { LikeModule } from './likes/like.module';
 import { CommentsModule } from './comments/comments.module';
 import { AppController } from './app.controller';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AppController } from './app.controller';
     uploadModule,
     LikeModule,
     CommentsModule,
+    MailModule
   ],
   controllers: [AppController],
 })
