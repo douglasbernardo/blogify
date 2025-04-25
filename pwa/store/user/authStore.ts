@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('authStore',{
     userName: localStorage.getItem('name'),
     loggedWithGoogle: localStorage.getItem('google'),
     errorMessages: [],
+    errorMessagesResetPass: [],
   }),
 
   actions:{
@@ -28,7 +29,6 @@ export const useAuthStore = defineStore('authStore',{
           navigateTo('/profile')
         }
         if(error.value){
-          console.log(error.value.data.message)
           if (!this.errorMessages.includes(error.value.data.message)) {
             this.errorMessages.push(error.value.data.message);
           }
@@ -36,6 +36,24 @@ export const useAuthStore = defineStore('authStore',{
       }catch(error){
         console.log('Error when trying to login', error)
       }
+    },
+    async reset_password(email: string){
+      const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/auth/reset-password`,{
+        method: 'post',
+        body: {email: email}
+      })
+      if(error.value){
+        console.log(error.value.data.message)
+        if (!this.errorMessagesResetPass.includes(error.value.data.message)) {
+          this.errorMessagesResetPass.push(error.value.data.message);
+        }
+      }
+    },
+    async reset_my_password(token: string, password: string){
+      const {data, error} = await useFetch(`${useRuntimeConfig().public.apiBase}/auth/reset-my-pass`,{
+        method: 'post',
+        body: {token: token, pass: password}
+      })
     },
     async login_google(token_google: string){
       try {
@@ -68,7 +86,10 @@ export const useAuthStore = defineStore('authStore',{
     },
     clearErrorMessages(){
       this.errorMessages = []
-    }
+    },
+    clearErrorMessagesResetPass(){
+      this.errorMessagesResetPass = []
+    },
   },
 
   getters: {

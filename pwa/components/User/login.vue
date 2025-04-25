@@ -54,7 +54,7 @@
         </v-col>
         <v-col cols="5">
           <v-btn
-            @click=""
+            @click="forgotPasswordDialog=!forgotPasswordDialog"
             class="text-none"
             color="indigo-darken-4"
             variant="text"
@@ -76,18 +76,45 @@
         Ainda não faz parte ?
       </v-btn>
     </v-form>
+    <v-dialog v-model="forgotPasswordDialog" width="400">
+      <v-card class="rounded-xl ma-2">
+        <div v-if="authStore.errorMessagesResetPass.length">
+          <v-alert
+            v-for="(error, index) in authStore.errorMessagesResetPass"
+            :key="index"
+            closable
+            :text="error"
+            icon="$error"
+            type="error"
+            variant="tonal"
+            @click:close="authStore.clearErrorMessagesResetPass"
+          />
+        </div>
+        <v-card-title class="text-center">Esqueceu a senha? Redefina</v-card-title>
+        <div class="ma-2 pa-2 mt-5">
+          <span>Seu e-mail:</span>
+          <v-text-field v-model="emailForgotPass" hint="Entre com o e-mail que você usa o CURIOUS MIND"></v-text-field>
+          <v-card-actions>
+            <v-btn color="indigo-darken-2" block variant="flat" @click="$emit('resetPass',emailForgotPass)">Enviar</v-btn>
+          </v-card-actions>
+        </div>
+      </v-card>
+    </v-dialog>
   </v-sheet>
 </template>
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { useAuthStore } from '~/store/user/authStore';
-const clearErrorMessages = useAuthStore().clearErrorMessages
-const mobile = useDisplay()
-const showPassword = ref(false)
-const props = defineProps({
+defineProps({
   user: Object,
   errorMessages: Array<string>
 })
+const authStore = useAuthStore()
+const clearErrorMessages = useAuthStore().clearErrorMessages
+const mobile = useDisplay()
+const forgotPasswordDialog = ref(false)
+const emailForgotPass = ref('')
+const showPassword = ref(false)
 </script>
     
 <style scoped>
