@@ -79,15 +79,17 @@ export class AuthService {
       if(userExists === null) throw new UnauthorizedException('E-mail não encontrado!');
 
       const token = await this.jwtService.signAsync({email},{expiresIn: '15m'})
+      //const resetLink = `https://blogify-taupe.vercel.app/user/resetar-senha?token=${token}`;
       const resetLink = `http://localhost:3000/user/resetar-senha?token=${token}`;
 
-      await this.mailService.sendEmail(
+      const sendingEmail = await this.mailService.sendEmail(
         email,
         'Redefinir sua senha',
         'Clique no link para resetar sua senha.',
         `
           <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
-            <h2 style="color: #ff6600;">Redefinição de Senha</h2>
+            <h1 style="color: #ff6600;font-weight:bold">CURIOUS MIND</h1>
+            <h3 style="color: #ff6600;">Redefinição de Senha</h3>
             <p>Olá,</p>
             <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
             <p>Para continuar, clique no botão abaixo:</p>
@@ -100,6 +102,13 @@ export class AuthService {
           </div>
         `
       );
+      if(sendingEmail){
+        return {
+          emailSent: true,
+          message: 'e-mail foi enviado com sucesso!'
+        }
+      }
+      console.log(sendingEmail.accept)
     } catch (e) {
       throw e;
     }
@@ -110,8 +119,12 @@ export class AuthService {
     const resetPassUser = await this.userService.find_user(token.email)
     const cryptPass = await bcrypt.hash(resetData.pass, 12)
     resetPassUser.password = cryptPass
-
     resetPassUser.save()
+
+    return {
+      passChanged: true,
+      message: 'Sua senha foi redefinida com sucesso !'
+    }
   }
   async signIn_google() {}
 }
