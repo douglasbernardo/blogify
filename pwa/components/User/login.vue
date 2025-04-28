@@ -8,7 +8,7 @@
     text="Faça o login para continuar compartilhando suas paixões e conhecimentos com as pessoas."
     variant="tonal"
   ></v-alert>
-    <v-form fast-fail @submit.prevent>
+    <v-form @submit.prevent="$emit('login')">
       <v-alert
         v-if="errorMessages?.length"
         v-for="(error, index) in errorMessages"
@@ -37,6 +37,7 @@
       <v-row justify="center" no-gutters>
         <v-col cols="12" sm="12" md="2" lg="12">
           <v-btn
+            type="submit"
             text-bold
             block
             border-radius="5"
@@ -44,7 +45,6 @@
             color="indigo-darken-3"
             size="x-large"
             variant="flat"
-            @click="$emit('login')"
           >
             Fazer o Login
           </v-btn>
@@ -78,6 +78,17 @@
     </v-form>
     <v-dialog v-model="forgotPasswordDialog" width="400">
       <v-card class="rounded-xl ma-2">
+        <div v-if="authStore.emailSent">
+          <v-alert
+            closable
+            prominent
+            :text="`Foi enviado um e-mail para ${emailForgotPass}, verifique e redefina sua senha`"
+            icon="$success"
+            type="success"
+            variant="tonal"
+            @click:close="authStore.emailSent = false"
+          />
+        </div>
         <div v-if="authStore.errorMessagesResetPass.length">
           <v-alert
             v-for="(error, index) in authStore.errorMessagesResetPass"
@@ -103,7 +114,6 @@
   </v-sheet>
 </template>
 <script lang="ts" setup>
-import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { useAuthStore } from '~/store/user/authStore';
 defineProps({
   user: Object,
@@ -111,7 +121,6 @@ defineProps({
 })
 const authStore = useAuthStore()
 const clearErrorMessages = useAuthStore().clearErrorMessages
-const mobile = useDisplay()
 const forgotPasswordDialog = ref(false)
 const emailForgotPass = ref('')
 const showPassword = ref(false)
