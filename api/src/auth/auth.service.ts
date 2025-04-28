@@ -79,8 +79,8 @@ export class AuthService {
       if(userExists === null) throw new UnauthorizedException('E-mail não encontrado!');
 
       const token = await this.jwtService.signAsync({email},{expiresIn: '15m'})
-      //const resetLink = `https://blogify-taupe.vercel.app/user/resetar-senha?token=${token}`;
-      const resetLink = `http://localhost:3000/user/resetar-senha?token=${token}`;
+      const resetLink = `https://blogify-taupe.vercel.app/user/resetar-senha?token=${token}`;
+      //const resetLink = `http://localhost:3000/user/resetar-senha?token=${token}`;
 
       const sendingEmail = await this.mailService.sendEmail(
         email,
