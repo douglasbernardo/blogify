@@ -4,6 +4,10 @@
       <v-btn v-if="authStore.isAuthenticated" :icon="drawer ? 'mdi-menu-close' : 'mdi-menu-open'" @click="drawer=!drawer"></v-btn>
       <v-app-bar-title @click="navigateTo('/')" style="cursor: pointer;">Curious Mind</v-app-bar-title>
       <v-btn v-if="!authStore.isAuthenticated" style="font-family: 'Bungee Spice';" text="Login" class="login-btn mx-8 text-white" variant="tonal" to="/user/login"/>
+      <v-btn 
+        @click="toggleTheme" 
+        :icon="theme.name.value == 'dark' ? 'mdi-moon-waxing-crescent' : 'mdi-white-balance-sunny'"
+      />
     </v-app-bar>
     <v-navigation-drawer
       app
@@ -55,10 +59,14 @@
 <script lang="ts" setup>
 import {useRoute} from 'vue-router'
 import {useAuthStore} from '~/store/user/authStore'
-import { useDisplay } from 'vuetify/lib/framework.mjs';
+import { useDisplay, useTheme } from 'vuetify/lib/framework.mjs';
 import { userManager } from '~/store/user/user_manager';
 import { useArticleStore } from '~/store/article_manager';
 
+const theme = useTheme()
+function toggleTheme () {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
 const mobile = useDisplay()
 const dialog = ref(false)
 const dialogPicture = ref(false)

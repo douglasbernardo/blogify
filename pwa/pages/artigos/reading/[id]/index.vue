@@ -1,15 +1,6 @@
 <template>
   <v-container>
-    <v-switch
-      v-model="bgColor"
-      :label="bgColor"
-      false-value="Claro"
-      true-value="Escuro"
-      hide-details
-      inset
-    ></v-switch>
     <v-card
-      :class="{'bg-grey-darken-3': bgColor === 'Escuro'}"
       v-if="articleOptions" 
       elevation="10"
     >
