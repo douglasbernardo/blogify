@@ -2,7 +2,14 @@
   <v-layout>
     <v-app-bar height="75" class="bg-black">
       <v-btn v-if="authStore.isAuthenticated" :icon="drawer ? 'mdi-menu-close' : 'mdi-menu-open'" @click="drawer=!drawer"></v-btn>
-      <v-app-bar-title @click="navigateTo('/')" style="cursor: pointer;">Curious Mind</v-app-bar-title>
+      <v-app-bar-title
+        :class="mobile ? 'mobile-title': 'desktop-title'" 
+        @click="navigateTo('/')" 
+        class="overflow-visible"
+        style="cursor: pointer;"
+      >
+        Curious Mind
+    </v-app-bar-title>
       <v-btn v-if="!authStore.isAuthenticated" style="font-family: 'Bungee Spice';" text="Login" class="login-btn mx-8 text-white" variant="tonal" to="/user/login"/>
       <v-btn 
         @click="toggleTheme" 
@@ -63,11 +70,11 @@ import { useDisplay, useTheme } from 'vuetify/lib/framework.mjs';
 import { userManager } from '~/store/user/user_manager';
 import { useArticleStore } from '~/store/article_manager';
 
+const {mobile} = useDisplay()
 const theme = useTheme()
 function toggleTheme () {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
-const mobile = useDisplay()
 const dialog = ref(false)
 const dialogPicture = ref(false)
 const drawer = ref(false)
@@ -90,8 +97,12 @@ const logout = () => {
 
 </script>
 <style scoped>
-.v-app-bar-title{
-	font-size: 30px;
+.desktop-title{
+  font-size: 30px;
 	font-family: 'Bungee Spice';
+}
+.mobile-title{
+	font-family: 'Bungee Spice';
+  font-size: 16px;
 }
 </style>
