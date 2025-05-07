@@ -42,14 +42,10 @@
 
       <template v-slot:item.3>
         <CreationArticleWritingArticle
-          :article="article" 
-          :selectedOption="selectedOption"
-          :fontsText="fontsText"
-          :fontChosen="fontChosen.text"
-          @update:article="article = $event"
-          @update:fontChosen="fontChosen = $event"
           @update:canProceedStep3="canProceed.step3 = $event"
+          @update:content="contentArticle = $event"
         />
+        <p>alguma coisa{{ contentArticle }}</p>
       </template>
 
       <template v-slot:item.4>
@@ -63,6 +59,7 @@
   import {useArticleStore} from "~/store/article_manager";
   import { useDisplay } from "vuetify/lib/framework.mjs";
   const selectedOption = ref()
+  const contentArticle = ref()
   const step = ref(1)
   const canProceed = reactive({
     step1: false,
@@ -151,7 +148,7 @@
         backgroundImage: backgroundImage,
         title: articleTitle.value,
         titleFont: fontChosen.value.title,
-        article: article.value,
+        article: contentArticle.value,
         textFont: fontChosen.value.text,
         category: categoryChosen.value,
         status: statusChosen.value,
@@ -162,3 +159,7 @@
     }
   }
 </script>
+
+<style scoped>
+
+</style>
