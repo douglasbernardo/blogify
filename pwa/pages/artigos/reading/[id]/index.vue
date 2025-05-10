@@ -4,17 +4,7 @@
       v-if="articleOptions" 
       elevation="10"
     >
-      <p
-        :style="{fontFamily: String(articleOptions.titleFont), fontSize: '30px' }" 
-        class="text-center mt-16"
-      >
-        {{articleOptions.title}}
-      </p>
-      <article
-        class="pa-5 ma-5"
-        :style="{fontFamily: String(articleOptions.textFont)}"
-        v-html="formatArticle('',articleOptions.article)">
-      </article>
+      <article v-html="articleOptions.article" class="ql-editor"></article>
       <v-card-actions class="d-flex justify-end">
         <v-btn class="ma-2" size="small" variant="flat" color="primary" rounded @click="$router.push('/')">Voltar</v-btn>
         <v-btn class="ma-2" variant="flat" size="small" color="primary" rounded append-icon="mdi-comment" @click="sheet=!sheet">Comentários</v-btn>
@@ -168,8 +158,6 @@
   const commentsArray = ref<Array<string>>([])
   const isEditing = ref<boolean>(false)
   const envVariable = useRuntimeConfig()
-  const colorMode = useColorMode()
-  const bgColor = ref('Claro')
   const {mobile} = useDisplay()
 
   const fetchComments = async() => {

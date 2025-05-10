@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <form v-if="articleOptions">
+    <form>
       <span>Imagem de Background (opcional)</span>
       <v-file-input
       type="file"
@@ -11,53 +11,30 @@
       <v-text-field
         v-model="articleOptions.title"
       ></v-text-field>
-      <span>Escolha um fonte para seu título</span>
-      <v-select
-        :items="[
-          'Anton',
-          'Bebas Neue',
-          'Vina Sans',
-          'Black Ops One',
-          'Bungee',
-          'Rubik Mono One',
-          'Viga',
-          'Days One',
-          'Share Tech Mono'
-        ]"
-        v-model="articleOptions.titleFont"
-      ></v-select>
-      <span>Escreva aqui</span>
-      <v-textarea v-model="articleOptions.article"/>
-      <span>Escolha um fonte para seu texto</span>
-      <v-select
-        :items="[
-          'Roboto',
-          'Roboto Condensed',
-          'Kanit',
-          'Barlow Condensed',
-          'Sarabun',
-          'Alegreya Sans',
-          'Spectral',
-          'Saira',
-          'Crimson Pro',
-          'Red Hat Text'
-        ]"
-        v-model="articleOptions.textFont"
-      ></v-select>
-      <span>Escolha a categoria</span>
-      <v-combobox
-        :items="categories"
-        v-model="articleOptions.category"
-      ></v-combobox>
-      <span>Status</span>
-      <v-select
-        default="default"
-        :items="['publico','oculto']"
-        v-model="articleOptions.status"
-      ></v-select>
-
+      <v-row>
+        <v-combobox
+          class="ma-2"
+          :items="categories"
+          v-model="articleOptions.category"
+        ></v-combobox>
+        <v-select
+          class="ma-2"
+          default="default"
+          :items="['publico','oculto']"
+          v-model="articleOptions.status"
+        ></v-select>
+      </v-row>
+      <quill-editor
+        class="editor"
+        style="height: 500px;"
+        v-model:content="articleContent"
+        content-type="html"
+        :options="state.editorOption"
+        :disabled="state.disabled"
+        @update:content="onEditorChange"
+      />
       <v-btn
-        class="me-4"
+        class="ma-4"
         type="button"
         color="red"
         variant="tonal"
@@ -66,7 +43,7 @@
         Cancelar
       </v-btn>
 
-      <v-btn @click="submit" class="" color="blue">
+      <v-btn @click="submit" color="blue">
         Editar
       </v-btn>
     </form>
@@ -74,16 +51,63 @@
 </template>
 
 <script lang="ts" setup>
+  import { QuillEditor } from '@vueup/vue-quill'
+  import '@vueup/vue-quill/dist/vue-quill.snow.css';
   import {useArticleStore} from '~/store/article_manager'
   const route = useRoute()
   const articleStore = useArticleStore()
   const articleOptions = ref({})
   const categories = ref<Array<string>>([])
   const envVariable = useRuntimeConfig()
+  const articleContent = ref('')
+  const state = reactive({
+    content: '',
+    editorOption: {
+      placeholder: 'Escreva seu artigo aqui...',
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline', 'strike'],
+          ['blockquote', 'code-block'],
+          [{ header: 1 }, { header: 2 }],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ script: 'sub' }, { script: 'super' }],
+          [{ indent: '-1' }, { indent: '+1' }],
+          [{ direction: 'rtl' }],
+          [{ size: ['small', false, 'large', 'huge'] }],
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          [{ color: [] }, { background: [] }],
+          [{ font: [] }],
+          [{ align: [] }],
+          ['clean'],
+          ['link', 'image', 'video']
+        ]
+      },
+    },
+    disabled: false
+  })
+  const onEditorBlur = (quill) => {
+    console.log('editor blur!', quill)
+  }
+  const onEditorFocus = (quill) => {
+    state.content = quill.value.__vueParentComponent.attrs.modelValue
+    console.log('editor focus!', quill.value.__vueParentComponent.attrs.modelValue)
+  }
+  const onEditorReady = (quill) => {
+    console.log('editor ready!', quill.container.__vueParentComponent.attrs.modelValue)
+    state.content = quill
+  }
+  const onEditorChange = (html) => {
+    console.log('editor change!', html)
+    articleContent.value = html
+    state.content = html
+  }
+
+
   const selectedFile = ref(null)
   const handleFileChange = (event: any) => {
     selectedFile.value = event.target.files[0];
   };
+
 
   const submit = async () => {
     let response = null;
@@ -109,9 +133,7 @@
         id: articleOptions.value._id,
         backgroundImage,
         title: articleOptions.value.title,
-        titleFont: articleOptions.value.titleFont,
-        article: articleOptions.value.article,
-        textFont: articleOptions.value.textFont,
+        article: state.content,
         category: articleOptions.value.category,
         status: articleOptions.value.status,
       })
@@ -129,6 +151,11 @@
       ])
       categories.value = categoriesResponse, 
       articleOptions.value = editingArticleResponse
+      articleContent.value = editingArticleResponse.article
     })
   })
+
+
 </script>
+
+<style scoped></style>

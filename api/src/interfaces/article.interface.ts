@@ -3,7 +3,6 @@ export interface AddArticleInterface {
   title: string;
   titleFont: string;
   article: string;
-  textFont: string;
   category: string;
   status: string;
   createdBy: string;

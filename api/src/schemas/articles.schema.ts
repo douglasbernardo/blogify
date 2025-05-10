@@ -10,13 +10,7 @@ export class Article extends Document {
   title: string;
 
   @Prop()
-  titleFont: string;
-
-  @Prop()
   article: string;
-
-  @Prop()
-  textFont: string;
 
   @Prop()
   category: string;

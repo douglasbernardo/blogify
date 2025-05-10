@@ -9,8 +9,6 @@ export class ArticleDto {
 
   readonly article: string;
 
-  readonly textFont: string;
-
   readonly category: string;
 
   readonly status: string;

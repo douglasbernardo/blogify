@@ -8,11 +8,7 @@ export class articleEditDto {
   @IsString()
   readonly title: string;
   @IsString()
-  readonly titleFont: string;
-  @IsString()
   readonly article: string;
-  @IsString()
-  readonly textFont: string;
   @IsString()
   readonly category: string;
   @IsString()
