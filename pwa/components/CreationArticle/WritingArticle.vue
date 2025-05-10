@@ -9,12 +9,13 @@
     @focus="onEditorFocus($event)"
     @ready="onEditorReady($event)"
     @update:content="onEditorChange"
-    :article="state._content"
   />
 </template>
 
 <script lang="ts" setup>
  import { QuillEditor } from "@vueup/vue-quill";
+ import '@vueup/vue-quill/dist/vue-quill.snow.css';
+
  const emit = defineEmits([
   'update:canProceedStep3',
 ])
@@ -24,14 +25,23 @@
     editorOption: {
       placeholder: 'Escreva seu artigo aqui...',
       modules: {
-        // toolbars: [
-          // custom toolbars options
-          // will override the default configuration
-        // ],
-        // other moudle options here
-        // otherMoudle: {}
+        toolbar: [
+          ['bold', 'italic', 'underline', 'strike'],
+          ['blockquote', 'code-block'],
+          [{ header: 1 }, { header: 2 }],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ script: 'sub' }, { script: 'super' }],
+          [{ indent: '-1' }, { indent: '+1' }],
+          [{ direction: 'rtl' }],
+          [{ size: ['small', false, 'large', 'huge'] }],
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          [{ color: [] }, { background: [] }],
+          [{ font: [] }],
+          [{ align: [] }],
+          ['clean'],
+          ['link', 'image', 'video']
+        ]
       },
-      // more options
     },
     disabled: false
   })
@@ -50,12 +60,8 @@
     emit('update:content',html)
   }
 
-const props = defineProps({
-  article: String
-})
-
 watch(() => {
-  const isTitleValid = !!state._content
-  emit('update:canProceedStep3', isTitleValid)
+  const isArticleValid = !!state._content
+  emit('update:canProceedStep3', isArticleValid)
 })
 </script>

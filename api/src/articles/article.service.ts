@@ -27,9 +27,7 @@ export class ArticleService {
     return new this.article({
       backgroundImage: data.backgroundImage,
       title: data.title,
-      titleFont: data.titleFont,
       article: data.article,
-      textFont: data.textFont,
       category: data.category,
       status: data.status,
       createdBy: await this.userService.find_id_user_by_email(data.createdBy),
@@ -67,17 +65,17 @@ export class ArticleService {
     return articleDoc ? (articleDoc.toObject() as Article) : null;
   }
 
-  async edit_article(article: articleEditDto): Promise<Article> {
+  async edit_article(article: articleEditDto) {
     const edit_article = await this.article.findById(article.id);
     const updated_fields = {
       backgroundImage: article.backgroundImage || edit_article.backgroundImage,
       title: article.title || edit_article.title,
-      titleFont: article.titleFont || edit_article.titleFont,
       article: article.article || edit_article.article,
-      textFont: article.textFont || edit_article.textFont,
       category: article.category || edit_article.category,
       status: article.status || edit_article.status,
     };
+
+    console.log(updated_fields)
     Object.assign(edit_article, updated_fields);
     return await edit_article.save();
   }

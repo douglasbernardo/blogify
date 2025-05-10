@@ -5,7 +5,7 @@
       :mobile="mobile ? true : false"
       next-text="Próximo"
       prev-text="Voltar"
-      :items="['Opções de Criação','Criação do Artigo', 'Escrevendo Artigo', 'Confirmação']"
+      :items="['Bem vindo','Criação do Artigo', 'Escrevendo Artigo', 'Confirmação']"
     >
       <template v-slot:next>
         <v-btn v-if="canProceed[`step${step}`]" @click="step++">Próximo</v-btn>
@@ -15,24 +15,17 @@
       </template>
 
       <template v-slot:item.1>
-        <CreationArticleOptionsCreation 
-          @update:selectedOption="selectedOption = $event"
-          :selected-option="selectedOption"
-          @update:canProceedStep1="canProceed.step1 = $event"
-        />
+        <WelcomeCreator  @startStep2="step = 2" />
       </template>
 
       <template v-slot:item.2>
         <CreationArticleOptionsArticle
           :articleTitle="articleTitle"
           @update:articleTitle="articleTitle = $event"
-          :fontChosen="fontChosen.title"
-          @update:fontChosen="fontChosen = $event"
           :categoryChosen="categoryChosen"
           @update:categoryChosen="categoryChosen = $event"
           :statusChosen="statusChosen"
           @update:statusChosen="statusChosen = $event"
-          :fontsTitle="fontsTitle"
           :categories="categories"
           :status="status"
           @handleFileChange="handleFileChange"
@@ -45,7 +38,6 @@
           @update:canProceedStep3="canProceed.step3 = $event"
           @update:content="contentArticle = $event"
         />
-        <p>alguma coisa{{ contentArticle }}</p>
       </template>
 
       <template v-slot:item.4>
@@ -58,6 +50,7 @@
 <script lang="ts" setup>
   import {useArticleStore} from "~/store/article_manager";
   import { useDisplay } from "vuetify/lib/framework.mjs";
+  import WelcomeCreator from "~/components/CreationArticle/WelcomeCreator.vue";
   const selectedOption = ref()
   const contentArticle = ref()
   const step = ref(1)
@@ -82,39 +75,11 @@
     }
     return null
   }
-  const fontsTitle = ref([
-    'Anton',
-    'Bebas Neue',
-    'Vina Sans',
-    'Black Ops One',
-    'Bungee',
-    'Rubik Mono One',
-    'Viga',
-    'Days One',
-    'Share Tech Mono'
-  ])
-  const fontsText = ref([
-    '',
-    'Roboto',
-    'Roboto Condensed',
-    'Kanit',
-    'Barlow Condensed',
-    'Sarabun',
-    'Alegreya Sans',
-    'Spectral',
-    'Saira',
-    'Crimson Pro',
-    'Red Hat Text'
-  ])
   const articleTitle = ref('')
   const status = ref(['publico','oculto'])
   const article = ref('')
   const categoryChosen= ref('')
   const statusChosen = ref('')
-  const fontChosen= ref({
-    text: '',
-    title: ''
-  })
   const selectedFile = ref(null)
   const selectedTextFile = ref(null)
   const handleFileChange = (event: any) => {
@@ -147,9 +112,7 @@
       articleStore.add_new_article({
         backgroundImage: backgroundImage,
         title: articleTitle.value,
-        titleFont: fontChosen.value.title,
         article: contentArticle.value,
-        textFont: fontChosen.value.text,
         category: categoryChosen.value,
         status: statusChosen.value,
         createdBy: localStorage.getItem('user')

@@ -1,21 +1,13 @@
 <template>
   <form @submit.prevent="">
     <v-row>
-      <v-col cols="12" sm="12" lg="8">
+      <v-col cols="12" sm="12" lg="12">
         <span class="mb-3">Título</span>
+        <span class="ml-4 text-grey">Esse título será mostrado no card principal</span>
         <v-text-field
           v-model="localTitle"
           @update:model-value="emit('update:articleTitle', $event)"
-          :style="localFontChosen ? `font-family: ${localFontChosen}` : ''"
         ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="12" lg="4">
-        <span>Escolha um fonte para seu título</span>
-        <v-select
-          :items="fontsTitle"
-          v-model="localFontChosen"
-          @update:model-value="emit('update:fontChosen', $event)"
-        ></v-select>
       </v-col>
     </v-row>
     <v-row>
@@ -49,7 +41,6 @@
 <script lang="ts" setup>
 const props = defineProps({
   articleTitle: String,
-  fontChosen: String,
   categoryChosen: String,
   statusChosen: String,
   fontsTitle: Array,
@@ -58,28 +49,25 @@ const props = defineProps({
 })
 
 const localTitle = ref(props.articleTitle)
-const localFontChosen = ref(props.fontChosen)
 const localcategoryChosen = ref(props.categoryChosen)
 const localstatusChosen = ref(props.statusChosen)
 
 const emit = defineEmits([
   'handleFileChange',
   'update:articleTitle',
-  'update:fontChosen',
   'update:categoryChosen',
   'update:statusChosen',
   'update:canProceedStep2'
 ])
 
 watch(
-  [localTitle, localFontChosen, localcategoryChosen, localstatusChosen],
+  [localTitle, localcategoryChosen, localstatusChosen],
   () => {
     const isTitleValid = !!localTitle.value
-    const isFontValid = !!localFontChosen.value
     const isCategoryValid = !!localcategoryChosen.value
     const isStatusValid = !!localstatusChosen.value
 
-    const isValid = isTitleValid && isFontValid && isCategoryValid && isStatusValid
+    const isValid = isTitleValid && isCategoryValid && isStatusValid
 
     emit('update:canProceedStep2', isValid)
   }
